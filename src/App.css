@@ -1,0 +1,34 @@
+ul li {
+  display: inline-block;
+  list-style: none; 
+}
+a:hover {
+  text-decoration: none !important;
+}
+.line-show{
+  height:5px;
+  width: 100%;
+  background:#f50057;
+  transition:all 0.3s
+}
+.line{
+  height:5px;
+  width:0%;
+  background:#f50057;
+  transition:all 0.3s
+}
+.nav-item:hover .line{
+  width:100%;
+  transition:all 0.3s;
+  color : #f50057;
+}
+.nav-item:hover {
+  color : #f50057;
+}
+.nav-item{
+  margin-right:10px
+}
+.bg-color {
+  /* background-image: linear-gradient(to bottom, #ffffff, #e7eff6, #c8e2e5, #b3d3c6, #b4c09f); */
+  background-image: linear-gradient(to top, #ffffff, #f8f9fd, #eef4fb, #e2f0f8, #d5ecf2, #d5ecf2, #d5ecf2, #d5ecf2, #e2f0f8, #eef4fb, #f8f9fd, #ffffff);
+}
