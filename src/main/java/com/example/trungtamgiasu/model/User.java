@@ -43,6 +43,14 @@ public class User {
                                     inverseJoinColumns = @JoinColumn(name = "id_role"))
     private Set<Role> roles = new HashSet<>();
 
+    @OneToOne(fetch = FetchType.LAZY,
+            cascade =  CascadeType.ALL,
+            mappedBy = "user")
+    private Tutor tutor;
+
+    @OneToMany(mappedBy = "user")
+    private Set<Classes> classes = new HashSet<>();
+
     public User(String name, String phone, String address, @Email String email, String password) {
         this.name = name;
         this.phone = phone;

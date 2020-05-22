@@ -1,27 +1,30 @@
 package com.example.trungtamgiasu.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity(name = "Tutor")
-@Table(name = "tutor")
+@Table(name = "tutors")
 @Getter
 @Setter
 public class Tutor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id_tutor")
     private Long id;
 
-    @Column(name = "gender")
+    @Column(name = "gender", nullable = false)
     private String gender;
 
-    @Column(name = "yearOfBirth")
+    @Column(name = "yearOfBirth", nullable = false)
     private String yearOfBirth;
 
-    @Column(name = "image")
+    @Column(name = "image", nullable = false)
     private String image;
 
     @Column(name = "major", nullable = false)
@@ -36,19 +39,35 @@ public class Tutor {
     @Column(name = "level", nullable = false)
     private String level;
 
-    @Column(name = "subjects", nullable = false)
-    private String subjects;
-
-    @Column(name = "classes", nullable = false)
-    private String classes;
-
-    @Column(name = "districtCanTeach", nullable = false)
-    private String districtCanTeach;
-
     @Lob
     private String moreInfo;
 
     @Column(nullable = false)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private TutorStatus status;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "tutor_subject", joinColumns = @JoinColumn(name = "id_tutor"),
+            inverseJoinColumns = @JoinColumn(name = "id_subject"))
+    private Set<Subject> subjects = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "tutor_class_teach", joinColumns = @JoinColumn(name = "id_tutor"),
+            inverseJoinColumns = @JoinColumn(name = "id_class_teach"))
+    private Set<ClassTeach> classTeaches = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "tutor_district", joinColumns = @JoinColumn(name = "id_tutor"),
+            inverseJoinColumns = @JoinColumn(name = "id_district"))
+    private Set<District> districts = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "tutor_free_time", joinColumns = @JoinColumn(name = "id_tutor"),
+            inverseJoinColumns = @JoinColumn(name = "id_free_time"))
+    private Set<FreeTime> freeTimes = new HashSet<>();
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_user")
+    @JsonIgnore
+    private User user;
 }
