@@ -18,7 +18,7 @@ public class ClassRegister {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_class_register")
-    private int id;
+    private Long id;
 
     @Column(nullable = false)
     private String status;

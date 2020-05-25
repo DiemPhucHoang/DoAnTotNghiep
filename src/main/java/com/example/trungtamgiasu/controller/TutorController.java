@@ -1,6 +1,7 @@
 package com.example.trungtamgiasu.controller;
 
 import com.example.trungtamgiasu.service.TutorService;
+import com.example.trungtamgiasu.vo.SearchVO;
 import com.example.trungtamgiasu.vo.Tutor.TutorVO;
 import com.example.trungtamgiasu.vo.payload.ApiResponse;
 import org.slf4j.Logger;
@@ -35,9 +36,23 @@ public class TutorController {
                 tutorService.createTutor(tutorVO, idUser));
     }
 
+    @GetMapping
+    public ApiResponse getAll() {
+        logger.info("Get all tutors controller");
+        return new ApiResponse(
+                true,
+                "Get all tutors successfully",
+                tutorService.getAll());
 
+    }
 
-
-
+    @GetMapping("/spec")
+    public ApiResponse getAllBySearch(@RequestBody SearchVO searchVO) {
+        logger.info("Get all tutors by search controller");
+        return new ApiResponse(
+                true,
+                "Get all tutors by search successfully",
+                tutorService.searchTutor(searchVO));
+    }
 
 }

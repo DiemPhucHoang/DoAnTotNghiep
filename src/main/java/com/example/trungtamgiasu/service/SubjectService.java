@@ -4,4 +4,6 @@ import com.example.trungtamgiasu.model.Subject;
 
 public interface SubjectService {
     Subject getById(Long id);
+
+    Subject getBySubjectName(String name);
 }

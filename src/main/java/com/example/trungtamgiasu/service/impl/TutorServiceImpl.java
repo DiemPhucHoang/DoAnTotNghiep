@@ -5,15 +5,19 @@ import com.example.trungtamgiasu.exception.TutorException;
 import com.example.trungtamgiasu.mapper.FreeTimeMapper;
 import com.example.trungtamgiasu.mapper.TutorMapper;
 import com.example.trungtamgiasu.model.FreeTime;
+import com.example.trungtamgiasu.model.Subject;
 import com.example.trungtamgiasu.model.Tutor;
 import com.example.trungtamgiasu.model.TutorStatus;
 import com.example.trungtamgiasu.service.*;
+import com.example.trungtamgiasu.specification.TutorSpecification;
 import com.example.trungtamgiasu.vo.FreeTime.FreeTimeVO;
+import com.example.trungtamgiasu.vo.SearchVO;
 import com.example.trungtamgiasu.vo.Tutor.TutorVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +28,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class TutorServiceImpl implements TutorService {
@@ -161,5 +166,24 @@ public class TutorServiceImpl implements TutorService {
             tutorMap.getFreeTimes().add(freeTimeService.getByIdFreeTime(freeTime.getId()));
         }
         return saveTutor(tutorMap);
+    }
+
+    @Override
+    public List<Tutor> getTutorsBySubject(String subject) {
+
+        List<Tutor> tutors = tutorDAO.findBySubjects_SubjectName(subject);
+        return tutors;
+    }
+
+    @Override
+    public List<Tutor> searchTutor(SearchVO searchVO) {
+        logger.info("Search tutor with : " + searchVO.getSubject());
+        List<Tutor> tutors = tutorDAO.findAll(Specification.
+                where(TutorSpecification.withSubject(searchVO.getSubject(), TutorStatus.CHUA_NHAN_LOP))
+                .and(TutorSpecification.withClassTeach(searchVO.getClassTeach(), TutorStatus.CHUA_NHAN_LOP))
+                .and(TutorSpecification.withDistrict(searchVO.getDistrict(), TutorStatus.CHUA_NHAN_LOP))
+                .and(TutorSpecification.withLevel(searchVO.getLevel(), TutorStatus.CHUA_NHAN_LOP))
+                .and(TutorSpecification.withGender(searchVO.getGender(), TutorStatus.CHUA_NHAN_LOP)));
+        return tutors;
     }
 }

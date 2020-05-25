@@ -1,6 +1,7 @@
 package com.example.trungtamgiasu.service;
 
 import com.example.trungtamgiasu.model.Tutor;
+import com.example.trungtamgiasu.vo.SearchVO;
 import com.example.trungtamgiasu.vo.Tutor.TutorVO;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,6 +19,13 @@ public interface TutorService {
     String uploadImage(MultipartFile file);
 
     Tutor createTutor(TutorVO tutorVO, Long idUser);
+
+    List<Tutor> getTutorsBySubject(String subject);
+
+    List<Tutor> searchTutor(SearchVO searchVO);
+
+
+
 
 
 }

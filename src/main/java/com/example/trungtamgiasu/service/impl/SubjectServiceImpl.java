@@ -20,6 +20,12 @@ public class SubjectServiceImpl implements SubjectService {
     public Subject getById(Long id) {
         logger.info("Get subject by id " + id);
         return subjectDAO.findById(id)
-                .orElseThrow(() -> new BadRequestException("Subject " + id + "does not exists"));
+                .orElseThrow(() -> new BadRequestException("Subject " + id + " does not exists"));
+    }
+
+    @Override
+    public Subject getBySubjectName(String name) {
+        return subjectDAO.findBySubjectName(name)
+                .orElseThrow(() -> new BadRequestException("Subject " + name + " does not exists"));
     }
 }
