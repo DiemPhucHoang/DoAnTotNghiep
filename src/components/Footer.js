@@ -9,10 +9,10 @@ class Footer extends Component {
                     <img src="image/logo.png" style={{ height: '90px', marginTop: '-80px', marginRight: '0' }}></img>
                     <p>
                         <p>
-                            Address: 01 - Võ Văn Ngân - Quận Thủ Đức - TPHCM
+                            Địa chỉ: 01 - Võ Văn Ngân - Quận Thủ Đức - TPHCM
                         </p>
                         <p>
-                            Tel: 0987-654-4321
+                            Điện thoại: 0987-654-4321
                         </p>
                     </p>
                 </div>
