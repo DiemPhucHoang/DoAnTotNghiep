@@ -12,7 +12,6 @@ class PhuHuynh extends Component {
         super(props);
         this.state = {
             submitRequest: false,
-            showInfo: false
         }
     }
 
@@ -24,17 +23,6 @@ class PhuHuynh extends Component {
     onCloseSubmitRequest = () => {
         this.setState({
             submitRequest: !this.state.submitRequest
-        });
-    }
-
-    showInfoTutor = () => {
-        this.setState({
-            showInfo: true,
-        });
-    }
-    onCloseShowInfoTutor = () => {
-        this.setState({
-            showInfo: !this.state.showInfo
         });
     }
 
@@ -51,7 +39,7 @@ class PhuHuynh extends Component {
 
 
     render() {
-        var { submitRequest, showInfo } = this.state;
+        var { submitRequest } = this.state;
         return (
             <div className="bg-color">
                 <div className="container ">
@@ -382,7 +370,10 @@ class PhuHuynh extends Component {
                                             <p>Môn dạy: Toán, Vật Lý</p>
                                             <p>Khu vực: Quận Thủ Đức, Quận 2</p>
                                             <p>
-                                                <Button variant="contained" color="primary" size="small" onClick={this.showInfoTutor}>Xem chi tiết</Button>
+                                                <a href="/chi-tiet-gia-su">
+                                                    <Button variant="contained" color="primary" size="small">Xem chi tiết</Button>
+                                                </a>
+                                                
                                                 <a href="/chon-gia-su">
                                                     <Button variant="contained" color="secondary" size="small" style={{ float: 'right' }}>Chọn gia sư</Button>
                                                 </a>
@@ -390,78 +381,6 @@ class PhuHuynh extends Component {
                                             </p>
                                         </Grid>
                                     </Grid>
-                                    <Dialog
-                                        fullWidth
-                                        maxWidth="md"
-                                        open={showInfo}
-                                        onClose={this.onCloseShowInfoTutor}
-                                    >
-                                        <DialogTitle id="alert-dialog-title">
-                                           <h3 style={{textAlign: 'center'}}> Thông tin chi tiết của gia sư</h3>
-                                        </DialogTitle>
-                                        <DialogContent>
-                                            <Grid container spacing={3}>
-                                                <Grid item xs={3}>
-                                                    <img src="image/avata.jpg" class="rounded-circle" style={{ width: '100%' }} />
-                                                    <br /><br />
-                                                    <div style={{ textAlign: 'center' }}>
-                                                        <h6>HOÀNG THỊ DIỄM PHÚC</h6>
-                                                        <p>Sinh viên</p>
-                                                        <Button variant="contained" color="secondary" size="small">Chọn gia sư</Button>
-                                                    </div>
-                                                </Grid>
-                                                <Grid item xs={9}>
-                                                    <Table bo>
-                                                        <TableRow>
-                                                            <TableCell>Trường</TableCell>
-                                                            <TableCell><b>Đại học sư phạm kỹ thuật TPHCM</b></TableCell>
-                                                        </TableRow>
-                                                        <TableRow>
-                                                            <TableCell>Chuyên ngành</TableCell>
-                                                            <TableCell><b>Công nghệ thông tin</b></TableCell>
-                                                        </TableRow>
-                                                        <TableRow>
-                                                            <TableCell>Năm tốt nghiệp</TableCell>
-                                                            <TableCell><b>2020</b></TableCell>
-                                                        </TableRow>
-                                                        <TableRow>
-                                                            <TableCell>Dạy môn</TableCell>
-                                                            <TableCell><b>Toán, Vật Lý</b></TableCell>
-                                                        </TableRow>
-                                                        <TableRow>
-                                                            <TableCell>Lớp dạy</TableCell>
-                                                            <TableCell><b>Lớp 6, Lớp 7</b></TableCell>
-                                                        </TableRow>
-                                                        <TableRow>
-                                                            <TableCell>Khu vực dạy</TableCell>
-                                                            <TableCell><b>Q.Tân Bình, Q.Gò Vấp, Q.Phú Nhuận, Q.Bình Tân</b></TableCell>
-                                                        </TableRow>
-                                                        <TableRow>
-                                                            <TableCell>Yêu cầu lương</TableCell>
-                                                            <TableCell><b>200.000 VNĐ/buổi</b></TableCell>
-                                                        </TableRow>
-                                                        <TableRow>
-                                                            <TableCell>Thời gian dạy</TableCell>
-                                                            <TableCell>
-                                                                
-                                                            </TableCell>
-                                                        </TableRow>
-                                                    </Table>
-                                                </Grid>
-                                                <Grid item xs={12}>
-                                                    <h5 style={{textAlign: 'center'}}>DANH SÁCH CÁC LỚP ĐÃ DẠY</h5>
-                                                </Grid>
-                                            </Grid>
-                                        </DialogContent>
-                                        {/* <DialogActions>
-                                            <Button onClick={handleClose} color="primary">
-                                                Disagree
-                                            </Button>
-                                            <Button onClick={handleClose} color="primary" autoFocus>
-                                                Agree
-                                            </Button>
-                                        </DialogActions> */}
-                                    </Dialog>
                                 </Paper>
                             </Grid>
                             <Grid item xs={4} className="paper">

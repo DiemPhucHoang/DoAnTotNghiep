@@ -32,3 +32,35 @@ a:hover {
   /* background-image: linear-gradient(to bottom, #ffffff, #e7eff6, #c8e2e5, #b3d3c6, #b4c09f); */
   background-image: linear-gradient(to top, #ffffff, #f8f9fd, #eef4fb, #e2f0f8, #d5ecf2, #d5ecf2, #d5ecf2, #d5ecf2, #e2f0f8, #eef4fb, #f8f9fd, #ffffff);
 }
+.pull-right {
+  float: right!important;
+}
+.list-group-unbordered > .list-group-item {
+  border-left: 0px none;
+  border-right: 0px none;
+  border-radius: 0px 0px 0px 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.gblock-v2 .block-calender {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  display: flex;
+}
+
+.row-calendar {
+  max-width: 120px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  margin-left: -5px;
+}
+.calendar-normal, .calendar-active {
+  margin-bottom: 10px;
+}
+.mr-30 {
+  margin-left: 30px !important;
+}
+
+
