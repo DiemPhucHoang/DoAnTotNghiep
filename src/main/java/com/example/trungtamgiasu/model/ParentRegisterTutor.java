@@ -20,7 +20,7 @@ public class ParentRegisterTutor {
 
     @ManyToOne
     @MapsId("id_parent")
-    @JoinColumn(name = "id_user")
+    @JoinColumn(name = "id_parent")
     @JsonIgnore
     private User user;
 
@@ -30,11 +30,11 @@ public class ParentRegisterTutor {
     @JsonIgnore
     private Tutor tutor;
 
-    private Integer score;
+    @Column(name = "id_class")
+    private Long idClass;
 
-    private String message;
-
-    private boolean status;
+    @Column(nullable = false)
+    private ParentRegisterTutorStatus status;
 
 
 }

@@ -9,6 +9,17 @@ import java.util.Collection;
 
 public class TutorSpecification {
 
+//    public static Specification<Tutor> withName(String name, TutorStatus tutorStatus) {
+//        if (name == "" || name.isEmpty()) {
+//            return null;
+//        } else {
+//            return (root, query, cb) -> cb.and(
+//                    cb.equal(root.get("status"), tutorStatus),
+//                    cb.like(root.get("name"), name)
+//            );
+//        }
+//    }
+
     public static Specification<Tutor> withSubject(String subject, TutorStatus tutorStatus) {
         if (subject == null || subject.isEmpty()) {
             return null;

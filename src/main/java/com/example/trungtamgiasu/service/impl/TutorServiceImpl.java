@@ -2,6 +2,7 @@ package com.example.trungtamgiasu.service.impl;
 
 import com.example.trungtamgiasu.dao.*;
 import com.example.trungtamgiasu.exception.BadRequestException;
+import com.example.trungtamgiasu.exception.ResourceNotFoundException;
 import com.example.trungtamgiasu.exception.TutorException;
 import com.example.trungtamgiasu.exception.UserException;
 import com.example.trungtamgiasu.mapper.FreeTimeMapper;
@@ -12,11 +13,15 @@ import com.example.trungtamgiasu.service.TutorService;
 import com.example.trungtamgiasu.specification.TutorSpecification;
 import com.example.trungtamgiasu.vo.FreeTime.FreeTimeVO;
 import com.example.trungtamgiasu.vo.SearchVO;
+import com.example.trungtamgiasu.vo.Tutor.TutorInfoVO;
 import com.example.trungtamgiasu.vo.Tutor.TutorVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -64,11 +69,22 @@ public class TutorServiceImpl implements TutorService {
     @Value("${file.upload-dir}")
     String path;
 
+    @Override
+    public List<TutorInfoVO> getAll() {
+        logger.info("Get all tutors");
+        List<Tutor> tutors = tutorDAO.findByStatus(TutorStatus.CHUA_NHAN_LOP);
+        return tutorMapper.toTutorsInfoVOList(tutors);
+    }
 
     @Override
-    public List<Tutor> getAll() {
-        logger.info("Get all tutors");
-        return tutorDAO.findAll();
+    public Page<TutorInfoVO> getAllByPage(Pageable pageable) {
+        List<Tutor> tutors = tutorDAO.findByStatus(TutorStatus.CHUA_NHAN_LOP);
+        List<TutorInfoVO> tutorInfoVOS = tutorMapper.toTutorsInfoVOList(tutors);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), tutorInfoVOS.size());
+        Page<TutorInfoVO> tutorInfoVOPage = new PageImpl<TutorInfoVO>
+                (tutorInfoVOS.subList(start, end), pageable, tutorInfoVOS.size());
+        return tutorInfoVOPage;
     }
 
     @Override
@@ -79,8 +95,9 @@ public class TutorServiceImpl implements TutorService {
 
     @Override
     public boolean checkFileNameExist(String fileName, Long idUser) {
-        List<Tutor> tutorsList = getAll();
-        for (Tutor item: tutorsList) {
+        List<Tutor> tutors = tutorDAO.findByStatus(TutorStatus.CHUA_NHAN_LOP);
+
+        for (Tutor item: tutors) {
             if(item.getImage().equals(fileName) && !(item.getUser().getId().equals(idUser)))
             {
                 return true;
@@ -147,25 +164,36 @@ public class TutorServiceImpl implements TutorService {
         if(tutorVO == null) {
             throw new TutorException("Tutor is null");
         }
+        User user = userDAO.findById(idUser).orElseThrow(() ->
+                new ResourceNotFoundException("User", "id" , idUser));
+        if(tutorDAO.existsByUser(user)) {
+            throw new BadRequestException("Id user already exists");
+        }
         TutorStatus tutorStatus = TutorStatus.CHUA_NHAN_LOP;
         tutorVO.setStatus(tutorStatus);
         Tutor tutorMap = tutorMapper.toTutor(tutorVO);
         tutorMap.setUser(userDAO.findById(idUser).
                 orElseThrow(() -> new UserException("User not found by id " + idUser)));
         //add table tutor_subject
-        for (Long idSubject : tutorVO.getSubject()) {
-            tutorMap.getSubjects().add(subjectDAO.findById(idSubject)
-                    .orElseThrow(() -> new BadRequestException("Subject " + idSubject + " does not exists")));
+        if(tutorVO.getSubject() != null) {
+            for (Long idSubject : tutorVO.getSubject()) {
+                tutorMap.getSubjects().add(subjectDAO.findById(idSubject)
+                        .orElseThrow(() -> new BadRequestException("Subject " + idSubject + " does not exists")));
+            }
         }
         //add table tutor_class_teach
-        for (Long idClassTeach : tutorVO.getClassTeach()) {
-            tutorMap.getClassTeaches().add(classTeachDAO.findById(idClassTeach).
-                    orElseThrow(() -> new BadRequestException("Class teach " + idClassTeach + "does not exists")));
+        if(tutorVO.getClassTeach() != null) {
+            for (Long idClassTeach : tutorVO.getClassTeach()) {
+                tutorMap.getClassTeaches().add(classTeachDAO.findById(idClassTeach).
+                        orElseThrow(() -> new BadRequestException("Class teach " + idClassTeach + "does not exists")));
+            }
         }
         //add table tutor_district
-        for (Long idDistrict : tutorVO.getDistrict()) {
-            tutorMap.getDistricts().add(districtDAO.findById(idDistrict).
-                    orElseThrow(() -> new BadRequestException("District " + idDistrict + "does not exists")));
+        if(tutorVO.getDistrict() != null) {
+            for (Long idDistrict : tutorVO.getDistrict()) {
+                tutorMap.getDistricts().add(districtDAO.findById(idDistrict).
+                        orElseThrow(() -> new BadRequestException("District " + idDistrict + "does not exists")));
+            }
         }
         //add table tutor_free_time
         for (FreeTimeVO freeTimeVO : tutorVO.getFreeTime()) {
@@ -177,14 +205,20 @@ public class TutorServiceImpl implements TutorService {
     }
 
     @Override
-    public List<Tutor> searchTutor(SearchVO searchVO) {
+    public Page<TutorInfoVO> searchTutor(SearchVO searchVO, Pageable pageable) {
         logger.info("Search tutor with : " + searchVO.getSubject());
-        return tutorDAO.findAll(Objects.requireNonNull(Objects.requireNonNull(Objects.requireNonNull(Specification.
+        List<Tutor> tutors = tutorDAO.findAll(Objects.requireNonNull(Objects.requireNonNull(Objects.requireNonNull(Specification.
                 where(TutorSpecification.withSubject(searchVO.getSubject(), TutorStatus.CHUA_NHAN_LOP))
                 .and(TutorSpecification.withClassTeach(searchVO.getClassTeach(), TutorStatus.CHUA_NHAN_LOP)))
                 .and(TutorSpecification.withDistrict(searchVO.getDistrict(), TutorStatus.CHUA_NHAN_LOP)))
                 .and(TutorSpecification.withLevel(searchVO.getLevel(), TutorStatus.CHUA_NHAN_LOP)))
                 .and(TutorSpecification.withGender(searchVO.getGender(), TutorStatus.CHUA_NHAN_LOP)));
+        List<TutorInfoVO> tutorInfoVOS = tutorMapper.toTutorsInfoVOList(tutors);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), tutorInfoVOS.size());
+        Page<TutorInfoVO> tutorInfoVOPage = new PageImpl<>
+                (tutorInfoVOS.subList(start, end), pageable, tutorInfoVOS.size());
+        return tutorInfoVOPage;
     }
 
     @Override
@@ -217,15 +251,11 @@ public class TutorServiceImpl implements TutorService {
     }
 
     @Override
-    public byte[] readBytesFromFile(Long idUser, Authentication auth) {
-        UserPrincipal userPrincipal = (UserPrincipal) auth.getPrincipal();
-        User user = userDAO.findByPhone(userPrincipal.getPhone()).orElseThrow(() ->
-                new UsernameNotFoundException("User not found with phone: " + auth.getName()));
-        if(!(idUser.equals(user.getId())))
-        {
-            throw new UsernameNotFoundException("Can not found user");
+    public byte[] readBytesFromFile(Long idTutor) {
+        if(!tutorDAO.existsById(idTutor)) {
+            throw new ResourceNotFoundException("Tutor", "id", idTutor);
         }
-        String fileName = getTutorByIdUser(idUser).getImage();
+        String fileName = getTutorById(idTutor).getImage();
         String filePath = "uploads\\" + fileName;
         FileInputStream fileInputStream = null;
         byte[] bytesArray = null;
@@ -235,7 +265,7 @@ public class TutorServiceImpl implements TutorService {
             //read file into bytes[]
             fileInputStream = new FileInputStream(file);
             int number = fileInputStream.read(bytesArray);
-            System.out.printf("Number " + number);
+            System.out.print("Number " + number);
         }catch (IOException e) {
             e.printStackTrace();
         }finally {

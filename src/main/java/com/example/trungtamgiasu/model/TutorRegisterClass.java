@@ -8,16 +8,16 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.Date;
 
-@Entity(name = "ClassRegister")
-@Table(name = "class_register")
+@Entity(name = "TutorRegisterClass")
+@Table(name = "tutor_register_class")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClassRegister {
+public class TutorRegisterClass {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_class_register")
+    @Column(name = "id_register")
     private Long id;
 
     @Column(nullable = false)

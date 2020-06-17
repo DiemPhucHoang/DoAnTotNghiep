@@ -1,19 +1,21 @@
 package com.example.trungtamgiasu.vo.Tutor;
 
+import com.example.trungtamgiasu.model.FreeTime;
 import com.example.trungtamgiasu.model.TutorStatus;
-import com.example.trungtamgiasu.vo.FreeTime.FreeTimeVO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
+import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TutorVO {
+public class TutorInfoVO {
     private Long id;
 
     @NotBlank
@@ -38,20 +40,22 @@ public class TutorVO {
     private String level;
 
     @NotBlank
-    private Long[] subject;
+    private List<String> subjects;
 
     @NotBlank
-    private Long[] classTeach;
+    private List<String> classTeaches;
 
     @NotBlank
-    private Long[] district;
+    private List<String> districts;
 
     @NotBlank
-    private FreeTimeVO[] freeTime;
+    private Set<FreeTime> freeTimes;
 
     private String moreInfo;
 
     private TutorStatus status;
 
     private String name;
+
+
 }

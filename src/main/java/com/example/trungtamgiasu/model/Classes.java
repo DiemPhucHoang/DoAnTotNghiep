@@ -1,5 +1,6 @@
 package com.example.trungtamgiasu.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,25 +26,26 @@ public class Classes {
     @Column(nullable = false)
     private String subject;
 
+    private String levelRequirement;
+
+    private String genderRequirement;
+
     @Column(nullable = false)
+    private String district;
+
     private String timeTeach;
 
     @Column(nullable = false)
     private String address;
 
     @Column(nullable = false)
-    private String district;
+    private double tuitionFee;
 
     @Column(nullable = false)
-    private double salary;
-
-    @Column(name = "service_fee", nullable = false)
-    private double serviceFee;
-
-    @Column(nullable = false)
-    private String status;
+    private ClassesStatus status;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "id_user", nullable = false)
     private User user;
 }

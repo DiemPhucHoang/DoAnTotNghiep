@@ -58,4 +58,10 @@ public class User {
         this.email = email;
         this.password = password;
     }
+
+    public User(String name, String phone, @Email String email) {
+        this.name = name;
+        this.phone = phone;
+        this.email = email;
+    }
 }

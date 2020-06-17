@@ -31,5 +31,5 @@ public class Invoice {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_class_register")
-    private ClassRegister classRegister;
+    private TutorRegisterClass classRegister;
 }

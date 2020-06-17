@@ -2,11 +2,15 @@ package com.example.trungtamgiasu.controller;
 
 import com.example.trungtamgiasu.service.TutorService;
 import com.example.trungtamgiasu.vo.SearchVO;
+import com.example.trungtamgiasu.vo.Tutor.TutorInfoVO;
 import com.example.trungtamgiasu.vo.Tutor.TutorVO;
 import com.example.trungtamgiasu.vo.payload.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -39,22 +43,24 @@ public class TutorController {
     }
 
     @GetMapping
-    public ApiResponse getAll() {
+    public ApiResponse getAll(@PageableDefault(size = 6) Pageable pageable) {
         logger.info("Get all tutors controller");
+        Page<TutorInfoVO> tutorInfoVOPage = tutorService.getAllByPage(pageable);
         return new ApiResponse(
                 true,
                 "Get all tutors successfully",
-                tutorService.getAll());
+                tutorInfoVOPage);
 
     }
 
-    @GetMapping("/spec")
-    public ApiResponse getAllBySearch(@RequestBody SearchVO searchVO) {
+    @PostMapping("/spec")
+    public ApiResponse getAllBySearch(@RequestBody SearchVO searchVO, @PageableDefault(size = 6)Pageable pageable) {
         logger.info("Get all tutors by search controller");
+        Page<TutorInfoVO> tutorInfoVOPage = tutorService.searchTutor(searchVO, pageable);
         return new ApiResponse(
                 true,
                 "Get all tutors by search successfully",
-                tutorService.searchTutor(searchVO));
+                tutorInfoVOPage);
     }
 
     @GetMapping("/{idTutor}")
@@ -77,14 +83,13 @@ public class TutorController {
         );
     }
 
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_TUTOR')")
-    @GetMapping("/image/{idUser}")
-    public ApiResponse readBytesArrayImage(@PathVariable("idUser") Long idUser, Authentication auth) {
-        logger.info("Read bytes array by idUser: " + idUser);
+    @GetMapping("/image/{idTutor}")
+    public ApiResponse readBytesArrayImage(@PathVariable("idTutor") Long idTutor) {
+        logger.info("Read bytes array by idTutor: " + idTutor);
         return new ApiResponse(
                 true,
                 "Successfully",
-                tutorService.readBytesFromFile(idUser, auth));
+                tutorService.readBytesFromFile(idTutor));
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_TUTOR')")
