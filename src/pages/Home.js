@@ -7,7 +7,7 @@ const FirstPart = () => (
         <div className="container-fluid">
             <div className="row">
                 <div className="col-md-6 animated zoomIn">
-                    <img className="img-fluid" src="image/ttgs.png"></img>
+                    <img className="img-fluid" src="image/ttgs.png" alt="ttgs"></img>
                 </div>
                 <div className="col-md-6">
                     <h1 className="animated bounceInDown" style={{animationDelay:"0.3s"}}>
@@ -68,7 +68,7 @@ const SecondPart = () => (
                 </div>
             </div>
         </div>
-        <style jsx>
+        <style jsx="true">
             {`
             .second-part{
                 background-image: url('image/second.png');

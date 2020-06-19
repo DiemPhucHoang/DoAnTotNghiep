@@ -22,7 +22,7 @@ class Header extends Component {
         return (
             <nav className="navbar navbar-expand-lg navbar-light container">
                 <a className="navbar-brand" href="/" style={{marginRight: '50px'}}>
-                    <img style={{ height: '100px' }} src="image/logo.png"></img>
+                    <img style={{ height: '100px' }} src="image/logo.png" alt="logo"></img>
                 </a>
                 <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon" />
@@ -31,8 +31,10 @@ class Header extends Component {
                     <ul className="navbar-nav mr-auto">
                         <MenuLink {...this.props} title="Trang chủ" name="" />
                         <MenuLink {...this.props} title="Tìm gia sư" name="tim-gia-su" />
-                        <MenuLink {...this.props} title="Làm gia sư" name="lam-gia-su" />
-                        <MenuLink {...this.props} title="Liên hệ" name="lienhe" />
+                       
+                        <MenuLink {...this.props} title="Trở thành gia sư" name="tro-thanh-gia-su" />
+                        <MenuLink {...this.props} title="Lớp mới" name="lop-moi" />
+                        <MenuLink {...this.props} title="Liên hệ" name="lien-he" />
                     </ul>
                 </div>
             </nav>
