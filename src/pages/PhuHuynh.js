@@ -36,39 +36,21 @@ class PhuHuynh extends Component {
         })
     }
 
-
-
     render() {
         var { submitRequest } = this.state;
         return (
             <div className="bg-color">
-                <div className="container ">
+                <div className="p-5 mx-5">
                     {/* Tim gia su nhanh */}
                     <Card variant="elevation" elevation={3} >
-                        <Grid container spacing={3} style={{ padding: '20px' }}>
+                        <Grid container spacing={3} style={{ padding: '20px'}}>
                             <Grid item xs={2} >
                                 <p style={{ textAlign: 'center' }}><b>Tìm gia sư nhanh</b></p>
                                 <img src="image/find_tutor.png" style={{ width: '100%' }} />
                             </Grid>
                             <Grid item xs={10}>
-                                <Grid container spacing={3}>
-                                    <Grid item xs={12}>
-                                        <TextField
-                                            fullWidth
-                                            id="standard-select-currency"
-                                            label="Nhập từ khóa hoặc tên gia sư"
-                                            variant="outlined"
-                                            size="small"
-                                            InputProps={{
-                                                endAdornment: (
-                                                    <InputAdornment position="start">
-                                                        <Search color="disabled" />
-                                                    </InputAdornment>
-                                                )
-                                            }}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={4}>
+                                <Grid container spacing={3} style={{paddingTop: "25px"}}>
+                                    <Grid item xs={4} >
                                         <TextField
                                             id="standard-select-currency"
                                             select
@@ -123,7 +105,7 @@ class PhuHuynh extends Component {
                                         </TextField>
                                     </Grid>
                                 </Grid>
-                                <Grid container spacing={3}>
+                                <Grid container spacing={3} style={{paddingTop: "20px"}}>
                                     <Grid item xs={4}>
                                         <TextField
                                             id="standard-select-currency"
@@ -248,39 +230,17 @@ class PhuHuynh extends Component {
                                                         size="small"
                                                     />
                                                 </Grid>
-                                                <Grid item xs={3}>
-                                                    <TextField
-                                                        select
+                                                <Grid item xs={6}>
+                                                <TextField
                                                         fullWidth
                                                         id="standard-select-currency"
-                                                        label="Số buổi dạy/tuần"
+                                                        label="Thời gian dạy"
+                                                        placeholder="Thứ 2 4 6, từ 17h - 19h"
                                                         variant="outlined"
                                                         size="small"
-                                                    >
-                                                        <MenuItem key="1" value="1">1</MenuItem>
-                                                        <MenuItem key="2" value="2">2</MenuItem>
-                                                        <MenuItem key="3" value="3">3</MenuItem>
-                                                        <MenuItem key="4" value="4">4</MenuItem>
-                                                        <MenuItem key="5" value="5">5</MenuItem>
-                                                        <MenuItem key="6" value="6">6</MenuItem>
-                                                        <MenuItem key="7" value="7">7</MenuItem>
-                                                    </TextField>
+                                                    />
                                                 </Grid>
-                                                <Grid item xs={3}>
-                                                    <TextField
-                                                        select
-                                                        fullWidth
-                                                        id="standard-select-currency"
-                                                        label="Số giờ dạy/buổi"
-                                                        variant="outlined"
-                                                        size="small"
-                                                    >
-                                                        <MenuItem key="1" value="1">1 giờ</MenuItem>
-                                                        <MenuItem key="1.5" value="1.5">1.5 giờ</MenuItem>
-                                                        <MenuItem key="2" value="2">2 giờ</MenuItem>
-                                                        <MenuItem key="2.5" value="2.5">2.5 giờ</MenuItem>
-                                                    </TextField>
-                                                </Grid>
+                                                
                                                 <Grid item xs={6}>
                                                     <TextField
                                                         id="standard-select-currency"
@@ -515,17 +475,6 @@ class PhuHuynh extends Component {
                             <Pagination count={5} color="primary" />
                         </div>
                         <br /><br />
-                        <style jsx>
-                            {`
-                            .paper{
-                                transition: transform 0.5s;
-                            }
-                            .paper:hover{
-                                transform: scale(1.05 , 1.05);
-                                // box-shadow: 5px 5px 2px, -5px -5px 2px;
-                            }                   
-                            `}
-                        </style>
                     </Paper>
                 </div>
             </div>

@@ -124,38 +124,14 @@ class ChonGiaSu extends Component {
                                                 size="small"
                                             />
                                         </Grid>
-                                        <Grid item xs={3}>
+                                        <Grid item xs={6}>
                                             <TextField
-                                                select
                                                 fullWidth
                                                 id="standard-select-currency"
-                                                label="Số buổi dạy/tuần"
+                                                label="Thời gian dạy"
                                                 variant="outlined"
                                                 size="small"
-                                            >
-                                                <MenuItem key="1" value="1">1</MenuItem>
-                                                <MenuItem key="2" value="2">2</MenuItem>
-                                                <MenuItem key="3" value="3">3</MenuItem>
-                                                <MenuItem key="4" value="4">4</MenuItem>
-                                                <MenuItem key="5" value="5">5</MenuItem>
-                                                <MenuItem key="6" value="6">6</MenuItem>
-                                                <MenuItem key="7" value="7">7</MenuItem>
-                                            </TextField>
-                                        </Grid>
-                                        <Grid item xs={3}>
-                                            <TextField
-                                                select
-                                                fullWidth
-                                                id="standard-select-currency"
-                                                label="Số giờ dạy/buổi"
-                                                variant="outlined"
-                                                size="small"
-                                            >
-                                                <MenuItem key="1" value="1">1 giờ</MenuItem>
-                                                <MenuItem key="1.5" value="1.5">1.5 giờ</MenuItem>
-                                                <MenuItem key="2" value="2">2 giờ</MenuItem>
-                                                <MenuItem key="2.5" value="2.5">2.5 giờ</MenuItem>
-                                            </TextField>
+                                            />
                                         </Grid>
                                         <Grid item xs={6}>
                                             <TextField

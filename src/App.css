@@ -29,7 +29,6 @@ a:hover {
   margin-right:10px
 }
 .bg-color {
-  /* background-image: linear-gradient(to bottom, #ffffff, #e7eff6, #c8e2e5, #b3d3c6, #b4c09f); */
   background-image: linear-gradient(to top, #ffffff, #f8f9fd, #eef4fb, #e2f0f8, #d5ecf2, #d5ecf2, #d5ecf2, #d5ecf2, #e2f0f8, #eef4fb, #f8f9fd, #ffffff);
 }
 .pull-right {
@@ -63,4 +62,9 @@ a:hover {
   margin-left: 30px !important;
 }
 
-
+.paper{
+  transition: transform 0.5s;
+}
+.paper:hover{
+  transform: scale(1.05 , 1.05);
+}   
