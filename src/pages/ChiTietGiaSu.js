@@ -7,10 +7,10 @@ class ChiTietGiaSu extends Component {
             <div className="bg-color">
                 <div className="p-5 mx-5">
                     <Grid container spacing={3}>
-                        <Grid item xs={3}>
+                        <Grid item xs={4}>
                             <Paper>
                                 <div style={{ textAlign: 'center', padding: '15px' }}>
-                                    <img src="image/avata.jpg" class="rounded-circle" style={{ width: '70%' }} />
+                                    <img src="image/avata.jpg" class="rounded-circle" style={{ width: '50%' }} />
                                     <br /><br />
                                     <h6>HOÀNG THỊ DIỄM PHÚC</h6>
                                     <p>Sinh viên</p>
@@ -33,7 +33,7 @@ class ChiTietGiaSu extends Component {
                                 </div>
                             </Paper>
                         </Grid>
-                        <Grid item xs={9}>
+                        <Grid item xs={8}>
                             <Paper>
                                 <AppBar position="static">
                                     <Toolbar variant="dense">
@@ -89,13 +89,13 @@ class ChiTietGiaSu extends Component {
                                                 <p className="mr-30">Thứ 2</p>
                                                 <ul>
                                                     <li className="calendar-normal">
-                                                        <Button disabled variant="contained">Sáng</Button>
+                                                        <Button disabled variant="contained" size="small">Sáng</Button>
                                                     </li>
                                                     <li className="calendar-normal">
-                                                        <Button disabled variant="contained">Chiều</Button>
+                                                        <Button disabled variant="contained" size="small">Chiều</Button>
                                                     </li>
                                                     <li className="calendar-active">
-                                                        <Button variant="contained" color="secondary">&ensp;&nbsp;Tối&ensp;&nbsp;</Button>
+                                                        <Button variant="contained" size="small" color="secondary">&ensp;&nbsp;Tối&ensp;&nbsp;</Button>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -103,13 +103,13 @@ class ChiTietGiaSu extends Component {
                                                 <p className="mr-30">Thứ 3</p>
                                                 <ul>
                                                     <li className="calendar-normal">
-                                                        <Button disabled variant="contained">Sáng</Button>
+                                                        <Button disabled variant="contained" size="small">Sáng</Button>
                                                     </li>
                                                     <li className="calendar-normal">
-                                                        <Button disabled variant="contained">Chiều</Button>
+                                                        <Button disabled variant="contained" size="small">Chiều</Button>
                                                     </li>
                                                     <li className="calendar-active">
-                                                        <Button variant="contained" color="secondary">&ensp;&nbsp;Tối&ensp;&nbsp;</Button>
+                                                        <Button variant="contained" size="small" color="secondary">&ensp;&nbsp;Tối&ensp;&nbsp;</Button>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -117,13 +117,13 @@ class ChiTietGiaSu extends Component {
                                                 <p className="mr-30">Thứ 4</p>
                                                 <ul>
                                                     <li className="calendar-normal">
-                                                        <Button variant="contained" color="secondary">Sáng</Button>
+                                                        <Button variant="contained" size="small" color="secondary">Sáng</Button>
                                                     </li>
                                                     <li className="calendar-normal">
-                                                        <Button disabled variant="contained">Chiều</Button>
+                                                        <Button disabled variant="contained" size="small">Chiều</Button>
                                                     </li>
                                                     <li className="calendar-active">
-                                                        <Button variant="contained" color="secondary">&ensp;&nbsp;Tối&ensp;&nbsp;</Button>
+                                                        <Button variant="contained" size="small" color="secondary">&ensp;&nbsp;Tối&ensp;&nbsp;</Button>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -131,13 +131,13 @@ class ChiTietGiaSu extends Component {
                                                 <p className="mr-30">Thứ 5</p>
                                                 <ul>
                                                     <li className="calendar-normal">
-                                                        <Button disabled variant="contained">Sáng</Button>
+                                                        <Button disabled variant="contained" size="small">Sáng</Button>
                                                     </li>
                                                     <li className="calendar-normal">
-                                                        <Button disabled variant="contained">Chiều</Button>
+                                                        <Button disabled variant="contained" size="small">Chiều</Button>
                                                     </li>
                                                     <li className="calendar-active">
-                                                        <Button disabled variant="contained">&ensp;&nbsp;Tối&ensp;&nbsp;</Button>
+                                                        <Button disabled variant="contained" size="small">&ensp;&nbsp;Tối&ensp;&nbsp;</Button>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -145,13 +145,13 @@ class ChiTietGiaSu extends Component {
                                                 <p className="mr-30">Thứ 6</p>
                                                 <ul>
                                                     <li className="calendar-normal">
-                                                        <Button variant="contained" color="secondary">Sáng</Button>
+                                                        <Button variant="contained" color="secondary" size="small">Sáng</Button>
                                                     </li>
                                                     <li className="calendar-normal">
-                                                        <Button disabled variant="contained">Chiều</Button>
+                                                        <Button disabled variant="contained" size="small">Chiều</Button>
                                                     </li>
                                                     <li className="calendar-active">
-                                                        <Button disabled variant="contained">&ensp;&nbsp;Tối&ensp;&nbsp;</Button>
+                                                        <Button disabled variant="contained" size="small">&ensp;&nbsp;Tối&ensp;&nbsp;</Button>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -159,13 +159,13 @@ class ChiTietGiaSu extends Component {
                                                 <p className="mr-30">Thứ 7</p>
                                                 <ul>
                                                     <li className="calendar-normal">
-                                                        <Button disabled variant="contained">Sáng</Button>
+                                                        <Button disabled variant="contained" size="small">Sáng</Button>
                                                     </li>
                                                     <li className="calendar-normal">
-                                                        <Button variant="contained" color="secondary">Chiều</Button>
+                                                        <Button variant="contained" color="secondary" size="small">Chiều</Button>
                                                     </li>
                                                     <li className="calendar-active">
-                                                        <Button variant="contained" color="secondary">&ensp;&nbsp;Tối&ensp;&nbsp;</Button>
+                                                        <Button variant="contained" color="secondary" size="small">&ensp;&nbsp;Tối&ensp;&nbsp;</Button>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -173,13 +173,13 @@ class ChiTietGiaSu extends Component {
                                                 <p className="mr-30">Chủ nhật</p>
                                                 <ul>
                                                     <li className="calendar-normal">
-                                                        <Button disabled variant="contained">Sáng</Button>
+                                                        <Button disabled variant="contained" size="small">Sáng</Button>
                                                     </li>
                                                     <li className="calendar-normal">
-                                                        <Button disabled variant="contained">Chiều</Button>
+                                                        <Button disabled variant="contained" size="small">Chiều</Button>
                                                     </li>
                                                     <li className="calendar-active">
-                                                        <Button variant="contained" color="secondary">&ensp;&nbsp;Tối&ensp;&nbsp;</Button>
+                                                        <Button variant="contained" size="small" color="secondary">&ensp;&nbsp;Tối&ensp;&nbsp;</Button>
                                                     </li>
                                                 </ul>
                                             </div>

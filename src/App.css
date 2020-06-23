@@ -67,4 +67,9 @@ a:hover {
 }
 .paper:hover{
   transform: scale(1.05 , 1.05);
-}   
+}
+
+.row-calendar ul li {
+  display: flex;
+  list-style: none;
+}
