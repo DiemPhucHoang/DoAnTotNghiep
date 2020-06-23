@@ -10,6 +10,7 @@ import DangKyLamGiaSu from './pages/DangKyLamGiaSu';
 import LopMoi from './pages/LopMoi';
 import DanhGiaGiaSu from './pages/DanhGiaGiaSu';
 import ChiTietGiaSu from './pages/ChiTietGiaSu';
+import HoSoGiaSu from './pages/HoSoGiaSu';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/lop-moi" exact={true} component={LopMoi} />
         <Route path="/danh-gia-gia-su" exact={true} component={DanhGiaGiaSu} />
         <Route path="/chi-tiet-gia-su" exact={true} component={ChiTietGiaSu} />
+        <Route path="/ho-so-gia-su" exact={true} component={HoSoGiaSu} />
       </Switch>
       <Footer />
     </Router>

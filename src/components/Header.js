@@ -30,7 +30,6 @@ class Header extends Component {
                     <ul className="navbar-nav mr-auto">
                         <MenuLink {...this.props} title="TRANG CHỦ" name="" />
                         <MenuLink {...this.props} title="TÌM GIA SƯ" name="tim-gia-su" />
-                        {/* <MenuLink {...this.props} title="Đánh giá gia sư" name="danh-gia-gia-su" /> */}
                         <MenuLink {...this.props} title="LÀM GIA SƯ" name="lam-gia-su" />
                         <MenuLink {...this.props} title="LỚP MỚI" name="lop-moi" />
                         <MenuLink {...this.props} title="ĐĂNG NHẬP" name="lien-he" />

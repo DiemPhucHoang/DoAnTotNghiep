@@ -37,7 +37,7 @@ const SecondPart = () => (
         <div className="card-deck mx-5 py-5">
             <div className="card shadow p-4 " style={{ borderRadius: '30px' }}>
                 <div className="card-body ">
-                    <h1 className="card-title">Tìm kiếm gia sư</h1>
+                    <h1 className="card-title">Tìm gia sư</h1>
                     <p className="card-text">
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. In maximus tincidunt erat pellentesque venenatis.
                         Maecenas molestie quis sem nec laoreet. Nam tellus orci, tincidunt vitae massa ac, auctor dignissim nulla.
@@ -53,7 +53,7 @@ const SecondPart = () => (
             <div className="card shadow p-4" style={{ borderRadius: '30px' }}>
                 <img className="card-img-top d-block mx-auto my-4" src="image/profile.png" alt="2nd card" style={{ width: '40%', height: 'auto' }} />
                 <div className="card-body">
-                    <h1 className="card-title">Trở thành gia sư</h1>
+                    <h1 className="card-title">Làm gia sư</h1>
                     <p className="card-text">
                         In maximus tincidunt erat pellentesque venenatis. Maecenas molestie quis sem nec laoreet.
                         Nam tellus orci, tincidunt vitae massa ac, auctor dignissim nulla. Duis rutrum tristique mauris eget pharetra.

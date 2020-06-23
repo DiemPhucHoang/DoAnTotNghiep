@@ -5,7 +5,7 @@ class ChiTietGiaSu extends Component {
     render() {
         return (
             <div className="bg-color">
-                <div className="container ">
+                <div className="p-5 mx-5">
                     <Grid container spacing={3}>
                         <Grid item xs={3}>
                             <Paper>
