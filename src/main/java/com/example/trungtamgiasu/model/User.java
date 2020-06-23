@@ -1,5 +1,6 @@
 package com.example.trungtamgiasu.model;
 
+import com.example.trungtamgiasu.model.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,8 +8,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity(name = "User")
 @Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = "phone")})
@@ -38,16 +37,18 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"),
-                                    inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles = new HashSet<>();
+    @Column(name = "role", nullable = false)
+    private Role role;
 
-    public User(String name, String phone, String address, @Email String email, String password) {
+    @OneToOne(mappedBy="user")
+    private Tutor tutor;
+
+    public User(String name, String phone, String address, @Email String email, String password, Role role) {
         this.name = name;
         this.phone = phone;
         this.address = address;
         this.email = email;
         this.password = password;
+        this.role = role;
     }
 }

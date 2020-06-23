@@ -1,6 +1,9 @@
-package com.example.trungtamgiasu.vo.User;
+package com.example.trungtamgiasu.vo;
 
+import com.example.trungtamgiasu.model.User;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.Email;
@@ -9,6 +12,8 @@ import javax.validation.constraints.Size;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserVO {
     @NotBlank
     private String name;
@@ -29,4 +34,12 @@ public class UserVO {
 
     private String role;
 
+    public UserVO(User user) {
+        this.name = user.getName();
+        this.phone = user.getPhone();
+        this.address = user.getAddress();
+        this.email = user.getEmail();
+        this.password = user.getPassword();
+        this.role = user.getRole().getKey();
+    }
 }
