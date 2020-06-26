@@ -15,7 +15,7 @@ class ThongTinChung extends Component {
                     <img
                         src={`data:image/jpg;base64,${tutorDetail.image}`}
                         className="rounded-circle"
-                        style={{ width: '70%' }}
+                        style={{ width: '50%' }}
                         alt="avatar" />
                     <br /><br />
                     <h6>{tutorDetail.name}</h6>

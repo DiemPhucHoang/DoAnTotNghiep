@@ -86,7 +86,6 @@ class PhuHuynh extends Component {
     }
 
     onSearchTutors = (search) => {
-        console.log("search info: ", search);
         this.setState({
             activePage: 1,
           }, () => {    
@@ -148,13 +147,14 @@ class PhuHuynh extends Component {
         const {tutor} = this.props;
         const content = tutor.content;
         let {subjects, districts, classTeaches} = this.state;
-        
+        let {history} = this.props;
         return (
             <div className="bg-color">
-                <div className="container ">
+                <div className="p-5 mx-5">
                     <TimGiaSuNhanh 
                         onSearchTutors={this.onSearchTutors} 
-                        subjects={subjects} districts={districts} 
+                        subjects={subjects} 
+                        districts={districts} 
                         classTeaches={classTeaches}
                     />
                     <br />
@@ -175,6 +175,7 @@ class PhuHuynh extends Component {
                                 subjects={subjects} 
                                 districts={districts} 
                                 classTeaches={classTeaches}
+                                history={history}
                             />
                         </p>{" "}
                         <br />
@@ -201,7 +202,7 @@ class PhuHuynh extends Component {
 const mapStateToProps = state => {
     return {
         tutor: state.tutor,
-        search: state.search
+        search: state.searchTutor
     };
 };
 

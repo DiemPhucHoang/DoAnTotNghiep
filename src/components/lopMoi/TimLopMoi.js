@@ -1,11 +1,11 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
     Card, Grid, TextField, MenuItem, Button
 } from '@material-ui/core';
-import { connect } from "react-redux";
-import { actSearchInputRequest } from "../../actions/tutor";
+import { connect } from 'react-redux';
+import {actSearchInputClassRequest} from './../../actions/classes';
 
-class TimGiaSuNhanh extends Component {
+class TimLopMoi extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -17,7 +17,7 @@ class TimGiaSuNhanh extends Component {
         }
     }
 
-    onChange = event => {
+    onChangeClass = (event) => {
         const { name, value } = event.target;
         this.setState({
             [name]: value
@@ -35,25 +35,25 @@ class TimGiaSuNhanh extends Component {
             gender: gender,
             isSearch: true
         }
-        this.props.onSearchTutors(search);
-        this.props.onSearchInput(search);
+        this.props.onSearchClasses(search);
+        this.props.onSearchInputClass(search);
     }
 
-    render() {
+      render() {
         let { subjects, classTeaches, districts } = this.props;
         const genderArr = [{ value: "Nam" }, { value: "Nữ" }];
         const levelArr = [{value: "Sinh viên"}, {value: "Giáo viên"}, {value: "Thạc sĩ"}, {value: "Cử nhận sư phạm"}]; 
         const hasSubjects = subjects && subjects.length > 0;
         const hasDistricts = districts && districts.length > 0;
         const hasClassTeaches = classTeaches && classTeaches.length > 0;
-        return (
-            <Card variant="elevation" elevation={3}>
+            return (
+                <Card variant="elevation" elevation={3}>
                 <Grid container spacing={3} style={{ padding: "20px" }}>
                     <Grid item xs={2}>
                         <p style={{ textAlign: "center" }}>
-                            <b>Tìm gia sư nhanh</b>
+                            <b>Tìm lớp phù hợp</b>
                         </p>
-                        <img src="image/find_tutor.png" style={{ width: "100%" }} alt="find-tutor" />
+                        <img src="image/web_search.png" style={{ width: "100%" }} alt="find-tutor" />
                     </Grid>
                     <Grid item xs={10}>
                         <form onSubmit={this.handleSubmit}>
@@ -70,7 +70,7 @@ class TimGiaSuNhanh extends Component {
                                         select
                                         label="Chọn môn học"
                                         name="subject"
-                                        onChange={this.onChange}
+                                        onChange={this.onChangeClass}
                                         variant="outlined"
                                         size="small"
                                         fullWidth
@@ -92,7 +92,7 @@ class TimGiaSuNhanh extends Component {
                                         variant="outlined"
                                         fullWidth
                                         size="small"
-                                        onChange={this.onChange}
+                                        onChange={this.onChangeClass}
                                         value={this.state.classTeach}
                                     >
                                         {hasClassTeaches && classTeaches.map((option) => (
@@ -111,7 +111,7 @@ class TimGiaSuNhanh extends Component {
                                         variant="outlined"
                                         size="small"
                                         fullWidth
-                                        onChange={this.onChange}
+                                        onChange={this.onChangeClass}
                                         value={this.state.district}
                                     >
                                         {hasDistricts && districts.map((option) => (
@@ -135,7 +135,7 @@ class TimGiaSuNhanh extends Component {
                                         variant="outlined"
                                         fullWidth
                                         size="small"
-                                        onChange={this.onChange}
+                                        onChange={this.onChangeClass}
                                         value={this.state.level}
                                     >
                                         {levelArr.map((option) => (
@@ -154,7 +154,7 @@ class TimGiaSuNhanh extends Component {
                                         variant="outlined"
                                         size="small"
                                         fullWidth
-                                        onChange={this.onChange}
+                                        onChange={this.onChangeClass}
                                         value={this.state.gender}
                                     >
                                         {genderArr.map((option) => (
@@ -167,22 +167,23 @@ class TimGiaSuNhanh extends Component {
                                 <Grid item xs={4}>
                                     <Button label="Submit" type="submit" variant="contained" color="secondary" fullWidth>
                                         Tìm kiếm
-                				</Button>
+                                </Button>
                                 </Grid>
                             </Grid>
                         </form>
                     </Grid>
                 </Grid>
             </Card>
-        );
-    }
+            );
+      }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        onSearchInput: (search) => {
-            dispatch(actSearchInputRequest(search));
+        onSearchInputClass: (search) => {
+            dispatch(actSearchInputClassRequest(search));
         }
     };
 };
-export default connect(null, mapDispatchToProps)(TimGiaSuNhanh);
+
+export default connect(null, mapDispatchToProps)(TimLopMoi);

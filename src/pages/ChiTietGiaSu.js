@@ -27,12 +27,12 @@ class ChiTietGiaSu extends Component {
         return (
             
             <div className="bg-color">
-                <div className="container">
+                <div className="p-5 mx-5">
                     <Grid container spacing={3}>
-                        <Grid item xs={3}>
+                        <Grid item xs={4}>
                             <ThongTinChung tutorDetail={tutor} chooseTutor={this.chooseTutor}/>
                         </Grid>
-                        <Grid item xs={9}>
+                        <Grid item xs={8}>
                             <ThongTinChiTiet tutorDetail={tutor} />
                         </Grid>
                     </Grid>

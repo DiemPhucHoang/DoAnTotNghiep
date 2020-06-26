@@ -22,7 +22,7 @@ class GiaSuItem extends Component {
         return (
             <Grid item xs={4} className="paper">
 
-                <Paper elevation={3} style={{ padding: "10px", height: '350px' }}>
+                <Paper elevation={3} style={{ padding: "10px", height: '370px' }}>
                     <Grid container spacing={3}>
                         <Grid item xs={4}>
                             <img
@@ -43,6 +43,8 @@ class GiaSuItem extends Component {
                             <p>Năm sinh: {tutorItem.yearOfBirth}</p>
                             <p>Môn dạy: {subjects.join(', ')}</p>
                             <p>Khu vực: {districts.join(', ')}</p>
+                            <p>Yêu cầu: {tutorItem.salaryPerHour} vnđ/h</p>
+                            
                             <p>
                                 <Link to={`/chi-tiet-gia-su/${tutorItem.id}`}>
                                     <Button

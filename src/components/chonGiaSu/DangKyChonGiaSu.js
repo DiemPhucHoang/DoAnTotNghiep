@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
     CardContent, Button, Grid, TextField, MenuItem
 } from '@material-ui/core';
-import {actCreateClassesRequest} from './../../actions/classes';
+import { actCreateClassesRequest } from './../../actions/classes';
 import { connect } from "react-redux";
 
 class DangKyChonGiaSu extends Component {
@@ -10,10 +10,7 @@ class DangKyChonGiaSu extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            classInfo:{
-               
-            },
-            
+            classInfo: {}
         }
     }
 
@@ -23,41 +20,25 @@ class DangKyChonGiaSu extends Component {
         this.props.tutorItem.forEach(tutor => {
             idArr.push(tutor.id);
         });
-        console.log(' idArr: ',  idArr);
         this.setState((prevState) => ({
             classInfo: {
-              ...prevState.classInfo,
-              idTutors: idArr
+                ...prevState.classInfo,
+                idTutors: idArr
             },
-        }));
-
-        this.props.onCreateClass(this.state.classInfo);
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        if (
-          JSON.stringify(this.props.tutorItem) !==
-          JSON.stringify(prevProps.tutorItem)
-        ) {
-            let idArr = [];
-            this.props.tutorItem.forEach(tutor => {
-                idArr.push(tutor.id);
-            });
-            this.setState((prevState) => ({
-                classInfo: {
-                  ...prevState.classInfo,
-                  idTutors: idArr
-                },
-            }));
-        }
+        }), () => {
+            let { history } = this.props;
+            let hasChooseTutors = true;
+            this.props.onCreateClass(this.state.classInfo, hasChooseTutors, history);
+        })
+        
     }
 
     onHandleChooseTutor = (event) => {
-        let {name, value} = event.target;
+        let { name, value } = event.target;
         this.setState((prevState) => ({
             classInfo: {
-              ...prevState.classInfo,
-              [name]: value,
+                ...prevState.classInfo,
+                [name]: value,
             },
         }));
     }
@@ -85,10 +66,10 @@ class DangKyChonGiaSu extends Component {
                                     onChange={this.onHandleChooseTutor}
                                 >
                                     {hasSubjects && subjects.map((option) => (
-                                            <MenuItem key={option.subjectName} value={option.subjectName}>
-                                                {option.subjectName}
-                                            </MenuItem>
-                                        ))}
+                                        <MenuItem key={option.subjectName} value={option.subjectName}>
+                                            {option.subjectName}
+                                        </MenuItem>
+                                    ))}
                                 </TextField>
                             </Grid>
                             <Grid item xs={6}>
@@ -104,10 +85,57 @@ class DangKyChonGiaSu extends Component {
                                     onChange={this.onHandleChooseTutor}
                                 >
                                     {hasClassTeaches && classTeaches.map((option) => (
-                                            <MenuItem key={option.classTeachName} value={option.classTeachName}>
-                                                {option.classTeachName}
-                                            </MenuItem>
-                                        ))}
+                                        <MenuItem key={option.classTeachName} value={option.classTeachName}>
+                                            {option.classTeachName}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    id="standard-select-currency"
+                                    select
+                                    name="levelRequirement"
+                                    label="Chọn trình độ gia sư"
+                                    variant="outlined"
+                                    fullWidth
+                                    size="small"
+                                    onChange={this.onHandleChooseTutor}
+                                >
+                                    <MenuItem key="Giáo viên" value="Giáo viên">
+                                        Giáo viên
+                                        </MenuItem>
+                                    <MenuItem key="Sinh viên" value="Sinh viên">
+                                        Sinh viên
+                                        </MenuItem>
+                                    <MenuItem key="Thạc sỹ" value="Thạc sỹ">
+                                        Thạc sỹ
+                                        </MenuItem>
+                                    <MenuItem key="Cử nhân sư phạm" value="Cử nhân sư phạm">
+                                        Cử nhân sư phạm
+                                        </MenuItem>
+                                </TextField>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    id="standard-select-currency"
+                                    select
+                                    name="genderRequirement"
+                                    label="Chọn giới tính gia sư"
+                                    variant="outlined"
+                                    size="small"
+                                    fullWidth
+                                    onChange={this.onHandleChooseTutor}
+                                >
+                                    <MenuItem key="Nam" value="Nam">
+                                        Nam
+                                        </MenuItem>
+                                    <MenuItem key="Nữ" value="Nữ">
+                                        Nữ
+                                        </MenuItem>
+                                    <MenuItem key="Không yêu cầu" value="Không yêu cầu">
+                                        Không yêu cầu
+                                        </MenuItem>
                                 </TextField>
                             </Grid>
                             <Grid item xs={6}>
@@ -146,11 +174,11 @@ class DangKyChonGiaSu extends Component {
                                     fullWidth
                                     onChange={this.onHandleChooseTutor}
                                 >
-                                     {hasDistricts && districts.map((option) => (
-                                            <MenuItem key={option.districtName} value={option.districtName}>
-                                                {option.districtName}
-                                            </MenuItem>
-                                        ))}
+                                    {hasDistricts && districts.map((option) => (
+                                        <MenuItem key={option.districtName} value={option.districtName}>
+                                            {option.districtName}
+                                        </MenuItem>
+                                    ))}
                                 </TextField>
                             </Grid>
                             <Grid item xs={6}>
@@ -212,8 +240,9 @@ class DangKyChonGiaSu extends Component {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onCreateClass: (classInfo) => {
-            dispatch(actCreateClassesRequest(classInfo));
+        onCreateClass: (classInfo, hasChooseTutors, history) => {
+            console.log('classInfo: ', classInfo);
+            dispatch(actCreateClassesRequest(classInfo, hasChooseTutors, history));
         }
     };
 };

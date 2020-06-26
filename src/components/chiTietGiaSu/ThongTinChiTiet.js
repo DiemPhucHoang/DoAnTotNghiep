@@ -4,10 +4,10 @@ import ThoiGianDay from './ThoiGianDay';
 
 class ThongTinChiTiet extends Component {
    render() {
-      let { tutorDetail } = this.props;
-      let { subjects } = tutorDetail;
-      let { classTeaches } = tutorDetail;
-      let { districts } = tutorDetail;
+      const { tutorDetail } = this.props;
+      const { subjects } = tutorDetail;
+      const { classTeaches } = tutorDetail;
+      const { districts } = tutorDetail;
       const hasValue = subjects && subjects.length > 0 && classTeaches && classTeaches.length > 0
          && districts && districts.length > 0;
       return (
@@ -16,7 +16,7 @@ class ThongTinChiTiet extends Component {
                <Toolbar variant="dense">
                   <Typography variant="h6" color="inherit">
                      Thông tin chi tiết
-                        </Typography>
+                  </Typography>
                </Toolbar>
             </AppBar>
             {hasValue && (
@@ -50,10 +50,10 @@ class ThongTinChiTiet extends Component {
                            <TableCell>Khu vực dạy</TableCell>
                            <TableCell><b>{districts.join(', ')}</b></TableCell>
                         </TableRow>
-                        {/* <TableRow>
-                                 <TableCell>Yêu cầu lương</TableCell>
-                                 <TableCell><b></b></TableCell>
-                             </TableRow> */}
+                        <TableRow>
+                              <TableCell>Yêu cầu lương</TableCell>
+                              <TableCell><b>{tutorDetail.salaryPerHour} vnđ/h</b></TableCell>
+                        </TableRow>
                      </TableBody>
                   </Table>
                </div>
@@ -63,7 +63,7 @@ class ThongTinChiTiet extends Component {
                <Toolbar variant="dense">
                   <Typography variant="h6" color="inherit">
                      Thời gian dạy
-                        </Typography>
+                  </Typography>
                </Toolbar>
             </AppBar>
             <ThoiGianDay freeTimes={tutorDetail.freeTimes}/>

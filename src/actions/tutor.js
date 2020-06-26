@@ -27,15 +27,12 @@ export const actFetchTutors = tutors => {
 export const actSearchTutorsRequest = (searchInput, page) => {
     return dispatch => {
       return callApi(
-        `tutor/spec?page=${page}`, "POST", searchInput).then(res => {
+        `tutor/search?page=${page}`, "POST", searchInput).then(res => {
           if (res.status === 200) {
             dispatch(actSearchTutors(res.data));
           }
         }).catch(error => {
-          notification.error({
-            message: "Error ",
-            description: error.message
-          });
+          console.log(error.message);
         })
     }
   }
@@ -90,6 +87,7 @@ export const actChooseTutor = tutor => {
   }
 }
 
+//delete choose tutor
 export const actDeleteChooseTutor = id => {
   return {
     type: Types.DELETE_CHOOSE_TUTOR,

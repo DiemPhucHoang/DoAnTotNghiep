@@ -24,7 +24,9 @@ class DangYeuCauTimGiaSu extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         this.props.onCloseSubmitRequest();
-        this.props.onCreateClass(this.state.classInfo);
+        let hasChooseTutors = false;
+        let {history} = this.props;
+        this.props.onCreateClass(this.state.classInfo, hasChooseTutors, history);
         
         
     }
@@ -100,14 +102,14 @@ class DangYeuCauTimGiaSu extends Component {
                                     <TextField
                                         id="standard-select-currency"
                                         select
-                                        name="level"
+                                        name="levelRequirement"
                                         label="Chọn trình độ gia sư"
                                         variant="outlined"
                                         fullWidth
                                         size="small"
                                         onChange={this.onChange}
                                     >
-                                        <MenuItem key="Giáo viên" value="Toán">
+                                        <MenuItem key="Giáo viên" value="Giáo viên">
                                             Giáo viên
                                         </MenuItem>
                                         <MenuItem key="Sinh viên" value="Sinh viên">
@@ -125,7 +127,7 @@ class DangYeuCauTimGiaSu extends Component {
                                     <TextField
                                         id="standard-select-currency"
                                         select
-                                        name="gender"
+                                        name="genderRequirement"
                                         label="Chọn giới tính gia sư"
                                         variant="outlined"
                                         size="small"
@@ -147,7 +149,7 @@ class DangYeuCauTimGiaSu extends Component {
                                     <TextField
                                         fullWidth
                                         id="standard-select-currency"
-                                        name="tuition_fee"
+                                        name="tuitionFee"
                                         label="Học phí dự kiến (VNĐ/tháng)"
                                         variant="outlined"
                                         size="small"
@@ -158,7 +160,7 @@ class DangYeuCauTimGiaSu extends Component {
                                     <TextField
                                         fullWidth
                                         required
-                                        name="time_teach"
+                                        name="timeTeach"
                                         id="standard-select-currency"
                                         label="Thời gian dạy"
                                         variant="outlined"
@@ -264,8 +266,8 @@ class DangYeuCauTimGiaSu extends Component {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onCreateClass: (classInfo) => {
-            dispatch(actCreateClassesRequest(classInfo));
+        onCreateClass: (classInfo, hasChooseTutors, history) => {
+            dispatch(actCreateClassesRequest(classInfo, hasChooseTutors, history));
         }
     };
 };

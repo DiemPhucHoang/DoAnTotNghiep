@@ -1,7 +1,7 @@
-import * as Types from './../constants/ActionTypes';
+import * as Types from '../constants/ActionTypes';
 var initialState = {};
 
-const search = (state = initialState, action) => {
+const searchTutor = (state = initialState, action) => {
     switch(action.type){
         case Types.SEARCH_INPUT:
            state = action.searchInput;
@@ -10,4 +10,4 @@ const search = (state = initialState, action) => {
     }
 };
 
-export default search;
+export default searchTutor;

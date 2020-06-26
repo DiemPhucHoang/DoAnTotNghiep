@@ -16,13 +16,21 @@ const chooseTutor = (state = initialState, action) => {
     switch(action.type){
         case Types.CHOOSE_TUTOR:
            state.push(action.tutor.result);
-            return [...state];
+            const arr = [...state];
+            const filteredArr = arr.reduce((acc, current) => {
+                const x = acc.find(item => item.id === current.id);
+                if (!x) {
+                  return acc.concat([current]);
+                } else {
+                  return acc;
+                }
+              }, []);
+              return filteredArr;
         case Types.DELETE_CHOOSE_TUTOR:
             index = findIndex(state, id);
             state.splice(index, 1);
             return [...state];
         case Types.DELETE_ALL_CHOOSE_TUTOR:
-           // let updateState = state;
             state.splice(0, state.length)
             return state;
         default: return [...state];

@@ -1,12 +1,18 @@
 import { combineReducers } from 'redux';
 import tutor from './tutor';
-import search from './search';
+import searchTutor from './searchTutor';
 import chooseTutor from './chooseTutor';
+import classes from './classes';
+import searchClass from './searchClass';
+import auth from './auth';
 
 const appReducers = combineReducers ({
+      auth,
       tutor,
-      search,
-      chooseTutor
+      searchTutor,
+      chooseTutor,
+      classes,
+      searchClass
       
 });
 

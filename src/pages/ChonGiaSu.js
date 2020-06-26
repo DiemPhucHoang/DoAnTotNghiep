@@ -22,7 +22,6 @@ class ChonGiaSu extends Component {
     componentDidMount() {
         const chooseTutor = true
         this.props.onFetchTutorDetail(this.props.location.state.tutorId, chooseTutor);
-
         this.getAll();
     }
 
@@ -59,6 +58,7 @@ class ChonGiaSu extends Component {
     render() {
         const { tutor } = this.props;
         let { subjects, districts, classTeaches } = this.state;
+        const {history} = this.props;
         return (
             <div className="bg-color">
                 <br />
@@ -90,6 +90,7 @@ class ChonGiaSu extends Component {
                             subjects={subjects}
                             districts={districts}
                             classTeaches={classTeaches}
+                            history={history}
                         />
                         <br /><br />
                     </Card>

@@ -19,7 +19,7 @@ class GiaSuDaChon extends Component {
         const { tutorItem } = this.props;
         console.log("length: ", tutorItem.length);
         const hasTutorItem = tutorItem && tutorItem.length > 0;
-        let checkTutor = false;
+        // let checkTutor = false;
         return (
             <CardContent>
                 <TableContainer component={Paper}>
@@ -61,11 +61,11 @@ class GiaSuDaChon extends Component {
                         </TableBody>
                     </Table>
                 </TableContainer>
-                <p style={{ float: 'left', color: 'red' }}>(Được chọn tối đa 3 gia sư) </p>
+                <p style={{ float: 'left', color: 'red' }}>(Nên chọn ít nhất 2 gia sư) </p>
                 <br />
-                {tutorItem.length >= 3 ? checkTutor=true : checkTutor=false}
+                {/* {tutorItem.length >= 3 ? checkTutor=true : checkTutor=false} */}
                 <Link to='/tim-gia-su'>
-                    <Button disabled={checkTutor} variant="contained" color="secondary" style={{ float: 'right' }}>
+                    <Button variant="contained" color="secondary" style={{ float: 'right' }}>
                         Chọn tiếp
                     </Button>
                 </Link>
