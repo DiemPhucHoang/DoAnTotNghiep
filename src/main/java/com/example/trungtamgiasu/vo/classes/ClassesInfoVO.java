@@ -6,15 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClassesVO {
+public class ClassesInfoVO {
     private Long id;
 
     @NotBlank
@@ -40,16 +38,4 @@ public class ClassesVO {
     private double tuitionFee;
 
     private ClassesStatus classesStatus;
-
-    @NotBlank
-    private String name;
-
-    @NotBlank
-    @Size(min = 10, max = 11)
-    private String phone;
-
-    @Email
-    private String email;
-
-    private Long[] idTutors;
 }

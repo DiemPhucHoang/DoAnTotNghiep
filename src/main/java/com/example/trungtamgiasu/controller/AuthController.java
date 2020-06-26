@@ -4,7 +4,7 @@ import com.example.trungtamgiasu.dao.RoleDAO;
 import com.example.trungtamgiasu.dao.UserDAO;
 import com.example.trungtamgiasu.exception.AppException;
 import com.example.trungtamgiasu.model.Role;
-import com.example.trungtamgiasu.model.RoleName;
+import com.example.trungtamgiasu.model.enums.RoleName;
 import com.example.trungtamgiasu.model.User;
 import com.example.trungtamgiasu.security.JwtTokenProvider;
 import com.example.trungtamgiasu.security.UserPrincipal;
@@ -38,6 +38,7 @@ import java.util.Collections;
 public class AuthController {
 
     Logger logger = LoggerFactory.getLogger(this.getClass().getName());
+
     @Autowired
     AuthenticationManager authenticationManager;
 
@@ -128,7 +129,5 @@ public class AuthController {
                 "Change info user successfully",
                 userService.changeInfoUser(idUser, changeInfoUserVO, auth));
     }
-
-
 
 }

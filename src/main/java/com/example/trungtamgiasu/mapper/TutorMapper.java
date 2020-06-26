@@ -19,4 +19,6 @@ public interface TutorMapper {
     List<Tutor> toTutorsList(List<TutorVO> tutorsVOList);
 
     List<Tutor> toTutorsListByTutorsInfoVO(List<TutorInfoVO> tutorInfoVOS);
+
+    byte[] readBytesFromFile(Long idTutor);
 }

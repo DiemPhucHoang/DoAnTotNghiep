@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface TutorService {
-    List<TutorInfoVO> getAll();
 
     Page<TutorInfoVO> getAllByPage(Pageable pageable);
 
@@ -28,13 +27,11 @@ public interface TutorService {
 
     Page<TutorInfoVO> searchTutor(SearchVO searchVO, Pageable pageable);
 
-    Tutor getTutorById(Long id);
+    TutorInfoVO getTutorById(Long id);
 
     List<Tutor> getSimilarTutors(Long idTutor);
 
     Tutor getTutorByIdUser(Long idUser);
-
-    byte[] readBytesFromFile(Long idTutor);
 
     String changeImage(Long idUser, MultipartFile file, Authentication auth);
 

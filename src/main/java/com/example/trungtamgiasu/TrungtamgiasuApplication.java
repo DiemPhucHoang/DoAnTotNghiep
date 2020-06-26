@@ -4,7 +4,7 @@ import com.example.trungtamgiasu.dao.RoleDAO;
 import com.example.trungtamgiasu.dao.UserDAO;
 import com.example.trungtamgiasu.exception.AppException;
 import com.example.trungtamgiasu.model.Role;
-import com.example.trungtamgiasu.model.RoleName;
+import com.example.trungtamgiasu.model.enums.RoleName;
 import com.example.trungtamgiasu.model.User;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;

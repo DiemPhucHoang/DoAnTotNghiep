@@ -34,6 +34,7 @@ CREATE TABLE `tutors` (
   `graduation_year` varchar(11) NOT NULL,
   `more_info` longtext,
   `level` varchar(255) NOT NULL,
+  `salary_per_hour` double NOT NULL,
   `status` varchar(255) NOT NULL,
   `id_user` bigint DEFAULT NULL,
   PRIMARY KEY (`id_tutor`),

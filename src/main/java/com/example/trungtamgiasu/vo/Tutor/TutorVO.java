@@ -1,6 +1,6 @@
 package com.example.trungtamgiasu.vo.Tutor;
 
-import com.example.trungtamgiasu.model.TutorStatus;
+import com.example.trungtamgiasu.model.enums.TutorStatus;
 import com.example.trungtamgiasu.vo.FreeTime.FreeTimeVO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -54,4 +54,7 @@ public class TutorVO {
     private TutorStatus status;
 
     private String name;
+
+    @NotBlank
+    private double salaryPerHour;
 }

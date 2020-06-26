@@ -3,7 +3,6 @@ package com.example.trungtamgiasu.service.impl;
 import com.example.trungtamgiasu.dao.UserDAO;
 import com.example.trungtamgiasu.exception.BadRequestException;
 import com.example.trungtamgiasu.exception.ResourceNotFoundException;
-import com.example.trungtamgiasu.exception.UserException;
 import com.example.trungtamgiasu.model.User;
 import com.example.trungtamgiasu.security.UserPrincipal;
 import com.example.trungtamgiasu.service.UserService;
@@ -59,7 +58,7 @@ public class UserServiceImpl implements UserService {
     public void changePassword(ChangePasswordVO changePasswordVO, Authentication auth) {
         User user = getUserByAuthentication(auth);
         if(!(passwordEncoder.matches(changePasswordVO.getOldPassword(), user.getPassword()))) {
-            throw new UserException("Password does not match with the old password");
+            throw new BadRequestException("Password does not match with the old password");
         }
         logger.info("Change password by idUser " + user.getId());
         userDAO.changePassword(passwordEncoder.encode(changePasswordVO.getNewPassword()), user.getId());

@@ -3,11 +3,10 @@ package com.example.trungtamgiasu.service.impl;
 import com.example.trungtamgiasu.dao.*;
 import com.example.trungtamgiasu.exception.BadRequestException;
 import com.example.trungtamgiasu.exception.ResourceNotFoundException;
-import com.example.trungtamgiasu.exception.TutorException;
-import com.example.trungtamgiasu.exception.UserException;
 import com.example.trungtamgiasu.mapper.FreeTimeMapper;
 import com.example.trungtamgiasu.mapper.TutorMapper;
 import com.example.trungtamgiasu.model.*;
+import com.example.trungtamgiasu.model.enums.TutorStatus;
 import com.example.trungtamgiasu.security.UserPrincipal;
 import com.example.trungtamgiasu.service.TutorService;
 import com.example.trungtamgiasu.specification.TutorSpecification;
@@ -28,8 +27,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -70,19 +67,13 @@ public class TutorServiceImpl implements TutorService {
     String path;
 
     @Override
-    public List<TutorInfoVO> getAll() {
-        logger.info("Get all tutors");
-        List<Tutor> tutors = tutorDAO.findByStatus(TutorStatus.CHUA_NHAN_LOP);
-        return tutorMapper.toTutorsInfoVOList(tutors);
-    }
-
-    @Override
     public Page<TutorInfoVO> getAllByPage(Pageable pageable) {
         List<Tutor> tutors = tutorDAO.findByStatus(TutorStatus.CHUA_NHAN_LOP);
         List<TutorInfoVO> tutorInfoVOS = tutorMapper.toTutorsInfoVOList(tutors);
+
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), tutorInfoVOS.size());
-        Page<TutorInfoVO> tutorInfoVOPage = new PageImpl<TutorInfoVO>
+        Page<TutorInfoVO> tutorInfoVOPage = new PageImpl<>
                 (tutorInfoVOS.subList(start, end), pageable, tutorInfoVOS.size());
         return tutorInfoVOPage;
     }
@@ -111,7 +102,7 @@ public class TutorServiceImpl implements TutorService {
         int index = 1;
         String fileName = file.getOriginalFilename();
         if(fileName == null) {
-            throw new TutorException("Can not found file name");
+            throw new BadRequestException("File name does not exists");
         }
         String firstFileName = fileName.substring(0, fileName.lastIndexOf("."));
         String lastFileName = fileName.substring(fileName.lastIndexOf("."));
@@ -131,21 +122,21 @@ public class TutorServiceImpl implements TutorService {
     public String uploadImage(MultipartFile file) {
         if(file.isEmpty())
         {
-            throw new TutorException("Failed to store empty file");
+            throw new BadRequestException("Failed to store empty file");
         }
         String fileName = file.getOriginalFilename();
         if(fileName == null) {
-            throw new TutorException("Can not found file name");
+            throw new BadRequestException("Can not found file name");
         }
         try {
             if(fileName.contains("..")){
-                throw new TutorException("Sorry! Filename contains invalid path sequence " + fileName);
+                throw new BadRequestException("Sorry! Filename contains invalid path sequence " + fileName);
             }
             Path dir = Paths.get(path).toAbsolutePath().normalize();
             try {
                 Files.createDirectories(dir);
             } catch (Exception ex) {
-                throw new TutorException("Could not create the directory where the uploaded files will be stored.");
+                throw new BadRequestException("Could not create the directory where the uploaded files will be stored.");
             }
             // Copy file to the target location (Replacing existing file with the same name)
             Path targetLocation = dir.resolve(fileName);
@@ -153,7 +144,7 @@ public class TutorServiceImpl implements TutorService {
             Files.copy(is, targetLocation,
                     StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            throw new TutorException("Could not store file " + fileName + ". Please try again!");
+            throw new BadRequestException("Could not store file " + fileName + ". Please try again!");
         }
         return fileName;
     }
@@ -162,7 +153,7 @@ public class TutorServiceImpl implements TutorService {
     public Tutor createTutor(TutorVO tutorVO, Long idUser) {
         logger.info("Create tutor service");
         if(tutorVO == null) {
-            throw new TutorException("Tutor is null");
+            throw new BadRequestException("Tutor is null");
         }
         User user = userDAO.findById(idUser).orElseThrow(() ->
                 new ResourceNotFoundException("User", "id" , idUser));
@@ -173,7 +164,7 @@ public class TutorServiceImpl implements TutorService {
         tutorVO.setStatus(tutorStatus);
         Tutor tutorMap = tutorMapper.toTutor(tutorVO);
         tutorMap.setUser(userDAO.findById(idUser).
-                orElseThrow(() -> new UserException("User not found by id " + idUser)));
+                orElseThrow(() -> new ResourceNotFoundException("User", "id", idUser)));
         //add table tutor_subject
         if(tutorVO.getSubject() != null) {
             for (Long idSubject : tutorVO.getSubject()) {
@@ -206,7 +197,7 @@ public class TutorServiceImpl implements TutorService {
 
     @Override
     public Page<TutorInfoVO> searchTutor(SearchVO searchVO, Pageable pageable) {
-        logger.info("Search tutor with : " + searchVO.getSubject());
+        logger.info("Search tutor");
         List<Tutor> tutors = tutorDAO.findAll(Objects.requireNonNull(Objects.requireNonNull(Objects.requireNonNull(Specification.
                 where(TutorSpecification.withSubject(searchVO.getSubject(), TutorStatus.CHUA_NHAN_LOP))
                 .and(TutorSpecification.withClassTeach(searchVO.getClassTeach(), TutorStatus.CHUA_NHAN_LOP)))
@@ -222,15 +213,18 @@ public class TutorServiceImpl implements TutorService {
     }
 
     @Override
-    public Tutor getTutorById(Long id) {
+    public TutorInfoVO getTutorById(Long id) {
         logger.info("Get tutor by id " + id);
-        return tutorDAO.findById(id).orElseThrow(() -> new TutorException("Tutor " + id + " does not exists"));
+        Tutor tutor = tutorDAO.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException("Tutor", "id", id));
+        return tutorMapper.toTutorInfoVO(tutor);
+
     }
 
     @Override
     public List<Tutor> getSimilarTutors(Long idTutor) {
         logger.info("Get similar tutor with id tutor " + idTutor);
-        Tutor tutor = getTutorById(idTutor);
+        Tutor tutor = tutorMapper.toTutorByTutorInfoVO(getTutorById(idTutor));
         List<Tutor> tutors = new ArrayList<>();
         for (Subject subject : tutor.getSubjects()) {
             tutors.addAll(tutorDAO.findBySubjects_SubjectName(subject.getSubjectName()));
@@ -246,38 +240,8 @@ public class TutorServiceImpl implements TutorService {
     public Tutor getTutorByIdUser(Long idUser) {
         logger.info("Get tutor by id " + idUser);
         return tutorDAO.findByUser(userDAO.findById(idUser).
-                orElseThrow(() -> new UserException("User not found by id " + idUser))).
-                orElseThrow(() -> new TutorException("Tutor by id user " + idUser + " does not exists"));
-    }
-
-    @Override
-    public byte[] readBytesFromFile(Long idTutor) {
-        if(!tutorDAO.existsById(idTutor)) {
-            throw new ResourceNotFoundException("Tutor", "id", idTutor);
-        }
-        String fileName = getTutorById(idTutor).getImage();
-        String filePath = "uploads\\" + fileName;
-        FileInputStream fileInputStream = null;
-        byte[] bytesArray = null;
-        try{
-            File file =new File(filePath);
-            bytesArray = new byte[(int) file.length()];
-            //read file into bytes[]
-            fileInputStream = new FileInputStream(file);
-            int number = fileInputStream.read(bytesArray);
-            System.out.print("Number " + number);
-        }catch (IOException e) {
-            e.printStackTrace();
-        }finally {
-            if (fileInputStream != null) {
-                try {
-                    fileInputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return bytesArray;
+                orElseThrow(() -> new ResourceNotFoundException("User", "id ", idUser))).
+                orElseThrow(() -> new ResourceNotFoundException("Tutor", "id",idUser));
     }
 
     @Override
@@ -296,11 +260,11 @@ public class TutorServiceImpl implements TutorService {
 
         if(file.isEmpty())
         {
-            throw new TutorException("Failed to store empty file");
+            throw new BadRequestException("Failed to store empty file");
         }
         try {
             if(newFileName.contains("..")){
-                throw new TutorException("Sorry! Filename contains invalid path sequence " + newFileName);
+                throw new BadRequestException("Sorry! Filename contains invalid path sequence " + newFileName);
             }
             Path dir = Paths.get(path).toAbsolutePath().normalize();
             // Copy file to the target location (Replacing existing file with the same name)
@@ -313,7 +277,7 @@ public class TutorServiceImpl implements TutorService {
             Files.copy(is, targetLocation,
                     StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            throw new TutorException("Could not store file " + newFileName + ". Please try again!");
+            throw new BadRequestException("Could not store file " + newFileName + ". Please try again!");
         }
         saveTutor(tutor);
         return newFileName;

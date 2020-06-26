@@ -1,5 +1,4 @@
 package com.example.trungtamgiasu.controller;
-
 import com.example.trungtamgiasu.service.TutorService;
 import com.example.trungtamgiasu.vo.SearchVO;
 import com.example.trungtamgiasu.vo.Tutor.TutorInfoVO;
@@ -35,11 +34,14 @@ public class TutorController {
 
     @PostMapping("/{idUser}")
     public ApiResponse createTutor(@RequestBody TutorVO tutorVO, @PathVariable("idUser") Long idUser) {
-        logger.info("Create tutor controller");
-        return new ApiResponse(
-                true,
-                "Create tutor successfully",
-                tutorService.createTutor(tutorVO, idUser));
+        try {
+            return new ApiResponse(
+                    true,
+                    "Create tutor successfully",
+                    tutorService.createTutor(tutorVO, idUser));
+        } catch (Exception e) {
+            return new ApiResponse(true, "Create tutor failed ", e);
+        }
     }
 
     @GetMapping
@@ -53,7 +55,7 @@ public class TutorController {
 
     }
 
-    @PostMapping("/spec")
+    @PostMapping("/search")
     public ApiResponse getAllBySearch(@RequestBody SearchVO searchVO, @PageableDefault(size = 6)Pageable pageable) {
         logger.info("Get all tutors by search controller");
         Page<TutorInfoVO> tutorInfoVOPage = tutorService.searchTutor(searchVO, pageable);
@@ -83,14 +85,14 @@ public class TutorController {
         );
     }
 
-    @GetMapping("/image/{idTutor}")
-    public ApiResponse readBytesArrayImage(@PathVariable("idTutor") Long idTutor) {
-        logger.info("Read bytes array by idTutor: " + idTutor);
-        return new ApiResponse(
-                true,
-                "Successfully",
-                tutorService.readBytesFromFile(idTutor));
-    }
+//    @GetMapping("/image/{idTutor}")
+//    public ApiResponse readBytesArrayImage(@PathVariable("idTutor") Long idTutor) {
+//        logger.info("Read bytes array by idTutor: " + idTutor);
+//        return new ApiResponse(
+//                true,
+//                "Successfully",
+//                tutorService.readBytesFromFile(idTutor));
+//    }
 
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_TUTOR')")
     @PostMapping("/image/{idUser}")

@@ -1,6 +1,7 @@
 package com.example.trungtamgiasu.specification;
 
 import com.example.trungtamgiasu.model.*;
+import com.example.trungtamgiasu.model.enums.TutorStatus;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Expression;
@@ -8,17 +9,6 @@ import javax.persistence.criteria.Root;
 import java.util.Collection;
 
 public class TutorSpecification {
-
-//    public static Specification<Tutor> withName(String name, TutorStatus tutorStatus) {
-//        if (name == "" || name.isEmpty()) {
-//            return null;
-//        } else {
-//            return (root, query, cb) -> cb.and(
-//                    cb.equal(root.get("status"), tutorStatus),
-//                    cb.like(root.get("name"), name)
-//            );
-//        }
-//    }
 
     public static Specification<Tutor> withSubject(String subject, TutorStatus tutorStatus) {
         if (subject == null || subject.isEmpty()) {

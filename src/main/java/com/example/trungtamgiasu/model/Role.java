@@ -1,5 +1,6 @@
 package com.example.trungtamgiasu.model;
 
+import com.example.trungtamgiasu.model.enums.RoleName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

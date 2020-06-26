@@ -1,7 +1,7 @@
 package com.example.trungtamgiasu.vo.Tutor;
 
 import com.example.trungtamgiasu.model.FreeTime;
-import com.example.trungtamgiasu.model.TutorStatus;
+import com.example.trungtamgiasu.model.enums.TutorStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,7 +25,7 @@ public class TutorInfoVO {
     private String yearOfBirth;
 
     @NotBlank
-    private String image;
+    private byte[] image;
 
     @NotBlank
     private String major;
@@ -49,13 +49,16 @@ public class TutorInfoVO {
     private List<String> districts;
 
     @NotBlank
-    private Set<FreeTime> freeTimes;
+    private List<FreeTime> freeTimes;
 
     private String moreInfo;
 
     private TutorStatus status;
 
     private String name;
+
+    @NotBlank
+    private double salaryPerHour;
 
 
 }

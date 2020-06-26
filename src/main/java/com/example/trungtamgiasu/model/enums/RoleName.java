@@ -1,4 +1,4 @@
-package com.example.trungtamgiasu.model;
+package com.example.trungtamgiasu.model.enums;
 
 public enum RoleName {
     ROLE_TUTOR,

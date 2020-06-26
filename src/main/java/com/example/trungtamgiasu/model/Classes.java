@@ -1,5 +1,6 @@
 package com.example.trungtamgiasu.model;
 
+import com.example.trungtamgiasu.model.enums.ClassesStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -46,6 +47,6 @@ public class Classes {
 
     @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "id_user", nullable = false)
+    @JoinColumn(name = "id_parent", nullable = false)
     private User user;
 }

@@ -1,11 +1,18 @@
 package com.example.trungtamgiasu.mapper.impl;
 
+import com.example.trungtamgiasu.dao.TutorDAO;
+import com.example.trungtamgiasu.exception.BadRequestException;
+import com.example.trungtamgiasu.exception.ResourceNotFoundException;
 import com.example.trungtamgiasu.mapper.TutorMapper;
 import com.example.trungtamgiasu.model.*;
 import com.example.trungtamgiasu.vo.Tutor.TutorInfoVO;
 import com.example.trungtamgiasu.vo.Tutor.TutorVO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -14,6 +21,8 @@ import java.util.Set;
 @Component
 public class TutorMapperImpl implements TutorMapper {
 
+    @Autowired
+    private TutorDAO tutorDAO;
 
     @Override
     public Tutor toTutor(TutorVO tutorVO) {
@@ -29,6 +38,7 @@ public class TutorMapperImpl implements TutorMapper {
             tutor.setCollege(tutorVO.getCollege());
             tutor.setGraduationYear(tutorVO.getGraduationYear());
             tutor.setLevel(tutorVO.getLevel());
+            tutor.setSalaryPerHour(tutorVO.getSalaryPerHour());
             tutor.setMoreInfo(tutorVO.getMoreInfo());
             tutor.setStatus(tutorVO.getStatus());
             return tutor;
@@ -56,11 +66,12 @@ public class TutorMapperImpl implements TutorMapper {
         tutorInfoVO.setId( tutor.getId() );
         tutorInfoVO.setGender( tutor.getGender() );
         tutorInfoVO.setYearOfBirth( tutor.getYearOfBirth() );
-        tutorInfoVO.setImage( tutor.getImage() );
+        tutorInfoVO.setImage(readBytesFromFile(tutor.getId()));
         tutorInfoVO.setMajor( tutor.getMajor() );
         tutorInfoVO.setCollege( tutor.getCollege() );
         tutorInfoVO.setGraduationYear( tutor.getGraduationYear() );
         tutorInfoVO.setLevel( tutor.getLevel() );
+        tutorInfoVO.setSalaryPerHour(tutor.getSalaryPerHour());
         tutorInfoVO.setMoreInfo( tutor.getMoreInfo() );
         tutorInfoVO.setStatus( tutor.getStatus() );
 
@@ -69,30 +80,24 @@ public class TutorMapperImpl implements TutorMapper {
         for (Subject subject : subjectSet) {
             subjectNames.add(subject.getSubjectName());
         }
-        if(subjectNames != null) {
-            tutorInfoVO.setSubjects(subjectNames);
-        }
+        tutorInfoVO.setSubjects(subjectNames);
 
         Set<ClassTeach> classTeachSet = tutor.getClassTeaches();
         List<String> classTeachNames = new ArrayList<>();
         for (ClassTeach classTeach : classTeachSet) {
             classTeachNames.add(classTeach.getClassTeachName());
         }
-        if ( classTeachNames != null ) {
-            tutorInfoVO.setClassTeaches(classTeachNames);
-        }
+        tutorInfoVO.setClassTeaches(classTeachNames);
 
         Set<District> districtSet = tutor.getDistricts();
         List<String> districtNames = new ArrayList<>();
         for (District district : districtSet) {
             districtNames.add(district.getDistrictName());
         }
-        if ( districtNames != null ) {
-            tutorInfoVO.setDistricts(districtNames);
-        }
-        Set<FreeTime> freeTimes = tutor.getFreeTimes();
+        tutorInfoVO.setDistricts(districtNames);
+        List<FreeTime> freeTimes = tutor.getFreeTimes();
         if ( freeTimes != null ) {
-            tutorInfoVO.setFreeTimes( new HashSet<>( freeTimes ) );
+            tutorInfoVO.setFreeTimes( new ArrayList<>( freeTimes ) );
         }
         tutorInfoVO.setName(tutor.getUser().getName());
         return tutorInfoVO;
@@ -132,5 +137,35 @@ public class TutorMapperImpl implements TutorMapper {
 //            tutors.add(toTutor())
 //        }
         return tutors;
+    }
+
+    public byte[] readBytesFromFile(Long idTutor) {
+        if(!tutorDAO.existsById(idTutor)) {
+            throw new ResourceNotFoundException("Tutor", "id", idTutor);
+        }
+        String fileName = tutorDAO.findById(idTutor).orElseThrow(() ->
+                new BadRequestException("File name does not exists")).getImage();
+        String filePath = "uploads\\" + fileName;
+        FileInputStream fileInputStream = null;
+        byte[] bytesArray = null;
+        try{
+            File file =new File(filePath);
+            bytesArray = new byte[(int) file.length()];
+            //read file into bytes[]
+            fileInputStream = new FileInputStream(file);
+            int number = fileInputStream.read(bytesArray);
+            System.out.print("Number " + number);
+        }catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if (fileInputStream != null) {
+                try {
+                    fileInputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return bytesArray;
     }
 }
