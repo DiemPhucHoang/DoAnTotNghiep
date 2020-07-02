@@ -1,8 +1,8 @@
 package com.example.trungtamgiasu.service;
 
 import com.example.trungtamgiasu.model.User;
-import com.example.trungtamgiasu.vo.User.ChangeInfoUserVO;
 import com.example.trungtamgiasu.vo.User.ChangePasswordVO;
+import com.example.trungtamgiasu.vo.User.UserInfoVO;
 import org.springframework.security.core.Authentication;
 
 public interface UserService {
@@ -10,11 +10,11 @@ public interface UserService {
 
     User getById(Long idUser);
 
-    User getByPhone(String phone);
+    UserInfoVO getByPhone(String phone);
 
     User getUserByAuthentication(Authentication auth);
 
     void changePassword(ChangePasswordVO changePasswordVO, Authentication auth);
 
-    User changeInfoUser(Long idUser, ChangeInfoUserVO changeInfoUserVO, Authentication auth);
+    User changeInfoUser(Long idUser, UserInfoVO userInfoVO, Authentication auth);
 }

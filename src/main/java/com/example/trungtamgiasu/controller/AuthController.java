@@ -3,14 +3,15 @@ package com.example.trungtamgiasu.controller;
 import com.example.trungtamgiasu.dao.RoleDAO;
 import com.example.trungtamgiasu.dao.UserDAO;
 import com.example.trungtamgiasu.exception.AppException;
+import com.example.trungtamgiasu.mapper.UserMapper;
 import com.example.trungtamgiasu.model.Role;
-import com.example.trungtamgiasu.model.enums.RoleName;
 import com.example.trungtamgiasu.model.User;
+import com.example.trungtamgiasu.model.enums.RoleName;
 import com.example.trungtamgiasu.security.JwtTokenProvider;
 import com.example.trungtamgiasu.security.UserPrincipal;
 import com.example.trungtamgiasu.service.UserService;
-import com.example.trungtamgiasu.vo.User.ChangeInfoUserVO;
 import com.example.trungtamgiasu.vo.User.ChangePasswordVO;
+import com.example.trungtamgiasu.vo.User.UserInfoVO;
 import com.example.trungtamgiasu.vo.User.UserVO;
 import com.example.trungtamgiasu.vo.payload.ApiResponse;
 import com.example.trungtamgiasu.vo.payload.JwtAuthenticationResponse;
@@ -57,6 +58,9 @@ public class AuthController {
     @Autowired(required = false)
     JwtTokenProvider tokenProvider;
 
+    @Autowired
+    private UserMapper userMapper;
+
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
@@ -100,34 +104,36 @@ public class AuthController {
 
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_TUTOR')")
     @GetMapping()
-    public ApiResponse getUser(Authentication auth)
-    {
-        UserPrincipal userDetails = (UserPrincipal) auth.getPrincipal();
-        String phone = userDetails.getPhone();
-        logger.info("Get user by phone: "+ phone);
-        return new ApiResponse(
-                true,
-                "Get user successfully",
-                userService.getByPhone(phone));
+    public ApiResponse getUser(Authentication auth) {
+        try {
+            UserPrincipal userDetails = (UserPrincipal) auth.getPrincipal();
+            String phone = userDetails.getPhone();
+            return new ApiResponse(true, "Get user successfully", userService.getByPhone(phone));
+        } catch (Exception e) {
+            return new ApiResponse(false, "Get user failed", e.toString());
+        }
+
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_TUTOR')")
     @PatchMapping()
-    public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordVO changePasswordVO, Authentication auth) {
-        logger.info("Change password");
-        return ResponseEntity.ok(
-                new ApiResponse(true, "Change password successfully"));
+    public ApiResponse changePassword(@Valid @RequestBody ChangePasswordVO changePasswordVO, Authentication auth) {
+        try {
+            userService.changePassword(changePasswordVO, auth);
+            return new ApiResponse(true, "Change password successfully");
+        } catch (Exception e) {
+            return new ApiResponse(false, "Change password failed", e.toString());
+        }
+
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_TUTOR')")
     @PostMapping("/{idUser}")
     public ApiResponse changeInfoUser(@PathVariable("idUser") Long idUser, Authentication auth,
-                                      @Valid @RequestBody ChangeInfoUserVO changeInfoUserVO) {
+                                      @Valid @RequestBody UserInfoVO userInfoVO) {
         logger.info("Change info user");
-        return new ApiResponse(
-                true,
-                "Change info user successfully",
-                userService.changeInfoUser(idUser, changeInfoUserVO, auth));
+        User user = userService.changeInfoUser(idUser, userInfoVO, auth);
+        return new ApiResponse(true,"Change info user successfully", user);
     }
 
 }

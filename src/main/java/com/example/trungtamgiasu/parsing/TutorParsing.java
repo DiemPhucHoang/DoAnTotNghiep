@@ -1,11 +1,11 @@
-package com.example.trungtamgiasu.mapper;
+package com.example.trungtamgiasu.parsing;
 
 import com.example.trungtamgiasu.model.Tutor;
 import com.example.trungtamgiasu.vo.Tutor.TutorInfoVO;
 import com.example.trungtamgiasu.vo.Tutor.TutorVO;
 
 import java.util.List;
-public interface TutorMapper {
+public interface TutorParsing {
     Tutor toTutor(TutorVO tutorVO);
 
     Tutor toTutorByTutorInfoVO(TutorInfoVO tutorInfoVO);

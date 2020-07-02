@@ -1,5 +1,6 @@
 package com.example.trungtamgiasu.vo.User;
 
+import com.example.trungtamgiasu.model.Tutor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,7 +10,9 @@ import javax.validation.constraints.Size;
 
 @Getter
 @Setter
-public class ChangeInfoUserVO {
+public class UserInfoVO {
+    private Long id;
+
     @NotBlank
     private String name;
 
@@ -22,4 +25,7 @@ public class ChangeInfoUserVO {
 
     @Email
     private String email;
+
+    private Tutor tutor;
+
 }

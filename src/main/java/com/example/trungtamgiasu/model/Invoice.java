@@ -30,6 +30,6 @@ public class Invoice {
     private Date time;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_class_register")
+    @JoinColumn(name = "id_register")
     private TutorRegisterClass classRegister;
 }

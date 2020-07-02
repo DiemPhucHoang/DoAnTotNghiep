@@ -1,5 +1,6 @@
 package com.example.trungtamgiasu.model;
 
+import com.example.trungtamgiasu.model.enums.TutorRegisterClassStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +22,7 @@ public class TutorRegisterClass {
     private Long id;
 
     @Column(nullable = false)
-    private String status;
+    private TutorRegisterClassStatus status;
 
     @Column(nullable = false)
     private Date dateReceive;

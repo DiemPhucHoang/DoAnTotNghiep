@@ -1,6 +1,9 @@
 package com.example.trungtamgiasu.specification;
 
-import com.example.trungtamgiasu.model.*;
+import com.example.trungtamgiasu.model.ClassTeach;
+import com.example.trungtamgiasu.model.District;
+import com.example.trungtamgiasu.model.Subject;
+import com.example.trungtamgiasu.model.Tutor;
 import com.example.trungtamgiasu.model.enums.TutorStatus;
 import org.springframework.data.jpa.domain.Specification;
 

@@ -4,9 +4,12 @@ import com.example.trungtamgiasu.dao.*;
 import com.example.trungtamgiasu.exception.BadRequestException;
 import com.example.trungtamgiasu.exception.ResourceNotFoundException;
 import com.example.trungtamgiasu.mapper.FreeTimeMapper;
-import com.example.trungtamgiasu.mapper.TutorMapper;
-import com.example.trungtamgiasu.model.*;
+import com.example.trungtamgiasu.model.FreeTime;
+import com.example.trungtamgiasu.model.Subject;
+import com.example.trungtamgiasu.model.Tutor;
+import com.example.trungtamgiasu.model.User;
 import com.example.trungtamgiasu.model.enums.TutorStatus;
+import com.example.trungtamgiasu.parsing.TutorParsing;
 import com.example.trungtamgiasu.security.UserPrincipal;
 import com.example.trungtamgiasu.service.TutorService;
 import com.example.trungtamgiasu.specification.TutorSpecification;
@@ -58,7 +61,7 @@ public class TutorServiceImpl implements TutorService {
     private UserDAO userDAO;
 
     @Autowired
-    private TutorMapper tutorMapper;
+    private TutorParsing tutorParsing;
 
     @Autowired
     private FreeTimeMapper freeTimeMapper;
@@ -69,7 +72,7 @@ public class TutorServiceImpl implements TutorService {
     @Override
     public Page<TutorInfoVO> getAllByPage(Pageable pageable) {
         List<Tutor> tutors = tutorDAO.findByStatus(TutorStatus.CHUA_NHAN_LOP);
-        List<TutorInfoVO> tutorInfoVOS = tutorMapper.toTutorsInfoVOList(tutors);
+        List<TutorInfoVO> tutorInfoVOS = tutorParsing.toTutorsInfoVOList(tutors);
 
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), tutorInfoVOS.size());
@@ -162,7 +165,7 @@ public class TutorServiceImpl implements TutorService {
         }
         TutorStatus tutorStatus = TutorStatus.CHUA_NHAN_LOP;
         tutorVO.setStatus(tutorStatus);
-        Tutor tutorMap = tutorMapper.toTutor(tutorVO);
+        Tutor tutorMap = tutorParsing.toTutor(tutorVO);
         tutorMap.setUser(userDAO.findById(idUser).
                 orElseThrow(() -> new ResourceNotFoundException("User", "id", idUser)));
         //add table tutor_subject
@@ -204,7 +207,7 @@ public class TutorServiceImpl implements TutorService {
                 .and(TutorSpecification.withDistrict(searchVO.getDistrict(), TutorStatus.CHUA_NHAN_LOP)))
                 .and(TutorSpecification.withLevel(searchVO.getLevel(), TutorStatus.CHUA_NHAN_LOP)))
                 .and(TutorSpecification.withGender(searchVO.getGender(), TutorStatus.CHUA_NHAN_LOP)));
-        List<TutorInfoVO> tutorInfoVOS = tutorMapper.toTutorsInfoVOList(tutors);
+        List<TutorInfoVO> tutorInfoVOS = tutorParsing.toTutorsInfoVOList(tutors);
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), tutorInfoVOS.size());
         Page<TutorInfoVO> tutorInfoVOPage = new PageImpl<>
@@ -217,14 +220,14 @@ public class TutorServiceImpl implements TutorService {
         logger.info("Get tutor by id " + id);
         Tutor tutor = tutorDAO.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException("Tutor", "id", id));
-        return tutorMapper.toTutorInfoVO(tutor);
+        return tutorParsing.toTutorInfoVO(tutor);
 
     }
 
     @Override
     public List<Tutor> getSimilarTutors(Long idTutor) {
         logger.info("Get similar tutor with id tutor " + idTutor);
-        Tutor tutor = tutorMapper.toTutorByTutorInfoVO(getTutorById(idTutor));
+        Tutor tutor = tutorParsing.toTutorByTutorInfoVO(getTutorById(idTutor));
         List<Tutor> tutors = new ArrayList<>();
         for (Subject subject : tutor.getSubjects()) {
             tutors.addAll(tutorDAO.findBySubjects_SubjectName(subject.getSubjectName()));

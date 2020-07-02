@@ -1,18 +1,17 @@
-package com.example.trungtamgiasu.mapper.impl;
+package com.example.trungtamgiasu.parsing.impl;
 
-import com.example.trungtamgiasu.mapper.ClassesMapper;
 import com.example.trungtamgiasu.model.Classes;
+import com.example.trungtamgiasu.parsing.ClassesParsing;
 import com.example.trungtamgiasu.vo.classes.ClassesInfoVO;
 import com.example.trungtamgiasu.vo.classes.ClassesVO;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @Component
-public class ClassesMapperImpl implements ClassesMapper {
-    public ClassesMapperImpl() {
+public class ClassesParsingImpl implements ClassesParsing {
+    public ClassesParsingImpl() {
     }
 
     @Override
@@ -77,36 +76,26 @@ public class ClassesMapperImpl implements ClassesMapper {
     }
 
     @Override
-    public List<ClassesVO> toClassesVOList(List<Classes> classes) {
-        if (classes == null) {
+    public List<ClassesVO> toClassesVOList(List<Classes> classesList) {
+        if (classesList == null) {
             return null;
-        } else {
-            List<ClassesVO> list = new ArrayList(classes.size());
-            Iterator var3 = classes.iterator();
-
-            while(var3.hasNext()) {
-                Classes classes1 = (Classes)var3.next();
-                list.add(this.toClassesVO(classes1));
-            }
-
-            return list;
         }
+        List<ClassesVO> classesVOList = new ArrayList<>();
+        for (Classes classes : classesList) {
+            classesVOList.add(toClassesVO(classes));
+        }
+        return classesVOList;
     }
 
     @Override
-    public List<ClassesInfoVO> toClassesInfoVOList(List<Classes> classes) {
-        if (classes == null) {
+    public List<ClassesInfoVO> toClassesInfoVOList(List<Classes> classesList) {
+        if (classesList == null) {
             return null;
-        } else {
-            List<ClassesInfoVO> list = new ArrayList(classes.size());
-            Iterator var3 = classes.iterator();
-
-            while(var3.hasNext()) {
-                Classes classes1 = (Classes)var3.next();
-                list.add(this.toClassesInfoVO(classes1));
-            }
-
-            return list;
         }
+        List<ClassesInfoVO> classesInfoVOList = new ArrayList<>();
+        for (Classes classes : classesList) {
+            classesInfoVOList.add(toClassesInfoVO(classes));
+        }
+        return classesInfoVOList;
     }
 }

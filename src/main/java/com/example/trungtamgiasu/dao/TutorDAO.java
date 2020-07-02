@@ -1,8 +1,8 @@
 package com.example.trungtamgiasu.dao;
 
 import com.example.trungtamgiasu.model.Tutor;
-import com.example.trungtamgiasu.model.enums.TutorStatus;
 import com.example.trungtamgiasu.model.User;
+import com.example.trungtamgiasu.model.enums.TutorStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

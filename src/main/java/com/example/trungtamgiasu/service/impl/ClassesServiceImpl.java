@@ -3,11 +3,11 @@ package com.example.trungtamgiasu.service.impl;
 import com.example.trungtamgiasu.dao.*;
 import com.example.trungtamgiasu.exception.BadRequestException;
 import com.example.trungtamgiasu.exception.ResourceNotFoundException;
-import com.example.trungtamgiasu.mapper.ClassesMapper;
 import com.example.trungtamgiasu.model.*;
 import com.example.trungtamgiasu.model.enums.ClassesStatus;
 import com.example.trungtamgiasu.model.enums.ParentRegisterTutorStatus;
 import com.example.trungtamgiasu.model.enums.RoleName;
+import com.example.trungtamgiasu.parsing.ClassesParsing;
 import com.example.trungtamgiasu.service.ClassesService;
 import com.example.trungtamgiasu.specification.ClassesSpecification;
 import com.example.trungtamgiasu.vo.SearchVO;
@@ -30,7 +30,7 @@ public class ClassesServiceImpl implements ClassesService {
     Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
     @Autowired
-    private ClassesMapper classesMapper;
+    private ClassesParsing classesParsing;
 
     @Autowired
     private ClassesDAO classesDAO;
@@ -53,7 +53,7 @@ public class ClassesServiceImpl implements ClassesService {
         if(classesVO == null) {
             throw new BadRequestException("Class is null");
         }
-        Classes classMap = classesMapper.toClasses(classesVO);
+        Classes classMap = classesParsing.toClasses(classesVO);
         ClassesStatus classesStatus = ClassesStatus.LOPMOI;
         classMap.setStatus(classesStatus);
         if (userDAO.existsByPhone(classesVO.getPhone())) {
@@ -88,7 +88,7 @@ public class ClassesServiceImpl implements ClassesService {
         logger.info("Get all classes");
         ClassesStatus classesStatus = ClassesStatus.LOPMOI;
         List<Classes> classesList = classesDAO.findByStatus(classesStatus);
-        List<ClassesInfoVO> classesInfoVOS = classesMapper.toClassesInfoVOList(classesList);
+        List<ClassesInfoVO> classesInfoVOS = classesParsing.toClassesInfoVOList(classesList);
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), classesInfoVOS.size());
         Page<ClassesInfoVO> classesInfoVOPage = new PageImpl<>
@@ -99,13 +99,16 @@ public class ClassesServiceImpl implements ClassesService {
     @Override
     public Page<ClassesInfoVO> searchClasses(SearchVO searchVO, Pageable pageable) {
         logger.info("Search classes");
+        if(searchVO == null) {
+            throw new BadRequestException("SearchVO is not found");
+        }
         List<Classes> classesList = classesDAO.findAll(Objects.requireNonNull(Objects.requireNonNull(Objects.requireNonNull(Specification.
                 where(ClassesSpecification.withSubject(searchVO.getSubject(), ClassesStatus.LOPMOI))
                 .and(ClassesSpecification.withClassTeach(searchVO.getClassTeach(), ClassesStatus.LOPMOI)))
                 .and(ClassesSpecification.withDistrict(searchVO.getDistrict(), ClassesStatus.LOPMOI)))
                 .and(ClassesSpecification.withLevel(searchVO.getLevel(), ClassesStatus.LOPMOI)))
                 .and(ClassesSpecification.withGender(searchVO.getGender(), ClassesStatus.LOPMOI)));
-        List<ClassesInfoVO> classesInfoVOS = classesMapper.toClassesInfoVOList(classesList);
+        List<ClassesInfoVO> classesInfoVOS = classesParsing.toClassesInfoVOList(classesList);
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), classesInfoVOS.size());
         Page<ClassesInfoVO> classesInfoVOPage = new PageImpl<>
@@ -118,6 +121,6 @@ public class ClassesServiceImpl implements ClassesService {
         logger.info("Get class by id " + id);
         Classes classes = classesDAO.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException("Class", "id", id));
-        return classesMapper.toClassesInfoVO(classes);
+        return classesParsing.toClassesInfoVO(classes);
     }
 }

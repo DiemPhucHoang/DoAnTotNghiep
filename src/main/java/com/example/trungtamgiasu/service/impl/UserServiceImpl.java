@@ -3,11 +3,12 @@ package com.example.trungtamgiasu.service.impl;
 import com.example.trungtamgiasu.dao.UserDAO;
 import com.example.trungtamgiasu.exception.BadRequestException;
 import com.example.trungtamgiasu.exception.ResourceNotFoundException;
+import com.example.trungtamgiasu.mapper.UserMapper;
 import com.example.trungtamgiasu.model.User;
 import com.example.trungtamgiasu.security.UserPrincipal;
 import com.example.trungtamgiasu.service.UserService;
-import com.example.trungtamgiasu.vo.User.ChangeInfoUserVO;
 import com.example.trungtamgiasu.vo.User.ChangePasswordVO;
+import com.example.trungtamgiasu.vo.User.UserInfoVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private UserMapper userMapper;
+
     @Override
     public User saveUser(User user) {
         logger.info("Save user with id: " + user.getId());
@@ -40,10 +44,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getByPhone(String phone) {
+    public UserInfoVO getByPhone(String phone) {
         logger.info("Get user by phone " + phone);
-        return  userDAO.findByPhone(phone).orElseThrow(() ->
+
+        User user =  userDAO.findByPhone(phone).orElseThrow(() ->
                 new ResourceNotFoundException("User", "phone" , phone));
+        UserInfoVO userInfoVO = new UserInfoVO();
+        userInfoVO.setTutor(user.getTutor());
+        return userMapper.toUserInfoVO(user);
     }
 
     @Override
@@ -65,19 +73,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User changeInfoUser(Long idUser, ChangeInfoUserVO changeInfoUserVO, Authentication auth) {
+    public User changeInfoUser(Long idUser, UserInfoVO userInfoVO, Authentication auth) {
         User user = getUserByAuthentication(auth);
         if(!(idUser.equals(user.getId()))) {
             throw new ResourceNotFoundException("User", "id", idUser);
         }
-        if (userDAO.existsByPhone(changeInfoUserVO.getPhone())
-                && !changeInfoUserVO.getPhone().equals(user.getPhone())) {
+        if (userDAO.existsByPhone(userInfoVO.getPhone())
+                && !userInfoVO.getPhone().equals(user.getPhone())) {
             throw  new BadRequestException("Phone already exists");
         }
-        user.setName(changeInfoUserVO.getName());
-        user.setPhone(changeInfoUserVO.getPhone());
-        user.setAddress(changeInfoUserVO.getAddress());
-        user.setEmail(changeInfoUserVO.getEmail());
+        user.setName(userInfoVO.getName());
+        user.setPhone(userInfoVO.getPhone());
+        user.setAddress(userInfoVO.getAddress());
+        user.setEmail(userInfoVO.getEmail());
         logger.info("Update user by idUser" + user.getId());
         return saveUser(user);
     }

@@ -1,10 +1,10 @@
-package com.example.trungtamgiasu.mapper.impl;
+package com.example.trungtamgiasu.parsing.impl;
 
 import com.example.trungtamgiasu.dao.TutorDAO;
 import com.example.trungtamgiasu.exception.BadRequestException;
 import com.example.trungtamgiasu.exception.ResourceNotFoundException;
-import com.example.trungtamgiasu.mapper.TutorMapper;
 import com.example.trungtamgiasu.model.*;
+import com.example.trungtamgiasu.parsing.TutorParsing;
 import com.example.trungtamgiasu.vo.Tutor.TutorInfoVO;
 import com.example.trungtamgiasu.vo.Tutor.TutorVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +14,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Component
-public class TutorMapperImpl implements TutorMapper {
+public class TutorParsingImpl implements TutorParsing {
 
     @Autowired
     private TutorDAO tutorDAO;
@@ -105,10 +104,10 @@ public class TutorMapperImpl implements TutorMapper {
 
     @Override
     public List<TutorInfoVO> toTutorsInfoVOList(List<Tutor> tutorsList) {
-        List<TutorInfoVO> tutorInfoVOS = new ArrayList<>();
         if (tutorsList == null) {
             return null;
         }
+        List<TutorInfoVO> tutorInfoVOS = new ArrayList<>();
         for (Tutor tutor : tutorsList) {
             tutorInfoVOS.add(toTutorInfoVO(tutor));
         }
@@ -117,10 +116,10 @@ public class TutorMapperImpl implements TutorMapper {
 
     @Override
     public List<Tutor> toTutorsList(List<TutorVO> tutorsVOList) {
-        List<Tutor> tutors = new ArrayList<>();
         if (tutorsVOList == null) {
             return null;
         }
+        List<Tutor> tutors = new ArrayList<>();
         for (TutorVO tutorVO : tutorsVOList) {
             tutors.add(toTutor(tutorVO));
         }

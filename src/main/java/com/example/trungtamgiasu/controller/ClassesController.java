@@ -1,5 +1,6 @@
 package com.example.trungtamgiasu.controller;
 
+import com.example.trungtamgiasu.model.Classes;
 import com.example.trungtamgiasu.service.ClassesService;
 import com.example.trungtamgiasu.vo.SearchVO;
 import com.example.trungtamgiasu.vo.classes.ClassesInfoVO;
@@ -20,28 +21,29 @@ public class ClassesController {
 
     @PostMapping()
     public ApiResponse createClass(@RequestBody ClassesVO classesVO) {
-        return new ApiResponse(
-                true,
-                "Create class successfully",
-                classesService.createClass(classesVO));
+        try {
+            Classes classes = classesService.createClass(classesVO);
+            return new ApiResponse(true, "Create class successfully", classes);
+        } catch (Exception e) {
+            return new ApiResponse(false, "Create class failed", e.toString());
+        }
+
     }
 
     @GetMapping()
     public ApiResponse getAll(@PageableDefault(size = 6)Pageable pageable) {
         Page<ClassesInfoVO> classesInfoVOPage = classesService.getAll(pageable);
-        return new ApiResponse(
-                true,
-                "Get all classes successfully",
-                classesInfoVOPage);
+        return new ApiResponse(true, "Get all classes successfully", classesInfoVOPage);
     }
 
     @PostMapping("/search")
     public ApiResponse getAllBySearch(@RequestBody SearchVO searchVO, @PageableDefault(size = 6)Pageable pageable) {
-        Page<ClassesInfoVO> classesInfoVOPage = classesService.searchClasses(searchVO, pageable);
-        return new ApiResponse(
-                true,
-                "Get all classes by search successfully",
-                classesInfoVOPage);
+        try {
+            Page<ClassesInfoVO> classesInfoVOPage = classesService.searchClasses(searchVO, pageable);
+            return new ApiResponse(true, "Get all classes by search successfully", classesInfoVOPage);
+        } catch (Exception e) {
+            return new ApiResponse(false, "Get all classes by search failed", e.toString());
+        }
     }
 
     @GetMapping("/{idClass}")
@@ -50,7 +52,7 @@ public class ClassesController {
             ClassesInfoVO classesInfoVO = classesService.getClassesById(id);
             return new ApiResponse(true, "Get classes by " +  id + " successfully", classesInfoVO);
         } catch (Exception e) {
-            return new ApiResponse(false, "Get classes by " + id + " failed");
+            return new ApiResponse(false, "Get classes by " + id + " failed", e.toString());
         }
     }
 
