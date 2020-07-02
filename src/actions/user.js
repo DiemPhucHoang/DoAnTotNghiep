@@ -3,7 +3,6 @@ import callApi from "../utils/apiCaller";
 import { notification } from "antd";
 import "antd/dist/antd.css";
 import setAuthorizationToken from './../utils/setAuthorizationToken';
-import jwtDecode from 'jwt-decode';
 
 //login
 export const actLoginRequest = (userInfo, history) => {
@@ -13,11 +12,20 @@ export const actLoginRequest = (userInfo, history) => {
                 const token = res.data.accessToken;
                 localStorage.setItem("token", token);
                 setAuthorizationToken(token);
-                dispatch(setCurrentUser(userInfo.phone));
+                // dispatch(setCurrentUser(userInfo.phone));
                 history.push("/");
                 notification.success({
                     message: "Success",
                     description: "Đăng nhập thành công!"
+                });
+                
+                callApi("auth", "GET", null).then(res => {
+                    if (res.status === 200 && res.data.success) {
+                        localStorage.setItem("id", res.data.result.id);
+                        dispatch(setCurrentUser(res.data));
+                    }
+                }).catch(error => {
+                    console.log('error: ', error);
                 });
             }
         }).catch(error => {
