@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { Grid, TextField, Typography, Button, FormControlLabel } from '@material-ui/core';
 import Avatar from '@material-ui/core/Avatar';
 import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Container from '@material-ui/core/Container';
 import {actLoginRequest} from './../actions/user';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 class DangNhap extends Component {
 
@@ -32,7 +32,6 @@ class DangNhap extends Component {
               [name]: value,
             },
         }));
-        console.log("user ", this.state.userInfo);
     }
     render() {
         return (
@@ -86,7 +85,7 @@ class DangNhap extends Component {
                                 </Link>
                             </Grid>
                             <Grid item >
-                                <Link href="#" variant="body2">
+                                <Link to='/lam-gia-su' variant="body2">
                                     {"Don't have an account? Sign Up"}
                                 </Link>
                             </Grid>

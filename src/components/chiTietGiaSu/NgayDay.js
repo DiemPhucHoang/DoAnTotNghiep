@@ -13,13 +13,13 @@ class NgayDay extends Component {
                 <p className="mr-30">{freeTime.dayName}</p>
                 <ul>
                     <li className="calendar-normal">
-                        <Button variant="contained" color={colorMorning} disableElevation>Sáng</Button>
+                        <Button variant="contained" size="small" color={colorMorning} disableElevation>Sáng</Button>
                     </li>
                     <li className="calendar-normal">
-                        <Button variant="contained" color={colorAfternoon} disableElevation>Chiều</Button>
+                        <Button variant="contained" size="small" color={colorAfternoon} disableElevation>Chiều</Button>
                     </li>
                     <li className="calendar-normal">
-                        <Button variant="contained" color={colorEvening} disableElevation>&ensp;Tối&ensp;&ensp;</Button>
+                        <Button variant="contained" size="small" color={colorEvening} disableElevation>&ensp;Tối&ensp;&ensp;</Button>
                     </li>
                 </ul>
             </div>

@@ -4,13 +4,21 @@ import {
 } from '@material-ui/core';
 import { actCreateClassesRequest } from './../../actions/classes';
 import { connect } from "react-redux";
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import ListItemText from '@material-ui/core/ListItemText';
+import Checkbox from '@material-ui/core/Checkbox';
 
 class DangKyChonGiaSu extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            classInfo: {}
+            classInfo: {
+                subject: []
+            }
         }
     }
 
@@ -28,9 +36,23 @@ class DangKyChonGiaSu extends Component {
         }), () => {
             let { history } = this.props;
             let hasChooseTutors = true;
-            this.props.onCreateClass(this.state.classInfo, hasChooseTutors, history);
+            let classInfo = {
+                classTeach: this.state.classInfo.classTeach,
+                subject: this.state.classInfo.subject.join(", "),
+                timeTeach: this.state.classInfo.timeTeach,
+                address: this.state.classInfo.address,
+                district: this.state.classInfo.district,
+                tuitionFee: this.state.classInfo.tuitionFee,
+                genderRequirement: this.state.classInfo.genderRequirement,
+                levelRequirement: this.state.classInfo.levelRequirement,
+                name: this.state.classInfo.name,
+                phone: this.state.classInfo.phone,
+                email: this.state.classInfo.email,
+                idTutors: this.state.classInfo.idTutors
+              };
+            this.props.onCreateClass(classInfo, hasChooseTutors, history);
         })
-        
+
     }
 
     onHandleChooseTutor = (event) => {
@@ -54,23 +76,27 @@ class DangKyChonGiaSu extends Component {
                     <Grid container spacing={3} style={{ padding: '20px' }}>
                         <Grid container spacing={3}>
                             <Grid item xs={6}>
-                                <TextField
-                                    fullWidth
-                                    required
-                                    id="standard-select-currency"
-                                    name="subject"
-                                    select
-                                    label="Môn học"
-                                    variant="outlined"
-                                    size="small"
-                                    onChange={this.onHandleChooseTutor}
-                                >
-                                    {hasSubjects && subjects.map((option) => (
-                                        <MenuItem key={option.subjectName} value={option.subjectName}>
-                                            {option.subjectName}
-                                        </MenuItem>
-                                    ))}
-                                </TextField>
+                                <FormControl variant="outlined" fullWidth required>
+                                    <InputLabel id="demo-mutiple-checkbox-outlined-label">Môn học</InputLabel>
+                                    <Select
+                                        labelId="demo-mutiple-checkbox-outlined-label"
+                                        id="demo-mutiple-checkbox-outlined"
+                                        multiple
+                                        label="Môn học"
+                                        onChange={this.onHandleChooseTutor}
+                                        input={<Input />}
+                                        name="subject"
+                                        value={this.state.classInfo.subject}
+                                        renderValue={(selected) => selected.join(', ')}
+                                    >
+                                        {hasSubjects && subjects.map((subject) => (
+                                            <MenuItem key={subject.subjectName} value={subject.subjectName}>
+                                                <Checkbox checked={this.state.classInfo.subject.indexOf(subject.subjectName) > -1} />
+                                                <ListItemText primary={subject.subjectName} />
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
                             </Grid>
                             <Grid item xs={6}>
                                 <TextField

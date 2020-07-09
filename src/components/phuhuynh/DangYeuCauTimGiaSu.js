@@ -9,7 +9,14 @@ import {
     DialogContent
 } from "@material-ui/core";
 
-import {actCreateClassesRequest} from './../../actions/classes';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import ListItemText from '@material-ui/core/ListItemText';
+import Checkbox from '@material-ui/core/Checkbox';
+
+import { actCreateClassesRequest } from './../../actions/classes';
 import { connect } from "react-redux";
 
 class DangYeuCauTimGiaSu extends Component {
@@ -17,7 +24,9 @@ class DangYeuCauTimGiaSu extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            classInfo:{}
+            classInfo: {
+                subject: []
+            }
         }
     }
 
@@ -25,18 +34,30 @@ class DangYeuCauTimGiaSu extends Component {
         e.preventDefault();
         this.props.onCloseSubmitRequest();
         let hasChooseTutors = false;
-        let {history} = this.props;
-        this.props.onCreateClass(this.state.classInfo, hasChooseTutors, history);
-        
-        
+        let { history } = this.props;
+        let classInfo = {
+            classTeach: this.state.classInfo.classTeach,
+            subject: this.state.classInfo.subject.join(", "),
+            timeTeach: this.state.classInfo.timeTeach,
+            address: this.state.classInfo.address,
+            district: this.state.classInfo.district,
+            tuitionFee: this.state.classInfo.tuitionFee,
+            genderRequirement: this.state.classInfo.genderRequirement,
+            levelRequirement: this.state.classInfo.levelRequirement,
+            name: this.state.classInfo.name,
+            phone: this.state.classInfo.phone,
+            email: this.state.classInfo.email,
+          };
+        this.props.onCreateClass(classInfo, hasChooseTutors, history);
     }
 
     onChange = (event) => {
-        let {name, value} = event.target;
+        let { name, value } = event.target;
+        console.log('event.target.value: ', event.target.value);
         this.setState((prevState) => ({
             classInfo: {
-              ...prevState.classInfo,
-              [name]: value,
+                ...prevState.classInfo,
+                [name]: value,
             },
         }));
     }
@@ -53,14 +74,37 @@ class DangYeuCauTimGiaSu extends Component {
                 fullWidth
                 maxWidth="md"
             >
-            <DialogTitle id="draggable-dialog-title">
-                Đăng yêu cầu tìm gia sư
-            </DialogTitle>
+                <DialogTitle id="draggable-dialog-title">
+                    Đăng yêu cầu tìm gia sư
+                </DialogTitle>
                 <DialogContent>
                     <form onSubmit={this.handleSubmit}>
                         <Grid container spacing={3} style={{ padding: "20px" }}>
                             <Grid container spacing={3}>
                                 <Grid item xs={6}>
+                                    <FormControl variant="outlined" fullWidth required>
+                                        <InputLabel id="demo-mutiple-checkbox-outlined-label">Môn học</InputLabel>
+                                        <Select
+                                            labelId="demo-mutiple-checkbox-outlined-label"
+                                            id="demo-mutiple-checkbox-outlined"
+                                            multiple
+                                            label="Môn học"
+                                            onChange={this.onChange}
+                                            input={<Input />}
+                                            name="subject"
+                                            value={this.state.classInfo.subject}
+                                            renderValue={(selected) => selected.join(', ')}
+                                        >
+                                            {hasSubjects && subjects.map((subject) => (
+                                                <MenuItem key={subject.subjectName} value={subject.subjectName}>
+                                                    <Checkbox checked={this.state.classInfo.subject.indexOf(subject.subjectName) > -1} />
+                                                    <ListItemText primary={subject.subjectName} />
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                {/* <Grid item xs={6}>
                                     <TextField
                                         fullWidth
                                         select
@@ -78,7 +122,7 @@ class DangYeuCauTimGiaSu extends Component {
                                             </MenuItem>
                                         ))}
                                     </TextField>
-                                </Grid>
+                                </Grid> */}
                                 <Grid item xs={6}>
                                     <TextField
                                         id="standard-select-currency"
@@ -169,7 +213,6 @@ class DangYeuCauTimGiaSu extends Component {
                                         onChange={this.onChange}
                                     />
                                 </Grid>
-
                                 <Grid item xs={6}>
                                     <TextField
                                         id="standard-select-currency"
@@ -259,7 +302,7 @@ class DangYeuCauTimGiaSu extends Component {
                         </div>
                     </form>
                 </DialogContent>
-            </Dialog>
+            </Dialog >
         );
     }
 }

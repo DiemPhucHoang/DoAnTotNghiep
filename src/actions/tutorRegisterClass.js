@@ -12,20 +12,21 @@ export const actTutorRegisterClassRequest = (registerInfo, idClass) => {
             registerInfo
         )
             .then(res => {
-                if (res.status === 200 && res.data.status) {
+                if (res.status === 200 && res.data.success) {
                     dispatch(actTutorRegisterClass(res.data));
                     notification.success({
                         message: "Success",
                         description: "Đăng ký nhận lớp thành công. Vui lòng chờ trung tâm duyệt đăng ký. Trung tâm sẽ liên hệ với bạn sau!"
                     });
+                } else {
+                    notification.error({
+                        message: "Failed!",
+                        description: "Bạn đã đăng ký lớp này!"
+                    });
                 }
-            })
-            .catch(error => {
-                notification.error({
-                    message: "Bạn đã đăng ký lớp này!",
-                    description: error.message
-                });
-            });
+            }).catch(err => {
+                console.log(err);
+          });
     };
 };
 
@@ -40,25 +41,23 @@ export const actTutorRegisterClass = registerInfo => {
 //get list tutor register class
 export const actFetchTutorRegisterClassRequest = idClass => {
     return dispatch => {
-      return callApi(
-        `register-class/class/${idClass}`,
-        "GET",
-        null
-      )
-        .then(res => {
-          if (res.status === 200) {
-            dispatch(actFetchTutorRegisterClass(res.data));
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
+        return callApi(
+            `register-class/class/${idClass}`,
+            "GET",
+            null
+        ).then(res => {
+            if (res.status === 200) {
+                dispatch(actFetchTutorRegisterClass(res.data));
+            }
+         }).catch(err => {
+            console.log(err);
+      });
     };
-  };
-  
+};
+
 export const actFetchTutorRegisterClass = tutorRegister => {
     return {
-      type: Types.FETCH_TUTOR_REGISTER_CLASS,
-      tutorRegister
+        type: Types.FETCH_TUTOR_REGISTER_CLASS,
+        tutorRegister
     };
 };

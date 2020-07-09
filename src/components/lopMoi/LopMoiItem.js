@@ -20,7 +20,7 @@ class LopMoiItem extends Component {
                     <AppBar position="static">
                         <Toolbar variant="dense">
                             <Typography variant="h6" color="inherit">
-                                Mã lớp: {classItem.id}
+                                Mã lớp: 00{classItem.id}
                             </Typography>
                         </Toolbar>
                     </AppBar>

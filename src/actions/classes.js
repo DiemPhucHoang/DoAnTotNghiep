@@ -3,10 +3,11 @@ import callApi from "../utils/apiCaller";
 import { notification } from "antd";
 import "antd/dist/antd.css";
 
+//create class
 export const actCreateClassesRequest = (classInfo, hasChooseTutors, history) => {
     return dispatch => {
         return callApi('class', 'POST', classInfo).then(res => {
-            if (res.status === 200) {
+            if (res.status === 200 && res.data.success) {
                 if (hasChooseTutors) {
                     dispatch(actDeleteChooseTutors());
                     history.push("/tim-gia-su");
@@ -21,13 +22,15 @@ export const actCreateClassesRequest = (classInfo, hasChooseTutors, history) => 
                         "Đăng yêu cầu thành công!"
                 });
 
+            } else {
+                notification.error({
+                    message: "Error ",
+                    description: "Đăng yêu cầu không thành công!. Số điện thoại đã đăng ký. Vui lòng đổi số điện thoại"
+                });
             }
-        }).catch(error => {
-            notification.error({
-                message: "Error ",
-                description: "Đăng yêu cầu không thành công!"
-            });
-        });
+        }).catch(err => {
+            console.log(err);
+      });
     }
 }
 
@@ -49,12 +52,12 @@ export const actDeleteChooseTutors = () => {
 export const actFetchClassesRequest = (page) => {
     return dispatch => {
         return callApi(`class?page=${page}`, 'GET', null).then(res => {
-            if (res.status === 200) {
+            if (res.status === 200 && res.data.success) {
                 dispatch(actFetchClasses(res.data));
             }
-        }).catch(error => {
-            console.log(error.message);
-        });
+        }).catch(err => {
+            console.log(err);
+      });
     }
 }
 
@@ -78,12 +81,12 @@ export const actSearchClassesRequest = (searchInput, page) => {
     return dispatch => {
         return callApi(
             `class/search?page=${page}`, "POST", searchInput).then(res => {
-                if (res.status === 200) {
+                if (res.status === 200 && res.data.success) {
                     dispatch(actSearchClasses(res.data));
                 }
-            }).catch(error => {
-                console.log(error.message);
-            })
+            }).catch(err => {
+                console.log(err);
+          });
     }
 }
 export const actSearchClasses = classes => {
@@ -97,12 +100,12 @@ export const actSearchClasses = classes => {
 export const actFetchClassDetailRequest = (id) => {
     return dispatch => {
         return callApi(`class/${id}`, "GET", null).then(res => {
-            if(res.status === 200) {
+            if (res.status === 200 && res.data.success) {
                 dispatch(actFetchClassDetail(res.data));
             }
-        }).catch(error => {
-            console.log(error.message);
-        })
+        }).catch(err => {
+            console.log(err);
+      });
     }
 }
 
@@ -112,3 +115,6 @@ export const actFetchClassDetail = classes => {
         classes
     }
 }
+
+
+

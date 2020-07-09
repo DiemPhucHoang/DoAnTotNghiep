@@ -11,8 +11,6 @@ class DanhSachGiaSuDaDangKy extends Component {
 
     render() {
         const {tutorRegisterClass} = this.props;
-        console.log('tutorRegisterClass.status: ', tutorRegisterClass.status);
-       
         const hasTutorRegisterClass = tutorRegisterClass && tutorRegisterClass.length > 0;
         return (
             <Grid container className="padding-class">
@@ -22,7 +20,7 @@ class DanhSachGiaSuDaDangKy extends Component {
                     </Typography>
                 </Grid>
                 <Grid xs={4} item>
-                    <label className="statusGray"></label> Chưa nhận lớp
+                    <label className="statusGray"></label> Xem xét
                     <label className="statusRed"></label> Không đạt
                 </Grid>
                 <Grid xs={12} item style={{ marginTop: "15px" }}>
@@ -41,7 +39,7 @@ class DanhSachGiaSuDaDangKy extends Component {
                             <TableBody>
                                 {hasTutorRegisterClass && tutorRegisterClass.map((row) => (
                                    
-                                    <TableRow key={row.idTutor} style={{ backgroundColor: `${row.status === "CHUANHANLOP" ? '#d6d6d6' : (row.status === "KHONGDAT" ?'#9B0000' : "")}`}}>
+                                    <TableRow key={row.idTutor} style={{ backgroundColor: `${row.status === "Xem xét" ? '#d6d6d6' : (row.status === "Không đạt" ?'#9B0000' : "")}`}}>
                                         <TableCell align="center" component="th" scope="row">
                                             {row.idTutor}
                                         </TableCell>

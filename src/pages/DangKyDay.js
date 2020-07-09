@@ -1,30 +1,54 @@
 import React, { Component } from 'react';
-import { Grid, Paper, AppBar, Toolbar, Typography} from '@material-ui/core';
+import { Grid, Paper, AppBar, Toolbar, Typography } from '@material-ui/core';
 import LopMoiDetail from './../components/dangKyDay/LopMoiDetail';
 import { connect } from 'react-redux';
-import {actFetchClassDetailRequest} from './../actions/classes';
+import { actFetchClassDetailRequest } from './../actions/classes';
 import FormDangKyNhanLop from './../components/dangKyDay/FormDangKyNhanLop';
 import DanhSachGiaSuDaDangKy from './../components/dangKyDay/DanhSachGiaSuDaDangKy';
 import DanhSachLopTuongTu from './../components/dangKyDay/DanhSachLopTuongTu';
-import {actTutorRegisterClassRequest, actFetchTutorRegisterClassRequest} from './../actions/tutorRegisterClass';
+import { actTutorRegisterClassRequest, actFetchTutorRegisterClassRequest } from './../actions/tutorRegisterClass';
+import callApi from './../utils/apiCaller';
 
 class DangKyDay extends Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            classesSimilar: []
+        }
+    }
+
     componentDidMount() {
-        const {match} = this.props;
-        if(match) {
+        const { match } = this.props;
+        if (match) {
             const id = match.params.id;
-            this.props.onFetchClassDetail(id);
-            this.props.onFetchTutorRegisterClass(id);
+            this.getData(id);
         }
     }
 
     onRegisterClass = (registerInfo) => {
         this.props.onHandleRegisterClass(registerInfo, this.props.classes.id);
     }
+    showClassDetail = (id) => {
+        this.getData(id);
+    }
+
+    getData = (id) => {
+        this.props.onFetchClassDetail(id);
+        this.props.onFetchTutorRegisterClass(id);
+        callApi(`class/similar/${id}`, 'GET', null).then(res => {
+            if (res.status === 200 && res.data.success) {
+                this.setState({
+                    classesSimilar: res.data.result
+                });
+            }
+        }).catch(error => {
+            console.log(error);
+        });
+    }
 
     render() {
-        const {classes} = this.props;
+        const { classes } = this.props;
         return (
             <div className="bg-color">
                 <div className="px-5 pt-5 pb-3 mx-5">
@@ -37,11 +61,18 @@ class DangKyDay extends Component {
                     </AppBar>
                     <Paper style={{ width: "100%", paddingBottom: "20px" }}>
                         <Grid container style={{ paddingRight: "20px" }}>
-                            <LopMoiDetail classItem={classes}/>
-                            <FormDangKyNhanLop onRegisterClass={this.onRegisterClass}/>
+                            <LopMoiDetail classItem={classes} />
+                            <FormDangKyNhanLop onRegisterClass={this.onRegisterClass} />
                         </Grid>
                         <hr />
-                        <DanhSachGiaSuDaDangKy tutorRegisterClass={this.props.tutorRegisterClass}/>
+                        {this.props.tutorRegisterClass.length <= 0 ? (
+                            <Grid container className="padding-class">
+                                <strong>Hiện tại chưa có gia sư nào đăng ký nhận lớp này</strong>
+                            </Grid>
+                        ) : (
+                                <DanhSachGiaSuDaDangKy tutorRegisterClass={this.props.tutorRegisterClass} />
+                            )}
+
                         <hr />
                         <Grid container className="padding-class">
                             <Grid item xs={12}>
@@ -63,7 +94,10 @@ class DangKyDay extends Component {
                         </Grid>
                     </Paper>
                 </div>
-                <DanhSachLopTuongTu />
+                <DanhSachLopTuongTu
+                    showClassDetail={this.showClassDetail}
+                    classesSimilar={this.state.classesSimilar}
+                    history={this.props.history} />
             </div>
         );
     }
@@ -77,16 +111,16 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-      onFetchClassDetail: (id) => {
-        dispatch(actFetchClassDetailRequest(id));
-      },
-      onHandleRegisterClass: (registerInfo, idClass) => {
-        dispatch(actTutorRegisterClassRequest(registerInfo, idClass));
-      },
-      onFetchTutorRegisterClass: idClass => {
-        dispatch(actFetchTutorRegisterClassRequest(idClass));
-      },
+        onFetchClassDetail: (id) => {
+            dispatch(actFetchClassDetailRequest(id));
+        },
+        onHandleRegisterClass: (registerInfo, idClass) => {
+            dispatch(actTutorRegisterClassRequest(registerInfo, idClass));
+        },
+        onFetchTutorRegisterClass: idClass => {
+            dispatch(actFetchTutorRegisterClassRequest(idClass));
+        },
     };
-  };
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(DangKyDay);
