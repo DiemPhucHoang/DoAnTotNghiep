@@ -71,7 +71,7 @@ public class TutorServiceImpl implements TutorService {
 
     @Override
     public Page<TutorInfoVO> getAllByPage(Pageable pageable) {
-        List<Tutor> tutors = tutorDAO.findByStatus(TutorStatus.CHUA_NHAN_LOP);
+        List<Tutor> tutors = tutorDAO.findByStatus(TutorStatus.CHUANHANLOP);
         List<TutorInfoVO> tutorInfoVOS = tutorParsing.toTutorsInfoVOList(tutors);
 
         int start = (int) pageable.getOffset();
@@ -89,7 +89,7 @@ public class TutorServiceImpl implements TutorService {
 
     @Override
     public boolean checkFileNameExist(String fileName, Long idUser) {
-        List<Tutor> tutors = tutorDAO.findByStatus(TutorStatus.CHUA_NHAN_LOP);
+        List<Tutor> tutors = tutorDAO.findByStatus(TutorStatus.CHUANHANLOP);
 
         for (Tutor item: tutors) {
             if(item.getImage().equals(fileName) && !(item.getUser().getId().equals(idUser)))
@@ -163,8 +163,7 @@ public class TutorServiceImpl implements TutorService {
         if(tutorDAO.existsByUser(user)) {
             throw new BadRequestException("Id user already exists");
         }
-        TutorStatus tutorStatus = TutorStatus.CHUA_NHAN_LOP;
-        tutorVO.setStatus(tutorStatus);
+        tutorVO.setStatus(TutorStatus.CHUANHANLOP.getKey());
         Tutor tutorMap = tutorParsing.toTutor(tutorVO);
         tutorMap.setUser(userDAO.findById(idUser).
                 orElseThrow(() -> new ResourceNotFoundException("User", "id", idUser)));
@@ -202,11 +201,11 @@ public class TutorServiceImpl implements TutorService {
     public Page<TutorInfoVO> searchTutor(SearchVO searchVO, Pageable pageable) {
         logger.info("Search tutor");
         List<Tutor> tutors = tutorDAO.findAll(Objects.requireNonNull(Objects.requireNonNull(Objects.requireNonNull(Specification.
-                where(TutorSpecification.withSubject(searchVO.getSubject(), TutorStatus.CHUA_NHAN_LOP))
-                .and(TutorSpecification.withClassTeach(searchVO.getClassTeach(), TutorStatus.CHUA_NHAN_LOP)))
-                .and(TutorSpecification.withDistrict(searchVO.getDistrict(), TutorStatus.CHUA_NHAN_LOP)))
-                .and(TutorSpecification.withLevel(searchVO.getLevel(), TutorStatus.CHUA_NHAN_LOP)))
-                .and(TutorSpecification.withGender(searchVO.getGender(), TutorStatus.CHUA_NHAN_LOP)));
+                where(TutorSpecification.withSubject(searchVO.getSubject(), TutorStatus.CHUANHANLOP))
+                .and(TutorSpecification.withClassTeach(searchVO.getClassTeach(), TutorStatus.CHUANHANLOP)))
+                .and(TutorSpecification.withDistrict(searchVO.getDistrict(), TutorStatus.CHUANHANLOP)))
+                .and(TutorSpecification.withLevel(searchVO.getLevel(), TutorStatus.CHUANHANLOP)))
+                .and(TutorSpecification.withGender(searchVO.getGender(), TutorStatus.CHUANHANLOP)));
         List<TutorInfoVO> tutorInfoVOS = tutorParsing.toTutorsInfoVOList(tutors);
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), tutorInfoVOS.size());
@@ -284,5 +283,11 @@ public class TutorServiceImpl implements TutorService {
         }
         saveTutor(tutor);
         return newFileName;
+    }
+
+    @Override
+    public List<TutorInfoVO> getTop4Tutors() {
+        logger.info("Get top 4");
+        return tutorParsing.toTutorsInfoVOList(tutorDAO.findTop4ByStatus(TutorStatus.CHUANHANLOP));
     }
 }

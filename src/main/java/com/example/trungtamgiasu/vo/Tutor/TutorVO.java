@@ -1,6 +1,5 @@
 package com.example.trungtamgiasu.vo.Tutor;
 
-import com.example.trungtamgiasu.model.enums.TutorStatus;
 import com.example.trungtamgiasu.vo.FreeTime.FreeTimeVO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -51,7 +50,7 @@ public class TutorVO {
 
     private String moreInfo;
 
-    private TutorStatus status;
+    private String status;
 
     private String name;
 

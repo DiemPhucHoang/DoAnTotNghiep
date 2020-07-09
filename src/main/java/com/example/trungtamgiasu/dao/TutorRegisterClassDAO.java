@@ -2,7 +2,6 @@ package com.example.trungtamgiasu.dao;
 
 import com.example.trungtamgiasu.model.Classes;
 import com.example.trungtamgiasu.model.TutorRegisterClass;
-import com.example.trungtamgiasu.model.enums.TutorRegisterClassStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -17,7 +16,7 @@ public interface TutorRegisterClassDAO extends JpaRepository<TutorRegisterClass,
 
     List<TutorRegisterClass> findAllByClasses(Classes classes);
 
-    @Query(value = "select * from tutor_register_class where id_class = ?1 and status != 'DAHUY'", nativeQuery = true)
+    @Query(value = "select * from tutor_register_class where id_class = ?1 and status != 'Đã hủy'", nativeQuery = true)
     List<TutorRegisterClass> getAllByClasses(Long idClass);
 
     @Query(value = "select  * from tutor_register_class where id_tutor = ?1", nativeQuery = true)

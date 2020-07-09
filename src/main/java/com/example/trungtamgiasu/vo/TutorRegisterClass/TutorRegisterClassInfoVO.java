@@ -1,6 +1,5 @@
 package com.example.trungtamgiasu.vo.TutorRegisterClass;
 
-import com.example.trungtamgiasu.model.enums.TutorRegisterClassStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +21,6 @@ public class TutorRegisterClassInfoVO {
 
     private String payment;
 
-    private TutorRegisterClassStatus status;
+    private String status;
 
 }

@@ -29,4 +29,6 @@ public interface TutorDAO extends JpaRepository<Tutor, Long>, JpaSpecificationEx
     boolean existsById(Long id);
 
     boolean existsByUser(User user);
+
+    List<Tutor> findTop4ByStatus(TutorStatus tutorStatus);
 }

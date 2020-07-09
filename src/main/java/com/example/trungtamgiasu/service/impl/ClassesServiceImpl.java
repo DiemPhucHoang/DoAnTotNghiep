@@ -53,9 +53,7 @@ public class ClassesServiceImpl implements ClassesService {
         if(classesVO == null) {
             throw new BadRequestException("Class is null");
         }
-        Classes classMap = classesParsing.toClasses(classesVO);
-        ClassesStatus classesStatus = ClassesStatus.LOPMOI;
-        classMap.setStatus(classesStatus);
+        classesVO.setStatus(ClassesStatus.LOPMOI.getKey());
         if (userDAO.existsByPhone(classesVO.getPhone())) {
             throw new BadRequestException("Phone is already use!");
         }
@@ -64,12 +62,12 @@ public class ClassesServiceImpl implements ClassesService {
         Role role = roleDAO.findByName(roleName).orElseThrow(() -> new BadRequestException("Role does not exists"));
         userInfo.getRoles().add(role);
         User user =  userDAO.save(userInfo);
+        Classes classMap = classesParsing.toClasses(classesVO);
         classMap.setUser(user);
         Classes classes = classesDAO.save(classMap);
-
         ParentRegisterTutorStatus status = ParentRegisterTutorStatus.CHUADONGY;
         ClassesStatus statusRegisterTutor = ClassesStatus.CHOXACNHAN;
-        if(classesVO.getIdTutors() != null) {
+        if(classesVO.getIdTutors() != null && classesVO.getIdTutors().length > 0) {
             for (Long id : classesVO.getIdTutors()) {
                 Tutor tutorInfo = tutorDAO.findById(id).orElseThrow(() ->
                         new ResourceNotFoundException("Tutor", "id", id));
@@ -122,5 +120,21 @@ public class ClassesServiceImpl implements ClassesService {
         Classes classes = classesDAO.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException("Class", "id", id));
         return classesParsing.toClassesInfoVO(classes);
+    }
+
+    @Override
+    public List<ClassesInfoVO> getTop4() {
+        logger.info("Get top 4 classes");
+        List<Classes> classesList = classesDAO.findTop4ByStatusOrderByTuitionFeeDesc(ClassesStatus.LOPMOI);
+        return classesParsing.toClassesInfoVOList(classesList);
+    }
+
+    @Override
+    public List<ClassesInfoVO> getTop3ByClassTeach(Long idClass) {
+        Classes classes = classesDAO.findById(idClass).orElseThrow(() ->
+                new ResourceNotFoundException("Class", "id", idClass));
+        logger.info("Get top 3 classes by class teach " + classes.getClassTeach());
+        List<Classes> classesList = classesDAO.getTop3Similar(classes.getClassTeach(), idClass);
+        return classesParsing.toClassesInfoVOList(classesList);
     }
 }

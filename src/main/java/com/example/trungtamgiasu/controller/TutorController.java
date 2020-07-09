@@ -106,4 +106,9 @@ public class TutorController {
                 tutorService.changeImage(idUser, file, auth));
     }
 
+    @GetMapping("/top4")
+    public ApiResponse getTop4Tutors() {
+        return new ApiResponse(true, "Get top4 tutors successfully", tutorService.getTop4Tutors());
+    }
+
 }

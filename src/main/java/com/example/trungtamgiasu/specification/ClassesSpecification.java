@@ -12,7 +12,7 @@ public class ClassesSpecification {
         } else {
             return (root, query, cb) -> cb.and(
                     cb.equal(root.get("status"), classesStatus),
-                    cb.equal(root.get("subject"), subject)
+                    cb.like(root.get("subject"), "%"+subject+"%")
             );
         }
     }

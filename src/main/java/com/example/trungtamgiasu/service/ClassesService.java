@@ -7,6 +7,8 @@ import com.example.trungtamgiasu.vo.classes.ClassesVO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface ClassesService {
     Classes createClass(ClassesVO classesVO);
 
@@ -15,4 +17,8 @@ public interface ClassesService {
     Page<ClassesInfoVO> searchClasses(SearchVO searchVO, Pageable pageable);
 
     ClassesInfoVO getClassesById(Long id);
+    
+    List<ClassesInfoVO> getTop4();
+
+    List<ClassesInfoVO> getTop3ByClassTeach(Long idClass);
 }

@@ -4,6 +4,7 @@ import com.example.trungtamgiasu.dao.TutorDAO;
 import com.example.trungtamgiasu.exception.BadRequestException;
 import com.example.trungtamgiasu.exception.ResourceNotFoundException;
 import com.example.trungtamgiasu.model.*;
+import com.example.trungtamgiasu.model.enums.TutorStatus;
 import com.example.trungtamgiasu.parsing.TutorParsing;
 import com.example.trungtamgiasu.vo.Tutor.TutorInfoVO;
 import com.example.trungtamgiasu.vo.Tutor.TutorVO;
@@ -13,9 +14,12 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class TutorParsingImpl implements TutorParsing {
@@ -39,7 +43,7 @@ public class TutorParsingImpl implements TutorParsing {
             tutor.setLevel(tutorVO.getLevel());
             tutor.setSalaryPerHour(tutorVO.getSalaryPerHour());
             tutor.setMoreInfo(tutorVO.getMoreInfo());
-            tutor.setStatus(tutorVO.getStatus());
+            tutor.setStatus(TutorStatus.from(tutorVO.getStatus()));
             return tutor;
         }
 
@@ -62,38 +66,43 @@ public class TutorParsingImpl implements TutorParsing {
         }
         TutorInfoVO tutorInfoVO = new TutorInfoVO();
 
-        tutorInfoVO.setId( tutor.getId() );
-        tutorInfoVO.setGender( tutor.getGender() );
-        tutorInfoVO.setYearOfBirth( tutor.getYearOfBirth() );
+        tutorInfoVO.setId(tutor.getId());
+        tutorInfoVO.setGender(tutor.getGender());
+        tutorInfoVO.setYearOfBirth(tutor.getYearOfBirth());
         tutorInfoVO.setImage(readBytesFromFile(tutor.getId()));
-        tutorInfoVO.setMajor( tutor.getMajor() );
-        tutorInfoVO.setCollege( tutor.getCollege() );
-        tutorInfoVO.setGraduationYear( tutor.getGraduationYear() );
-        tutorInfoVO.setLevel( tutor.getLevel() );
-        tutorInfoVO.setSalaryPerHour(tutor.getSalaryPerHour());
-        tutorInfoVO.setMoreInfo( tutor.getMoreInfo() );
-        tutorInfoVO.setStatus( tutor.getStatus() );
+        tutorInfoVO.setMajor(tutor.getMajor());
+        tutorInfoVO.setCollege(tutor.getCollege());
+        tutorInfoVO.setGraduationYear(tutor.getGraduationYear());
+        tutorInfoVO.setLevel(tutor.getLevel());
+        tutorInfoVO.setSalaryPerHour(NumberFormat.getNumberInstance(Locale.US)
+                .format(tutor.getSalaryPerHour()));
+        tutorInfoVO.setMoreInfo(tutor.getMoreInfo());
+        tutorInfoVO.setStatus(tutor.getStatus().getKey());
 
         Set<Subject> subjectSet = tutor.getSubjects();
         List<String> subjectNames = new ArrayList<>();
         for (Subject subject : subjectSet) {
             subjectNames.add(subject.getSubjectName());
         }
-        tutorInfoVO.setSubjects(subjectNames);
+        List<String> sortedSubjectNames = subjectNames.stream().sorted().collect(Collectors.toList());
+        tutorInfoVO.setSubjects(sortedSubjectNames);
 
         Set<ClassTeach> classTeachSet = tutor.getClassTeaches();
         List<String> classTeachNames = new ArrayList<>();
         for (ClassTeach classTeach : classTeachSet) {
             classTeachNames.add(classTeach.getClassTeachName());
         }
-        tutorInfoVO.setClassTeaches(classTeachNames);
+        List<String> sortedClassTeachNames = classTeachNames.stream().sorted().collect(Collectors.toList());
+        tutorInfoVO.setClassTeaches(sortedClassTeachNames);
 
         Set<District> districtSet = tutor.getDistricts();
         List<String> districtNames = new ArrayList<>();
         for (District district : districtSet) {
             districtNames.add(district.getDistrictName());
         }
-        tutorInfoVO.setDistricts(districtNames);
+        List<String> sortedDistrictNames = districtNames.stream().sorted().collect(Collectors.toList());
+        tutorInfoVO.setDistricts(sortedDistrictNames);
+
         List<FreeTime> freeTimes = tutor.getFreeTimes();
         if ( freeTimes != null ) {
             tutorInfoVO.setFreeTimes( new ArrayList<>( freeTimes ) );

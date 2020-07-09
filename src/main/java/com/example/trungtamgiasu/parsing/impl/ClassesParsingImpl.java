@@ -1,13 +1,19 @@
 package com.example.trungtamgiasu.parsing.impl;
 
 import com.example.trungtamgiasu.model.Classes;
+import com.example.trungtamgiasu.model.enums.ClassesStatus;
 import com.example.trungtamgiasu.parsing.ClassesParsing;
 import com.example.trungtamgiasu.vo.classes.ClassesInfoVO;
 import com.example.trungtamgiasu.vo.classes.ClassesVO;
 import org.springframework.stereotype.Component;
 
+import java.text.Format;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 @Component
 public class ClassesParsingImpl implements ClassesParsing {
@@ -29,7 +35,7 @@ public class ClassesParsingImpl implements ClassesParsing {
             classes.setTimeTeach(classesVO.getTimeTeach());
             classes.setAddress(classesVO.getAddress());
             classes.setTuitionFee(classesVO.getTuitionFee());
-            classes.setStatus(classesVO.getClassesStatus());
+            classes.setStatus(ClassesStatus.from(classesVO.getStatus()));
             return classes;
         }
 
@@ -50,7 +56,7 @@ public class ClassesParsingImpl implements ClassesParsing {
             classesVO.setTimeTeach(classes.getTimeTeach());
             classesVO.setAddress(classes.getAddress());
             classesVO.setTuitionFee(classes.getTuitionFee());
-            classesVO.setClassesStatus(classes.getStatus());
+            classesVO.setStatus(classes.getStatus().getKey());
             return classesVO;
         }
     }
@@ -69,8 +75,13 @@ public class ClassesParsingImpl implements ClassesParsing {
             classesInfoVO.setDistrict(classes.getDistrict());
             classesInfoVO.setTimeTeach(classes.getTimeTeach());
             classesInfoVO.setAddress(classes.getAddress());
-            classesInfoVO.setTuitionFee(classes.getTuitionFee());
-            classesInfoVO.setClassesStatus(classes.getStatus());
+            classesInfoVO.setTuitionFee(NumberFormat.getNumberInstance(Locale.US).format(classes.getTuitionFee()));
+            classesInfoVO.setStatus(classes.getStatus().getKey());
+            if(classes.getTime() != null) {
+                Format formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+                String s = formatter.format(classes.getTime());
+                classesInfoVO.setTime(s);
+            }
             return classesInfoVO;
         }
     }

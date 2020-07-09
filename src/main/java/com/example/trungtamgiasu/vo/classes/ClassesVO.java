@@ -1,6 +1,5 @@
 package com.example.trungtamgiasu.vo.classes;
 
-import com.example.trungtamgiasu.model.enums.ClassesStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,7 +38,7 @@ public class ClassesVO {
     @NotBlank
     private double tuitionFee;
 
-    private ClassesStatus classesStatus;
+    private String status;
 
     @NotBlank
     private String name;

@@ -34,4 +34,6 @@ public interface TutorService {
     Tutor getTutorByIdUser(Long idUser);
 
     String changeImage(Long idUser, MultipartFile file, Authentication auth);
+
+    List<TutorInfoVO> getTop4Tutors();
 }

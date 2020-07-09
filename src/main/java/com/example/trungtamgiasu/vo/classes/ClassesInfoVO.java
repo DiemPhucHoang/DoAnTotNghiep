@@ -1,12 +1,12 @@
 package com.example.trungtamgiasu.vo.classes;
 
-import com.example.trungtamgiasu.model.enums.ClassesStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -35,7 +35,9 @@ public class ClassesInfoVO {
     private String address;
 
     @NotBlank
-    private double tuitionFee;
+    private String tuitionFee;
 
-    private ClassesStatus classesStatus;
+    private String status;
+
+    private String time;
 }

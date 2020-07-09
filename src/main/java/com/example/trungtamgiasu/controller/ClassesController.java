@@ -56,5 +56,17 @@ public class ClassesController {
         }
     }
 
+    @GetMapping("/top4")
+    public ApiResponse getTop4() {
+        return new ApiResponse(true, "Get top 4 classes successfully", classesService.getTop4());
+    }
+
+    @GetMapping("/similar/{idClass}")
+    public ApiResponse getTop3ByClassTeach(@PathVariable("idClass") Long idClass) {
+        return new ApiResponse(
+                true,
+                "Get top 3 by class teach successfully",
+                classesService.getTop3ByClassTeach(idClass));
+    }
 
 }

@@ -61,7 +61,7 @@ public class TutorRegisterClassServiceImpl implements TutorRegisterClassService 
                 -> new BadRequestException("Tutor is not found with user" + user.getId()));
         Classes classes = classesDAO.findById(idClass).orElseThrow(() ->
                 new ResourceNotFoundException("Class", "id", idClass));
-        List<TutorRegisterClass> tutorRegisterClassList = tutorRegisterClassDAO.findAllByClasses(classes);
+        List<TutorRegisterClass> tutorRegisterClassList = tutorRegisterClassDAO.getAllByClasses(idClass);
         //check tutor has already registered and check max tutor can register
         if(tutorRegisterClassList.size() > 0)
         {
@@ -77,8 +77,8 @@ public class TutorRegisterClassServiceImpl implements TutorRegisterClassService 
             }
         }
         logger.info("Tutor " + tutor.getId() + " register " + "class" + idClass);
-        TutorRegisterClassStatus status =TutorRegisterClassStatus.CHUANHANLOP;
-        tutorRegisterClassVO.setStatus(status);
+        TutorRegisterClassStatus status =TutorRegisterClassStatus.XEMXET;
+        tutorRegisterClassVO.setStatus(status.getKey());
         TutorRegisterClass classRegister = tutorRegisterClassParsing.toTutorRegisterClass(tutorRegisterClassVO);
         classRegister.setTutor(tutor);
         classRegister.setClasses(classes);
@@ -106,12 +106,11 @@ public class TutorRegisterClassServiceImpl implements TutorRegisterClassService 
     @Override
     public ClassRegisterVO changeStatusTutorRegisterClass(Long id) {
         logger.info("Change status tutor register class with id_register " + id);
-        TutorRegisterClassStatus tutorRegisterClassStatus = TutorRegisterClassStatus.DAHUY;
         TutorRegisterClass tutorRegisterClass = tutorRegisterClassDAO.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException("Tutor register class", "id", id));
         System.out.println("status" + tutorRegisterClass.getStatus());
-        if(tutorRegisterClass.getStatus().equals(TutorRegisterClassStatus.CHUANHANLOP)) {
-            tutorRegisterClassDAO.changeStatusClassRegister(tutorRegisterClassStatus.name(), tutorRegisterClass.getId());
+        if(tutorRegisterClass.getStatus().equals(TutorRegisterClassStatus.XEMXET)) {
+            tutorRegisterClassDAO.changeStatusClassRegister(TutorRegisterClassStatus.DAHUY.getKey(), tutorRegisterClass.getId());
         } else {
             throw new BadRequestException("Can not change status");
         }
