@@ -132,8 +132,23 @@ public class AuthController {
     public ApiResponse changeInfoUser(@PathVariable("idUser") Long idUser, Authentication auth,
                                       @Valid @RequestBody UserInfoVO userInfoVO) {
         logger.info("Change info user");
-        User user = userService.changeInfoUser(idUser, userInfoVO, auth);
-        return new ApiResponse(true,"Change info user successfully", user);
+        try {
+            UserInfoVO user = userService.changeInfoUser(idUser, userInfoVO, auth);
+            return new ApiResponse(true,"Change info user successfully", user);
+        } catch (Exception e) {
+            return new ApiResponse(false, "Change info user failed", e.toString());
+        }
+    }
+
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_TUTOR')")
+    @GetMapping("/{idUser}")
+    public ApiResponse getUserById(@PathVariable("idUser") Long idUser) {
+        try {
+            UserInfoVO userInfoVO = userService.getById(idUser);
+            return new ApiResponse(true, "Get user by id " + idUser + "successfully", userInfoVO);
+        } catch (Exception e) {
+            return new ApiResponse(false, "Get user failed", e.toString());
+        }
     }
 
 }

@@ -1,4 +1,5 @@
 package com.example.trungtamgiasu.controller;
+import com.example.trungtamgiasu.parsing.TutorParsing;
 import com.example.trungtamgiasu.service.TutorService;
 import com.example.trungtamgiasu.vo.SearchVO;
 import com.example.trungtamgiasu.vo.Tutor.TutorInfoVO;
@@ -23,13 +24,16 @@ public class TutorController {
     @Autowired
     private TutorService tutorService;
 
-    @PostMapping("/image")
-    public ApiResponse uploadImage(@RequestPart("file")MultipartFile file) {
-        logger.info("Upload file controller");
+    @Autowired
+    private TutorParsing tutorParsing;
+
+    @PostMapping("/upload-image/{idUser}")
+    public ApiResponse uploadImage(@RequestPart("file")MultipartFile file, @PathVariable("idUser") Long idUser,
+                                   Authentication auth) {
         return new ApiResponse(
                 true,
                 "Upload image successfully",
-                tutorService.uploadImage(file));
+                tutorService.uploadImage(file, idUser, auth));
     }
 
     @PostMapping("/{idUser}")
@@ -46,7 +50,6 @@ public class TutorController {
 
     @GetMapping
     public ApiResponse getAll(@PageableDefault(size = 6) Pageable pageable) {
-        logger.info("Get all tutors controller");
         Page<TutorInfoVO> tutorInfoVOPage = tutorService.getAllByPage(pageable);
         return new ApiResponse(
                 true,
@@ -57,7 +60,6 @@ public class TutorController {
 
     @PostMapping("/search")
     public ApiResponse getAllBySearch(@RequestBody SearchVO searchVO, @PageableDefault(size = 6)Pageable pageable) {
-        logger.info("Get all tutors by search controller");
         Page<TutorInfoVO> tutorInfoVOPage = tutorService.searchTutor(searchVO, pageable);
         return new ApiResponse(
                 true,
@@ -73,6 +75,18 @@ public class TutorController {
                 "Get tutor " +  idTutor + " successfully",
                 tutorService.getTutorById(idTutor)
         );
+    }
+
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_TUTOR')")
+    @GetMapping("user/{idUser}")
+    public ApiResponse getTutorByIdUser(@PathVariable("idUser") Long idUser) {
+        logger.info("Get tutor by id user" + idUser);
+        try {
+            TutorInfoVO tutorInfoVO = tutorParsing.toTutorInfoVO(tutorService.getTutorByIdUser(idUser));
+            return new ApiResponse(true, "Get tutor by id user" +  idUser + " successfully", tutorInfoVO);
+        } catch (Exception e) {
+            return new ApiResponse(false, "Get tutor by id user" +  idUser + " failed", e.toString());
+        }
     }
 
     @GetMapping("/{idTutor}/similar")
@@ -95,7 +109,7 @@ public class TutorController {
 //    }
 
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_TUTOR')")
-    @PostMapping("/image/{idUser}")
+    @PostMapping("/change-image/{idUser}")
     public ApiResponse changeImageTutor(@PathVariable("idUser") Long idUser,
                                         @RequestPart("file") MultipartFile file, Authentication auth)
     {
@@ -109,6 +123,17 @@ public class TutorController {
     @GetMapping("/top4")
     public ApiResponse getTop4Tutors() {
         return new ApiResponse(true, "Get top4 tutors successfully", tutorService.getTop4Tutors());
+    }
+
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_TUTOR')")
+    @PostMapping("/edit/{idTutor}")
+    public ApiResponse changeInfoTutor(@PathVariable("idTutor") Long idTutor, @RequestBody TutorVO tutorVO)  {
+        try {
+            TutorInfoVO tutorInfoVO = tutorService.changeInfoTutor(tutorVO, idTutor);
+            return new ApiResponse(true, "Change info tutor " + idTutor + " successfully ", tutorInfoVO);
+        } catch (Exception e) {
+            return new ApiResponse(false, "Change info tutor " + idTutor + " failed " + e.toString());
+        }
     }
 
 }

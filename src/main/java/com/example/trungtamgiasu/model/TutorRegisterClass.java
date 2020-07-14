@@ -22,6 +22,7 @@ public class TutorRegisterClass {
     private Long id;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.ORDINAL)
     private TutorRegisterClassStatus status;
 
     @Column(nullable = false)

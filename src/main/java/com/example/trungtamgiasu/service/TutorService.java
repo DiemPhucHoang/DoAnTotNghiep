@@ -1,6 +1,7 @@
 package com.example.trungtamgiasu.service;
 
-import com.example.trungtamgiasu.model.Tutor;
+import com.example.trungtamgiasu.model.*;
+import com.example.trungtamgiasu.vo.FreeTime.FreeTimeVO;
 import com.example.trungtamgiasu.vo.SearchVO;
 import com.example.trungtamgiasu.vo.Tutor.TutorInfoVO;
 import com.example.trungtamgiasu.vo.Tutor.TutorVO;
@@ -10,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Set;
 
 public interface TutorService {
 
@@ -21,7 +23,8 @@ public interface TutorService {
 
     String changeFileNameIfExist(MultipartFile file, Long idUser);
 
-    String uploadImage(MultipartFile file);
+    //??ko dung
+    String uploadImage(MultipartFile file, Long idUser, Authentication auth);
 
     Tutor createTutor(TutorVO tutorVO, Long idUser);
 
@@ -36,4 +39,16 @@ public interface TutorService {
     String changeImage(Long idUser, MultipartFile file, Authentication auth);
 
     List<TutorInfoVO> getTop4Tutors();
+
+    TutorInfoVO changeInfoTutor(TutorVO tutorVO, Long idTutor);
+
+    boolean checkExistFreeTime(FreeTime freeTimeFirst, FreeTime freeTimeSecond);
+
+    Set<Subject> updateSubjects(Long[] subjects);
+
+    Set<District> updateDistricts(Long[] districts);
+
+    Set<ClassTeach> updateClassTeaches(Long[] classTeaches);
+
+    Set<FreeTime> updateFreeTimes(FreeTimeVO[] freeTimeVOS);
 }

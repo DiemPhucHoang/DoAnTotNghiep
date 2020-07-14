@@ -14,10 +14,9 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -65,47 +64,46 @@ public class TutorParsingImpl implements TutorParsing {
             return null;
         }
         TutorInfoVO tutorInfoVO = new TutorInfoVO();
-
         tutorInfoVO.setId(tutor.getId());
         tutorInfoVO.setGender(tutor.getGender());
         tutorInfoVO.setYearOfBirth(tutor.getYearOfBirth());
-        tutorInfoVO.setImage(readBytesFromFile(tutor.getId()));
+        if(tutor.getImage() != null) {
+            tutorInfoVO.setImage(readBytesFromFile(tutor.getId()));
+        }
         tutorInfoVO.setMajor(tutor.getMajor());
         tutorInfoVO.setCollege(tutor.getCollege());
         tutorInfoVO.setGraduationYear(tutor.getGraduationYear());
         tutorInfoVO.setLevel(tutor.getLevel());
-        tutorInfoVO.setSalaryPerHour(NumberFormat.getNumberInstance(Locale.US)
-                .format(tutor.getSalaryPerHour()));
+        tutorInfoVO.setSalaryPerHour(tutor.getSalaryPerHour());
         tutorInfoVO.setMoreInfo(tutor.getMoreInfo());
         tutorInfoVO.setStatus(tutor.getStatus().getKey());
 
         Set<Subject> subjectSet = tutor.getSubjects();
-        List<String> subjectNames = new ArrayList<>();
-        for (Subject subject : subjectSet) {
-            subjectNames.add(subject.getSubjectName());
+        if(subjectSet != null) {
+            List<Subject> sortedSubjectList = subjectSet.stream().sorted
+                    (Comparator.comparing(Subject::getId)).collect(Collectors.toList());
+            tutorInfoVO.setSubjects(sortedSubjectList);
         }
-        List<String> sortedSubjectNames = subjectNames.stream().sorted().collect(Collectors.toList());
-        tutorInfoVO.setSubjects(sortedSubjectNames);
 
         Set<ClassTeach> classTeachSet = tutor.getClassTeaches();
-        List<String> classTeachNames = new ArrayList<>();
-        for (ClassTeach classTeach : classTeachSet) {
-            classTeachNames.add(classTeach.getClassTeachName());
+        if(classTeachSet != null) {
+            List<ClassTeach> sortedClassTeachList = classTeachSet.stream().sorted
+                    (Comparator.comparing(ClassTeach::getId)).collect(Collectors.toList());
+            tutorInfoVO.setClassTeaches(sortedClassTeachList);
         }
-        List<String> sortedClassTeachNames = classTeachNames.stream().sorted().collect(Collectors.toList());
-        tutorInfoVO.setClassTeaches(sortedClassTeachNames);
 
         Set<District> districtSet = tutor.getDistricts();
-        List<String> districtNames = new ArrayList<>();
-        for (District district : districtSet) {
-            districtNames.add(district.getDistrictName());
+        if(districtSet != null) {
+            List<District> sortedDistrictList = districtSet.stream().sorted
+                    (Comparator.comparing(District::getId)).collect(Collectors.toList());
+            tutorInfoVO.setDistricts(sortedDistrictList);
         }
-        List<String> sortedDistrictNames = districtNames.stream().sorted().collect(Collectors.toList());
-        tutorInfoVO.setDistricts(sortedDistrictNames);
 
-        List<FreeTime> freeTimes = tutor.getFreeTimes();
-        if ( freeTimes != null ) {
-            tutorInfoVO.setFreeTimes( new ArrayList<>( freeTimes ) );
+        Set<FreeTime> freeTimeSet = tutor.getFreeTimes();
+        if ( freeTimeSet != null ) {
+            List<FreeTime> sortedFreeTimeList = freeTimeSet.stream().sorted
+                    (Comparator.comparing(FreeTime::getDayName)).collect(Collectors.toList());
+            tutorInfoVO.setFreeTimes(sortedFreeTimeList);
         }
         tutorInfoVO.setName(tutor.getUser().getName());
         return tutorInfoVO;

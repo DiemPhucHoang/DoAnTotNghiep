@@ -1,6 +1,9 @@
 package com.example.trungtamgiasu.vo.Tutor;
 
+import com.example.trungtamgiasu.model.ClassTeach;
+import com.example.trungtamgiasu.model.District;
 import com.example.trungtamgiasu.model.FreeTime;
+import com.example.trungtamgiasu.model.Subject;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,13 +41,13 @@ public class TutorInfoVO {
     private String level;
 
     @NotBlank
-    private List<String> subjects;
+    private List<Subject> subjects;
 
     @NotBlank
-    private List<String> classTeaches;
+    private List<ClassTeach> classTeaches;
 
     @NotBlank
-    private List<String> districts;
+    private List<District> districts;
 
     @NotBlank
     private List<FreeTime> freeTimes;
@@ -55,7 +58,7 @@ public class TutorInfoVO {
 
     private String name;
 
-    private String salaryPerHour;
+    private double salaryPerHour;
 
 
 }

@@ -35,6 +35,7 @@ public class ParentRegisterTutor {
     private Long idClass;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.ORDINAL)
     private ParentRegisterTutorStatus status;
 
 

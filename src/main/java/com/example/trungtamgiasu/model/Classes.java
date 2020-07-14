@@ -47,6 +47,7 @@ public class Classes {
     private double tuitionFee;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.ORDINAL)
     private ClassesStatus status;
 
     @CreatedDate

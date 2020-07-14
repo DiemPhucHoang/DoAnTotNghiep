@@ -1,6 +1,5 @@
 package com.example.trungtamgiasu.vo.User;
 
-import com.example.trungtamgiasu.model.Tutor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,7 +24,5 @@ public class UserInfoVO {
 
     @Email
     private String email;
-
-    private Tutor tutor;
 
 }

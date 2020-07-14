@@ -4,10 +4,7 @@ import com.example.trungtamgiasu.dao.*;
 import com.example.trungtamgiasu.exception.BadRequestException;
 import com.example.trungtamgiasu.exception.ResourceNotFoundException;
 import com.example.trungtamgiasu.mapper.FreeTimeMapper;
-import com.example.trungtamgiasu.model.FreeTime;
-import com.example.trungtamgiasu.model.Subject;
-import com.example.trungtamgiasu.model.Tutor;
-import com.example.trungtamgiasu.model.User;
+import com.example.trungtamgiasu.model.*;
 import com.example.trungtamgiasu.model.enums.TutorStatus;
 import com.example.trungtamgiasu.parsing.TutorParsing;
 import com.example.trungtamgiasu.security.UserPrincipal;
@@ -109,20 +106,32 @@ public class TutorServiceImpl implements TutorService {
         }
         String firstFileName = fileName.substring(0, fileName.lastIndexOf("."));
         String lastFileName = fileName.substring(fileName.lastIndexOf("."));
-        boolean checkExist = checkFileNameExist(fileName, idUser);
-        while (checkExist)
-        {
-            index++;
-            checkExist = checkFileNameExist(String.format("%s (%d)%s", firstFileName, index, lastFileName), idUser);
-            if (!checkExist) {
-                fileName = String.format("%s (%d)%s", firstFileName, index, lastFileName);
+
+        if(getTutorByIdUser(idUser).getImage() != null) {
+            boolean checkExist = checkFileNameExist(fileName, idUser);
+            while (checkExist)
+            {
+                index++;
+                checkExist = checkFileNameExist(String.format("%s (%d)%s", firstFileName, index, lastFileName), idUser);
+                if (!checkExist) {
+                    fileName = String.format("%s (%d)%s", firstFileName, index, lastFileName);
+                }
             }
         }
+
         return fileName;
     }
 
     @Override
-    public String uploadImage(MultipartFile file) {
+    public String uploadImage(MultipartFile file, Long idUser, Authentication auth) {
+        UserPrincipal userPrincipal = (UserPrincipal) auth.getPrincipal();
+        User user = userDAO.findByPhone(userPrincipal.getPhone()).orElseThrow(() ->
+                new UsernameNotFoundException("User not found with phone: " + userPrincipal.getPhone()));
+        if(!(idUser.equals(user.getId())))
+        {
+            throw new UsernameNotFoundException("Can not found user " + idUser);
+        }
+
         if(file.isEmpty())
         {
             throw new BadRequestException("Failed to store empty file");
@@ -131,6 +140,7 @@ public class TutorServiceImpl implements TutorService {
         if(fileName == null) {
             throw new BadRequestException("Can not found file name");
         }
+
         try {
             if(fileName.contains("..")){
                 throw new BadRequestException("Sorry! Filename contains invalid path sequence " + fileName);
@@ -149,6 +159,19 @@ public class TutorServiceImpl implements TutorService {
         } catch (IOException e) {
             throw new BadRequestException("Could not store file " + fileName + ". Please try again!");
         }
+
+//        Tutor tutorByIdUser = user.getTutor();
+//        if(tutorByIdUser == null) {
+//            Tutor tutor = new Tutor();
+//            tutor.setImage(fileName);
+//            tutor.setUser(user);
+//            saveTutor(tutor);
+//        } else {
+//            if(tutorByIdUser.getImage() == null) {
+//                tutorByIdUser.setImage(fileName);
+//                saveTutor(tutorByIdUser);
+//            }
+//        }
         return fileName;
     }
 
@@ -189,10 +212,23 @@ public class TutorServiceImpl implements TutorService {
             }
         }
         //add table tutor_free_time
-        for (FreeTimeVO freeTimeVO : tutorVO.getFreeTime()) {
-            FreeTime freeTime = freeTimeDAO.save(freeTimeMapper.toFreeTime(freeTimeVO));
-            tutorMap.getFreeTimes().add(freeTimeDAO.findById(freeTime.getId()).
-                    orElseThrow(() -> new BadRequestException("Free time by id " + freeTime.getId() + "does not exists")));
+        if(tutorVO.getFreeTime() != null) {
+            List<FreeTime> freeTimeList = freeTimeDAO.findAll();
+            for (FreeTimeVO freeTimeVO : tutorVO.getFreeTime()) {
+                FreeTime freeTimeCheck = freeTimeMapper.toFreeTime(freeTimeVO);
+                int dem = 0;
+                for (FreeTime freeTime : freeTimeList) {
+                    if(checkExistFreeTime(freeTime, freeTimeCheck)) {
+                        tutorMap.getFreeTimes().add(freeTime);
+                        dem++;
+                        break;
+                    }
+                }
+                if(dem == 0) {
+                    FreeTime freeTime = freeTimeDAO.save(freeTimeMapper.toFreeTime(freeTimeVO));
+                    tutorMap.getFreeTimes().add(freeTime);
+                }
+            }
         }
         return saveTutor(tutorMap);
     }
@@ -231,7 +267,6 @@ public class TutorServiceImpl implements TutorService {
         for (Subject subject : tutor.getSubjects()) {
             tutors.addAll(tutorDAO.findBySubjects_SubjectName(subject.getSubjectName()));
         }
-
         Set<Tutor> tutorSet = new LinkedHashSet<>(tutors);
         List<Tutor> tutorArrayList =  new ArrayList<>(tutorSet);
         tutorArrayList.remove(tutor);
@@ -272,9 +307,11 @@ public class TutorServiceImpl implements TutorService {
             // Copy file to the target location (Replacing existing file with the same name)
             Path targetLocation = dir.resolve(newFileName);
             InputStream is = file.getInputStream();
-            Path oldPath = Paths.get("uploads\\"+oldFileName);
-            //delete old file
-            Files.delete(oldPath);
+            if(oldFileName != null) {
+                Path oldPath = Paths.get("uploads\\"+oldFileName);
+                //delete old file
+                Files.delete(oldPath);
+            }
             //copy new file
             Files.copy(is, targetLocation,
                     StandardCopyOption.REPLACE_EXISTING);
@@ -289,5 +326,96 @@ public class TutorServiceImpl implements TutorService {
     public List<TutorInfoVO> getTop4Tutors() {
         logger.info("Get top 4");
         return tutorParsing.toTutorsInfoVOList(tutorDAO.findTop4ByStatus(TutorStatus.CHUANHANLOP));
+    }
+
+    @Override
+    public TutorInfoVO changeInfoTutor(TutorVO tutorVO, Long idTutor) {
+        logger.info("Change info tutor with id " + idTutor);
+        Tutor tutor = tutorDAO.findById(idTutor).orElseThrow(() ->
+                new ResourceNotFoundException("Tutor", "id", idTutor));
+        tutor.setCollege(tutorVO.getCollege());
+        tutor.setMajor(tutorVO.getMajor());
+        tutor.setGraduationYear(tutorVO.getGraduationYear());
+        tutor.setLevel(tutorVO.getLevel());
+        tutor.setGender(tutorVO.getGender());
+        tutor.setYearOfBirth(tutorVO.getYearOfBirth());
+        tutor.setSalaryPerHour(tutorVO.getSalaryPerHour());
+        //update table tutor_subject
+        if(tutorVO.getSubject() != null) {
+            tutor.setSubjects(updateSubjects(tutorVO.getSubject()));
+        }
+        //update table tutor_class_teach
+        if(tutorVO.getClassTeach() != null) {
+            tutor.setClassTeaches(updateClassTeaches(tutorVO.getClassTeach()));
+        }
+        //update table tutor_district
+        if(tutorVO.getDistrict() != null) {
+            tutor.setDistricts(updateDistricts(tutorVO.getDistrict()));
+        }
+        //update table tutor_free_time
+        if(tutorVO.getFreeTime() != null) {
+            tutor.setFreeTimes(updateFreeTimes(tutorVO.getFreeTime()));
+        }
+        return tutorParsing.toTutorInfoVO(saveTutor(tutor));
+    }
+
+    @Override
+    public boolean checkExistFreeTime(FreeTime freeTimeFirst, FreeTime freeTimeSecond) {
+        return freeTimeFirst.getDayName().equals(freeTimeSecond.getDayName()) &&
+                (freeTimeFirst.isMorning() == freeTimeSecond.isMorning()) &&
+                (freeTimeFirst.isAfternoon() == freeTimeSecond.isAfternoon()) &&
+                (freeTimeFirst.isEvening() == freeTimeSecond.isEvening());
+    }
+
+    @Override
+    public Set<Subject> updateSubjects(Long[] subjects) {
+        Set<Subject> subjectSet = new HashSet<>();
+        for (Long idSubject : subjects) {
+            subjectSet.add(subjectDAO.findById(idSubject)
+                    .orElseThrow(() -> new BadRequestException("Subject " + idSubject + " does not exists")));
+        }
+        return subjectSet;
+    }
+
+    @Override
+    public Set<District> updateDistricts(Long[] districts) {
+        Set<District> districtSet = new HashSet<>();
+        for (Long idDistrict : districts) {
+            districtSet.add(districtDAO.findById(idDistrict).
+                    orElseThrow(() -> new BadRequestException("District " + idDistrict + "does not exists")));
+        }
+        return districtSet;
+    }
+
+    @Override
+    public Set<ClassTeach> updateClassTeaches(Long[] classTeaches) {
+        Set<ClassTeach> classTeachSet = new HashSet<>();
+        for (Long idClassTeach : classTeaches) {
+            classTeachSet.add(classTeachDAO.findById(idClassTeach).
+                    orElseThrow(() -> new BadRequestException("Class teach " + idClassTeach + "does not exists")));
+        }
+        return classTeachSet;
+    }
+
+    @Override
+    public Set<FreeTime> updateFreeTimes(FreeTimeVO[] freeTimeVOS) {
+        Set<FreeTime> freeTimeSet = new HashSet<>();
+        List<FreeTime> freeTimeList = freeTimeDAO.findAll();
+        for (FreeTimeVO freeTimeVO : freeTimeVOS) {
+            FreeTime freeTimeCheck = freeTimeMapper.toFreeTime(freeTimeVO);
+            int dem = 0;
+            for (FreeTime freeTime : freeTimeList) {
+                if(checkExistFreeTime(freeTime, freeTimeCheck)) {
+                    freeTimeSet.add(freeTime);
+                    dem++;
+                    break;
+                }
+            }
+            if(dem == 0) {
+                FreeTime freeTime = freeTimeDAO.save(freeTimeMapper.toFreeTime(freeTimeVO));
+                freeTimeSet.add(freeTime);
+            }
+        }
+        return freeTimeSet;
     }
 }

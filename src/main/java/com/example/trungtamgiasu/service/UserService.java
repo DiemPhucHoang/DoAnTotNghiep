@@ -8,7 +8,7 @@ import org.springframework.security.core.Authentication;
 public interface UserService {
     User saveUser(User user);
 
-    User getById(Long idUser);
+    UserInfoVO getById(Long idUser);
 
     UserInfoVO getByPhone(String phone);
 
@@ -16,5 +16,5 @@ public interface UserService {
 
     void changePassword(ChangePasswordVO changePasswordVO, Authentication auth);
 
-    User changeInfoUser(Long idUser, UserInfoVO userInfoVO, Authentication auth);
+    UserInfoVO changeInfoUser(Long idUser, UserInfoVO userInfoVO, Authentication auth);
 }

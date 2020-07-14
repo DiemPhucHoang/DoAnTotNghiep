@@ -37,10 +37,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getById(Long idUser) {
+    public UserInfoVO getById(Long idUser) {
         logger.info("Get user by id " + idUser);
-        return userDAO.findById(idUser).orElseThrow(() ->
+        User user = userDAO.findById(idUser).orElseThrow(() ->
                 new ResourceNotFoundException("User", "id" , idUser));
+        UserInfoVO userInfoVO = new UserInfoVO();
+//        userInfoVO.setTutor(user.getTutor());
+        return userMapper.toUserInfoVO(user);
     }
 
     @Override
@@ -49,8 +52,8 @@ public class UserServiceImpl implements UserService {
 
         User user =  userDAO.findByPhone(phone).orElseThrow(() ->
                 new ResourceNotFoundException("User", "phone" , phone));
-        UserInfoVO userInfoVO = new UserInfoVO();
-        userInfoVO.setTutor(user.getTutor());
+//        UserInfoVO userInfoVO = new UserInfoVO();
+//        userInfoVO.setTutor(user.getTutor());
         return userMapper.toUserInfoVO(user);
     }
 
@@ -73,7 +76,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User changeInfoUser(Long idUser, UserInfoVO userInfoVO, Authentication auth) {
+    public UserInfoVO changeInfoUser(Long idUser, UserInfoVO userInfoVO, Authentication auth) {
         User user = getUserByAuthentication(auth);
         if(!(idUser.equals(user.getId()))) {
             throw new ResourceNotFoundException("User", "id", idUser);
@@ -87,6 +90,6 @@ public class UserServiceImpl implements UserService {
         user.setAddress(userInfoVO.getAddress());
         user.setEmail(userInfoVO.getEmail());
         logger.info("Update user by idUser" + user.getId());
-        return saveUser(user);
+        return userMapper.toUserInfoVO(saveUser(user));
     }
 }

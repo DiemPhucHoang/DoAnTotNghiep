@@ -6,9 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity(name = "Tutor")
@@ -49,7 +47,7 @@ public class Tutor {
     private String moreInfo;
 
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     private TutorStatus status;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -70,7 +68,7 @@ public class Tutor {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "tutor_free_time", joinColumns = @JoinColumn(name = "id_tutor"),
             inverseJoinColumns = @JoinColumn(name = "id_free_time"))
-    private List<FreeTime> freeTimes = new ArrayList<>();
+    private Set<FreeTime> freeTimes = new HashSet<>();
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_user")
