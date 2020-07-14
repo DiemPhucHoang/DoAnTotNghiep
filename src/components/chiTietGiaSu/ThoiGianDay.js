@@ -20,7 +20,6 @@ class ThoiGianDay extends Component {
       
     render() {
         const { freeTimes } = this.props;
-        console.log('freeTimes: ', freeTimes);
         const hasFreeTimes = freeTimes && freeTimes.length > 0;
         
         return (

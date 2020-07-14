@@ -114,19 +114,29 @@ a:hover {
 .statusGray {
   margin-left: 30px;
   margin-right: 5px;
-  background-color: #d6d6d6;
+  background-color: #e7e5e5;
   width: 26px;
   height: 26px;
   box-shadow: 2px 2px 1px rgba(0, 0, 0, 0.21);
 }
 .statusRed {
-  background-color: #9b0000;
+  background-color: #b65c5c;
   width: 26px;
   height: 26px;
   margin-left: 60px;
   margin-right: 5px;
   box-shadow: 2px 2px 1px rgba(0, 0, 0, 0.21);
 }
+
+.statusBlue {
+  background-color: #a2aeee;
+  width: 26px;
+  height: 26px;
+  margin-left: 60px;
+  margin-right: 5px;
+  box-shadow: 2px 2px 1px rgba(0, 0, 0, 0.21);
+}
+
 .padding-class {
   padding-left: 20px;
   padding-right: 20px;

@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
 import { Grid, Paper, AppBar, Toolbar, Typography, Table, TableCell, Avatar, TableRow, TableHead, TableBody } from '@material-ui/core';
 import ThoiGianDay from './ThoiGianDay';
+import { getStringName } from '../commons/util';
 
 class ThongTinChiTiet extends Component {
    render() {
       const { tutorDetail } = this.props;
-      const { subjects } = tutorDetail;
-      const { classTeaches } = tutorDetail;
-      const { districts } = tutorDetail;
+      const { subjects, classTeaches,  districts} = tutorDetail;
       const hasValue = subjects && subjects.length > 0 && classTeaches && classTeaches.length > 0
          && districts && districts.length > 0;
+
+      const subjectNames = hasValue && getStringName(subjects,'subjectName');
+      const districtNames = hasValue && getStringName(districts,'districtName');
+      const classTeachNames = hasValue && getStringName(classTeaches,'classTeachName');
       return (
          <Paper>
             <AppBar position="static">
@@ -40,15 +43,15 @@ class ThongTinChiTiet extends Component {
 
                         <TableRow>
                            <TableCell>Dạy môn</TableCell>
-                           <TableCell><b>{subjects.join(', ')}</b></TableCell>
+                           <TableCell><b>{subjectNames}</b></TableCell>
                         </TableRow>
                         <TableRow>
                            <TableCell>Lớp dạy</TableCell>
-                           <TableCell><b>{classTeaches.join(', ')}</b></TableCell>
+                           <TableCell><b>{classTeachNames}</b></TableCell>
                         </TableRow>
                         <TableRow>
                            <TableCell>Khu vực dạy</TableCell>
-                           <TableCell><b>{districts.join(', ')}</b></TableCell>
+                           <TableCell><b>{districtNames}</b></TableCell>
                         </TableRow>
                         <TableRow>
                               <TableCell>Yêu cầu lương</TableCell>

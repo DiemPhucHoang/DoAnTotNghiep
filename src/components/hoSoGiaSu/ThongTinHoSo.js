@@ -1,59 +1,85 @@
 import React, { Component } from 'react';
-import { Grid, Paper, Button, AppBar, Toolbar, Typography, TextField, MenuItem, FormControl, FormControlLabel, Checkbox, FormGroup } from '@material-ui/core';
+import {
+    Grid, Paper, Button, AppBar, Toolbar,
+    Typography, TextField, MenuItem, FormControl, FormGroup
+} from '@material-ui/core';
+import FreeTimeArea from "./FreeTimeArea";
+import CustomCheckBox from "../commons/items/checkbox";
 
 class ThongTinHoSo extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            tutorInfo: {}
-        }
+
+    handleClickButtonFreeTime = (id, name, value) => {
+        this.props.onChangeFreeTime(id, name, value);
     }
 
-    handleClickButtonFreeTime = (e, id, name, value) => {
-        this.props.onChangeFreeTime(id, name, !value);
+    handleSubmit = (e) => {
+        e.preventDefault();
+        this.props.handleSubmitTutor();
+
     }
 
-    onHandleInfoTutor = (event) => {
+    onChangeInfoTutor = (event) => {
         let { name, value } = event.target;
-        this.setState((prevState) => ({
-            tutorInfo: {
-                ...prevState.tutorInfo,
-                [name]: value,
-            },
-        }));
+        this.props.onChangeInfoTutor(name, value);
+
+    }
+
+    onChangeSubject = (name, checked) => {
+        this.props.onHandleClickSubject(name, checked);
+    }
+
+    onChangeClassTeach = (name, checked) => {
+        this.props.onHandleClickClassTeach(name, checked);
+    }
+
+    onChangeDistrict = (name, checked) => {
+        this.props.onHandleClickDistrict(name, checked);
+    }
+
+    renderSubjectArea = () => {
+        const { subjects } = this.props;
+        const hasSubjects = subjects && subjects.length > 0;
+        const subjectArea = hasSubjects && subjects.map((subject) => (
+            <CustomCheckBox key={subject.id} object={subject} onChange={this.onChangeSubject} itemName="subjectName"/>
+        ));
+        return subjectArea ? subjectArea : <> </>;
+    }
+
+    renderClassTeachArea = () => {
+        const { classTeaches} = this.props;
+        const hasClassTeaches = classTeaches && classTeaches.length > 0;
+        const classTeachArea = hasClassTeaches && classTeaches.map((classTeach) => (
+            <CustomCheckBox key={classTeach.id} object={classTeach} onChange={this.onChangeClassTeach} itemName="classTeachName"/>
+        ));
+        return classTeachArea ? classTeachArea: <> </>;
+    }
+    
+    renderDistrictArea = () => {
+        const { districts} = this.props;
+        const hasDistricts = districts && districts.length > 0;
+        const districtArea = hasDistricts && districts.map((district) => (
+            <CustomCheckBox key={district.id} object={district} onChange={this.onChangeDistrict} itemName="districtName"/>
+        ));
+        return districtArea ? districtArea : <> </>;
+    }
+
+    renderFreeTimeArea = () => {
+        const { lstFreeTime } = this.props;
+        const hasLstFreeTime = lstFreeTime && lstFreeTime.length > 0;
+        const freeTimeArea = hasLstFreeTime && lstFreeTime.map((freeTime) => {
+            return <div key={freeTime.id} >
+                <FreeTimeArea freeTime={freeTime} onChangeFreeTime={this.handleClickButtonFreeTime} />
+            </div>
+        });
+        return freeTimeArea ? freeTimeArea : <> </>
+    }
+
+    cancelUpdate = () => {
+        this.props.cancelUpdate();
     }
 
     render() {
-        console.log('freeTime: ', this.props.lstFreeTime);
-        const freeTimeArea = this.props.lstFreeTime?.map((freeTime, index) => {
-            return <div key={freeTime.id} className="row-calendar">
-                <p className="mr-30">{freeTime.dayName}</p>
-                <ul>
-                    <li className="calendar-normal">
-                        <Button variant="contained" size="small" name="morning"
-                            color={freeTime.morning ? "secondary" : "default"}
-                            onClick={(e) => this.handleClickButtonFreeTime(e, freeTime.id, "morning", freeTime.morning)}
-                        >
-                            Sáng</Button>
-                    </li>
-                    <li className="calendar-normal">
-                        <Button variant="contained" size="small" name="afternoon"
-                            color={freeTime.afternoon ? "secondary" : "default"}
-                            onClick={(e) => this.handleClickButtonFreeTime(e, freeTime.id, "afternoon", freeTime.afternoon)}
-                        >
-                            Chiều</Button>
-                    </li>
-                    <li className="calendar-active">
-                        <Button variant="contained" size="small" name="evening"
-                            color={freeTime.evening ? "secondary" : "default"}
-                            onClick={(e) => this.handleClickButtonFreeTime(e, freeTime.id, "evening", freeTime.evening)}
-                        >
-                            &ensp;&nbsp;Tối&ensp;&nbsp;</Button>
-                    </li>
-                </ul>
-            </div>
-        })
-
+        const { tutor } = this.props;
         return (
             <Grid item xs={8}>
                 <Paper>
@@ -64,50 +90,63 @@ class ThongTinHoSo extends Component {
                             </Typography>
                         </Toolbar>
                     </AppBar>
-                    <form style={{ padding: '20px' }}>
+                    <form onSubmit={this.handleSubmit} style={{ padding: '20px' }}>
                         <Grid container spacing={3}>
                             <Grid item xs={6}>
-                                <TextField 
-                                    id="standard-basic"
+                                <TextField
                                     fullWidth
                                     label="Trường"
-                                    value="Đại học sư phạm kỹ thuật TPHCM"
                                     name="college"
+                                    value={tutor?.college}
                                     required
-                                    onChange={this.onHandleInfoTutor}
+                                    onChange={this.onChangeInfoTutor}
                                 />
                             </Grid>
                             <Grid item xs={6}>
-                                <TextField 
-                                    id="standard-basic"
-                                    fullWidth 
+                                <TextField
+                                    fullWidth
                                     label="Ngành"
-                                    value="Công nghệ thông tin"
                                     name="major"
+                                    value={tutor?.major}
                                     required
-                                    onChange={this.onHandleInfoTutor}
+                                    onChange={this.onChangeInfoTutor}
                                 />
                             </Grid>
                             <Grid item xs={6}>
-                                <TextField 
-                                    id="standard-basic"
-                                    fullWidth 
+                                <TextField
+                                    fullWidth
                                     label="Năm tốt nghiệp"
-                                    value="2020"
+                                    type="number"
                                     name="graduationYear"
+                                    value={tutor?.graduationYear}
                                     required
-                                    onChange={this.onHandleInfoTutor}
+                                    onChange={this.onChangeInfoTutor}
                                 />
                             </Grid>
                             <Grid item xs={6}>
-                                <TextField id="standard-basic"
-                                    fullWidth label="Hiện là"
-                                    placeholder="Trình độ"
-                                    value="Sinh viên"
+                                <TextField
+                                    select
                                     name="level"
+                                    value={tutor?.level}
+                                    label="Hiện là"
+                                    fullWidth
+                                    size="small"
                                     required
-                                    onChange={this.onHandleInfoTutor}
-                                />
+                                    onChange={this.onChangeInfoTutor}
+                                >
+                                    <MenuItem key="Giáo viên" value="Giáo viên">
+                                        Giáo viên
+                                        </MenuItem>
+                                    <MenuItem key="Sinh viên" value="Sinh viên">
+                                        Sinh viên
+                                        </MenuItem>
+                                    <MenuItem key="Thạc sỹ" value="Thạc sỹ">
+                                        Thạc sỹ
+                                        </MenuItem>
+                                    <MenuItem key="Cử nhân sư phạm" value="Cử nhân sư phạm">
+                                        Cử nhân sư phạm
+                                        </MenuItem>
+                                </TextField>
                             </Grid>
                             <Grid item xs={4}>
                                 <TextField
@@ -115,96 +154,42 @@ class ThongTinHoSo extends Component {
                                     label="Giới tính"
                                     fullWidth
                                     name="gender"
+                                    value={tutor?.gender}
                                     required
-                                    onChange={this.onHandleInfoTutor}
+                                    onChange={this.onChangeInfoTutor}
                                 >
                                     <MenuItem key="Nam" value="Nam">Nam</MenuItem>
                                     <MenuItem key="Nữ" value="Nữ">Nữ</MenuItem>
                                 </TextField>
                             </Grid>
                             <Grid item xs={4}>
-                                <TextField 
-                                    id="standard-basic"
-                                    fullWidth 
+                                <TextField
+                                    fullWidth
                                     label="Năm sinh"
-                                    value="1998"
+                                    type="number"
                                     name="yearOfBirth"
+                                    value={tutor?.yearOfBirth}
                                     required
-                                    onChange={this.onHandleInfoTutor}
+                                    onChange={this.onChangeInfoTutor}
                                 />
                             </Grid>
                             <Grid item xs={4}>
-                                <TextField 
-                                    id="standard-basic"
-                                    fullWidth 
+                                <TextField
+                                    fullWidth
                                     label="Lương yêu cầu (giờ)"
-                                    value="200.000 vnđ"
+                                    type="number"
                                     name="salaryPerHour"
+                                    value={tutor?.salaryPerHour}
                                     required
-                                    onChange={this.onHandleInfoTutor}
+                                    onChange={this.onChangeInfoTutor}
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <h6>MÔN DẠY</h6>
+                                <h6>MÔN DẠY *</h6>
                                 <FormControl component="fieldset">
                                     <FormGroup>
-                                        <Grid container spacing={3}>
-                                            <Grid item xs={3}>
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Toán"
-                                                />
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Vật lý"
-                                                />
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Hóa học"
-                                                />
-                                            </Grid>
-                                            <Grid item xs={3}>
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Ngữ văn"
-                                                />
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Tiếng Anh"
-                                                />
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Sinh học"
-                                                />
-                                            </Grid>
-                                            <Grid item xs={3}>
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Báo bài"
-                                                />
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Lịch sử"
-                                                />
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Địa lý"
-                                                />
-                                            </Grid>
-                                            <Grid item xs={3}>
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Đàn nhạc"
-                                                />
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Tin học"
-                                                />
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Vẽ"
-                                                />
-                                            </Grid>
+                                        <Grid container spacing={1}>
+                                            {this.renderSubjectArea()}
                                         </Grid>
                                     </FormGroup>
                                 </FormControl>
@@ -213,76 +198,8 @@ class ThongTinHoSo extends Component {
                                 <h6>LỚP DẠY</h6>
                                 <FormControl component="fieldset">
                                     <FormGroup>
-                                        <Grid container spacing={3}>
-                                            <Grid item xs={3}>
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Lớp 1"
-                                                />
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Lớp 2"
-                                                />
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Lớp 3"
-                                                />
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Lớp 4"
-                                                />
-                                            </Grid>
-                                            <Grid item xs={3}>
-
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Lớp 5"
-                                                />
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Lớp 6"
-                                                />
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Lớp 7"
-                                                />
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Lớp 8"
-                                                />
-                                            </Grid>
-                                            <Grid item xs={3}>
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Lớp 9"
-                                                />
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Lớp 10"
-                                                />
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Lớp 11"
-                                                />
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Lớp 12"
-                                                />
-                                            </Grid>
-                                            <Grid item xs={3}>
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Ôn đại học"
-                                                />
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Lớp năng khiếu"
-                                                />
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Lớp khác"
-                                                />
-                                            </Grid>
+                                        <Grid container spacing={1}>
+                                            {this.renderClassTeachArea()}
                                         </Grid>
                                     </FormGroup>
                                 </FormControl>
@@ -291,83 +208,8 @@ class ThongTinHoSo extends Component {
                                 <h6>KHU VỰC DẠY (Quận/Huyện)</h6>
                                 <FormControl component="fieldset">
                                     <FormGroup>
-                                        <Grid container spacing={3}>
-                                            <Grid item xs={3}>
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Quận 1"
-                                                />
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Quận 2"
-                                                />
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Quận 3"
-                                                />
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Quận 4"
-                                                />
-                                            </Grid>
-                                            <Grid item xs={3}>
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Quận 5"
-                                                />
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Quận 6"
-                                                />
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Quận 7"
-                                                />
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Quận 8"
-                                                />
-                                            </Grid>
-                                            <Grid item xs={3}>
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Quận 9"
-                                                />
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Quận 10"
-                                                />
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Quận 11"
-                                                />
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Quận 12"
-                                                />
-                                            </Grid>
-                                            <Grid item xs={3}>
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Q. Thủ Đức"
-                                                />
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Q. Bình Thạnh"
-                                                />
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Q. Gò Vấp"
-                                                />
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Q. Tân Bình"
-                                                />
-                                                <FormControlLabel
-                                                    control={<Checkbox onChange={this.onChange} />}
-                                                    label="Q. Tân Phú"
-                                                />
-                                            </Grid>
+                                        <Grid container spacing={1}>
+                                            {this.renderDistrictArea()}
                                         </Grid>
                                     </FormGroup>
                                 </FormControl>
@@ -378,6 +220,8 @@ class ThongTinHoSo extends Component {
                                     fullWidth label="Thông tin thêm"
                                     multiline
                                     rowsMax={4}
+                                    name="moreInfo"
+                                    onChange={this.onChangeInfoTutor}
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -385,7 +229,7 @@ class ThongTinHoSo extends Component {
                                 <div style={{ textAlign: "center" }}>
                                     <div className="gblock-v2">
                                         <div className="body-block block-calender">
-                                            {freeTimeArea}
+                                            {this.renderFreeTimeArea()}
                                         </div>
                                     </div>
                                 </div>
@@ -393,16 +237,15 @@ class ThongTinHoSo extends Component {
                             <br />
                             <Grid item xs={4}></Grid>
                             <Grid item xs={3}>
-                                <Button variant="contained" size="small">Hủy bỏ</Button>
+                                <Button onClick={this.cancelUpdate} variant="contained" size="small">Hủy bỏ</Button>
                             </Grid>
                             <Grid item xs={3}>
-                                <Button variant="contained" color="primary" size="small">Cập nhật</Button>
+                                <Button type="submit" variant="contained" color="primary" size="small">Cập nhật</Button>
                             </Grid>
                         </Grid>
                     </form>
                 </Paper>
             </Grid>
-
         );
     }
 }

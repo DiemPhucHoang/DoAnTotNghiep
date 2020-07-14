@@ -13,6 +13,16 @@ const auth = (state = initialState, action = {}) => {
                 isAuthenticated: !isEmpty(action.user),
                 user: action.user.result
             };
+        case Types.FETCH_USER_BY_ID:
+            return {
+                ...state,
+                user: action.user.result
+            };
+        case Types.CHANGE_INFO_USER:
+            return {
+                ...state,
+                user: action.user.result
+            }
         default:
             return state;
     }

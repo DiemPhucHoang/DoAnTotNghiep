@@ -17,7 +17,6 @@ class GiaSuDaChon extends Component {
     }
     render() {
         const { tutorItem } = this.props;
-        console.log("length: ", tutorItem.length);
         const hasTutorItem = tutorItem && tutorItem.length > 0;
         // let checkTutor = false;
         return (

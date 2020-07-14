@@ -1,26 +1,65 @@
 import React, { Component } from 'react';
 import { Grid, Paper, Button } from '@material-ui/core';
 import { DropzoneDialog } from 'material-ui-dropzone';
+import DialogEdit from './DialogEdit';
+import DoiMatKhau from './DoiMatKhau';
 
 class ThongTinCaNhan extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            open: false
+            open: false,
+            openEditTutor: false,
+            openChangePassword: false
         }
     }
-      render() {
-            return (
-                <Grid item xs={4}>
+    showEditTutor = () => {
+        this.setState({
+            openEditTutor: true,
+        });
+    };
+    showChangePassword = () => {
+        this.setState({
+            openChangePassword: true,
+        });
+    };
+    onCloseEditTutor = () => {
+        this.setState({
+            openEditTutor: !this.state.openEditTutor
+        });
+    }
+    onCloseChangePassword = () => {
+        this.setState({
+            openChangePassword: !this.state.openChangePassword
+        });
+    }
+
+    editInfoTutor = (user) => {
+        this.props.changeInfoUser(user);
+    }
+
+    changeImage = (files) => {
+        console.log('sss: ', files);
+        let formData = new FormData();
+        formData.append("file", files);
+        this.props.onHandleChangeImage(formData);
+    }
+
+    render() {
+        const { user, tutor } = this.props;
+        const hasTutor = tutor.image;
+        return (
+            <Grid item xs={4}>
                 <Paper>
                     <div style={{ textAlign: 'center', padding: '15px' }}>
-                        <img alt="avatar" src="image/avata.jpg" className="rounded-circle" style={{ width: '50%' }} />
+                        <img alt="avatar" src={!hasTutor ? 'image/av3.png' : `data:image/jpg;base64,${tutor.image}`} className="rounded-circle" style={{ width: '50%' }} />
                         <br /><br />
-                        <h6>HOÀNG THỊ DIỄM PHÚC</h6>
+                        <h6>{user?.name}</h6>
                         <Button variant="contained" color="primary" onClick={() => this.setState({ open: true })}>
-                            Add Image
+                            Cập nhật ảnh
                         </Button>
                         <DropzoneDialog
+                            filesLimit={1}
                             acceptedFiles={['image/*']}
                             cancelButtonText={"cancel"}
                             submitButtonText={"submit"}
@@ -30,32 +69,47 @@ class ThongTinCaNhan extends Component {
                             onSave={(files) => {
                                 console.log('Files:', files);
                                 this.setState({ open: false });
+                                this.changeImage(files[0]);
                             }}
                             showPreviews={true}
                             showFileNamesInPreview={true}
                         />
                     </div>
                     <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
-                        <ul className='list-group list-group-unbordered'>
-                            <li className='list-group-item'>
-                                <p> <b>Số điện thoại: </b>0987654321</p>
-                            </li>
-                            <li className='list-group-item'>
-                                <p> <b>Địa chỉ: </b>01-Võ Văn Ngân-Thủ Đức-TPHCM</p>
-                            </li>
-                            <li className='list-group-item'>
-                                <p><b>Email: </b>phuc@gmail.com</p>
-                            </li>
-                        </ul>
+                        
+                            <ul className='list-group list-group-unbordered'>
+                                <li className='list-group-item'>
+                                    <p> <b>Số điện thoại: </b>{user?.phone}</p>
+                                </li>
+                                <li className='list-group-item'>
+                                    <p> <b>Địa chỉ: </b>{user?.address}</p>
+                                </li>
+                                <li className='list-group-item'>
+                                    <p><b>Email: </b>{user?.email}</p>
+                                </li>
+                            </ul>
+                       
                     </div>
                     <div style={{ textAlign: 'center', padding: '10px' }}>
-                        <Button variant="contained" color="secondary" size="small">Đổi mật khẩu</Button>
+                        <Button onClick={this.showEditTutor} variant="outlined" color="primary" size="small" style={{ marginRight: "30px" }}>
+                            Sửa thông tin
+                        </Button>
+                        <Button onClick={this.showChangePassword} variant="outlined" color="primary" size="small">Đổi mật khẩu</Button>
                     </div>
+                    <DialogEdit
+                        editInfoTutor={this.editInfoTutor}
+                        user={user} 
+                        openEditTutor={this.state.openEditTutor}
+                        onCloseEditTutor={this.onCloseEditTutor}/>
+                    <DoiMatKhau
+                        history={this.props.history}
+                        openChangePassword={this.state.openChangePassword}
+                        onCloseChangePassword={this.onCloseChangePassword}/>
                 </Paper>
             </Grid>
-            
-            );
-      }
+
+        );
+    }
 }
 
 export default ThongTinCaNhan;

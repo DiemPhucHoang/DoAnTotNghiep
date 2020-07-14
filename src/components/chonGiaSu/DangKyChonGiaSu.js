@@ -267,7 +267,6 @@ class DangKyChonGiaSu extends Component {
 const mapDispatchToProps = dispatch => {
     return {
         onCreateClass: (classInfo, hasChooseTutors, history) => {
-            console.log('classInfo: ', classInfo);
             dispatch(actCreateClassesRequest(classInfo, hasChooseTutors, history));
         }
     };

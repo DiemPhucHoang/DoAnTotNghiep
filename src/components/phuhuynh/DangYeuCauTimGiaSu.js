@@ -53,12 +53,11 @@ class DangYeuCauTimGiaSu extends Component {
 
     onChange = (event) => {
         let { name, value } = event.target;
-        console.log('event.target.value: ', event.target.value);
         this.setState((prevState) => ({
             classInfo: {
                 ...prevState.classInfo,
-                [name]: value,
-            },
+                [name]: value
+            }
         }));
     }
 

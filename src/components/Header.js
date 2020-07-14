@@ -36,9 +36,9 @@ class Header extends Component {
         const { isAuthenticated } = this.props.auth;
         return (
             <nav className="navbar navbar-expand-lg navbar-light container">
-                <a className="navbar-brand" href="/" style={{ marginRight: '50px' }}>
+                <Link className="navbar-brand" to="/" style={{ marginRight: '50px' }}>
                     <img alt="logo" style={{ height: '100px' }} src="image/logo.png"></img>
-                </a>
+                </Link>
                 <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon" />
                 </button>

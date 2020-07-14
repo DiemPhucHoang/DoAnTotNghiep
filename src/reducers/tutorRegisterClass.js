@@ -8,7 +8,6 @@ const tutorRegisterClass = (state = initialState, action) => {
             return [...state];
         case Types.TUTOR_REGISTER_CLASS:
             state.push(action.registerInfo.result);
-            console.log('action.registerInfo.result: ', action.registerInfo.result);
             return [...state];
         default: return [...state];
     }

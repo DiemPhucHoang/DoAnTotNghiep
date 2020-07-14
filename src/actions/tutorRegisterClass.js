@@ -13,6 +13,7 @@ export const actTutorRegisterClassRequest = (registerInfo, idClass) => {
         )
             .then(res => {
                 if (res.status === 200 && res.data.success) {
+                    // let id = localStorage.getItem("id");
                     dispatch(actTutorRegisterClass(res.data));
                     notification.success({
                         message: "Success",

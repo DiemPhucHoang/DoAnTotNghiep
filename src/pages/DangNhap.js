@@ -25,7 +25,6 @@ class DangNhap extends Component {
 
     onHandleSignIn = (event) => {
         let {name, value} = event.target;
-        console.log('name: ', name);
         this.setState((prevState) => ({
             userInfo: {
               ...prevState.userInfo,
@@ -80,7 +79,7 @@ class DangNhap extends Component {
                         </Button>
                         <Grid container className="pt-3">
                             <Grid item xs>
-                                <Link href="#" variant="body2">
+                                <Link to="/quen-mat-khau" variant="body2">
                                     Quên mật khẩu
                                 </Link>
                             </Grid>

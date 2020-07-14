@@ -13,6 +13,7 @@ import LopMoi from './pages/LopMoi';
 import HoSoGiaSu from './pages/HoSoGiaSu';
 import DangKyDay from './pages/DangKyDay';
 import DangNhap from './pages/DangNhap';
+import LopDaDangKy from './pages/LopDaDangKy';
 import { notification } from "antd";
 import { connect } from "react-redux";
 
@@ -48,12 +49,23 @@ class App extends Component {
           <Route path="/lop-moi" exact={true} component={LopMoi} />
           <Route path="/danh-gia-gia-su" exact={true} component={DanhGiaGiaSu} />
           <Route path="/chi-tiet-gia-su/:id" exact={true} component={ChiTietGiaSu} />
-          <Route path="/ho-so-gia-su" exact={true} component={HoSoGiaSu} />
+          <PrivateRoute 
+            path="/ho-so-gia-su" 
+            exact={true} 
+            component={HoSoGiaSu} 
+            isAuthenticated={isAuthenticated}/>
+          {/* <Route path="/ho-so-gia-su" exact={true} component={HoSoGiaSu}/> */}
           <PrivateRoute 
             path="/dang-ky-day/:id" 
             exact={true} 
             component={DangKyDay} isAuthenticated={isAuthenticated} />
+          <PrivateRoute 
+            path="/lop-da-dang-ky" 
+            exact={true} 
+            component={LopDaDangKy} isAuthenticated={isAuthenticated} />
+
           <Route path="/login" exact={true} component={DangNhap} />
+
         </Switch>
         <Footer />
       </Router>

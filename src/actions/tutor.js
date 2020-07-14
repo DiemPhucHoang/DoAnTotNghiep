@@ -1,7 +1,57 @@
 import * as Types from "../constants/ActionTypes";
 import callApi from "../utils/apiCaller";
 import { notification } from "antd";
+import "antd/dist/antd.css";
 
+//create tutor
+export const actCreateTutorRequest = (tutorInfo) => {
+    return dispatch => {
+        return callApi(`tutor/${localStorage.getItem("id")}`, 'POST', tutorInfo).then(res => {
+            if (res.status === 200 && res.data.success) {
+                dispatch(actCreateTutor(res.data));
+                notification.success({
+                    message: "Success",
+                    description: "Cập nhật hồ sơ thành công!"
+                });
+            }
+        }).catch(err => {
+            console.log(err);
+      });
+    }
+}
+
+export const actCreateTutor = tutor => {
+    return {
+        type: Types.CREATE_TUTOR,
+        tutor
+    }
+}
+
+//change info tutor
+export const actChangeInfoTutorRequest = (tutorInfo, idTutor) => {
+    return dispatch => {
+        return callApi(`tutor/edit/${idTutor}`, 'POST', tutorInfo).then(res => {
+            if (res.status === 200 && res.data.success) {
+                dispatch(actChangeInfoTutor(res.data));
+                notification.success({
+                    message: "Success",
+                    description: "Cập nhật hồ sơ thành công!"
+                });
+            }
+        }).catch(err => {
+            console.log(err);
+      });
+    }
+}
+
+export const actChangeInfoTutor = tutor => {
+    return {
+        type: Types.CHANGE_INFO_TUTOR,
+        tutor
+    }
+}
+
+//fetch tutors
 export const actFetchTutorsRequest = (page) => {
     return dispatch => {
         return callApi(`tutor?page=${page}`, 'GET', null).then(res => {
@@ -53,7 +103,7 @@ export const actSearchInputRequest = searchInput => {
 export const actFetchTutorDetailRequest = (id, chooseTutor) => {
     return dispatch => {
         return callApi(
-            `tutor/${id}`, "GET", id).then(res => {
+            `tutor/${id}`, "GET", null).then(res => {
                 if (res.status === 200) {
                     if (chooseTutor) {
                         dispatch(actChooseTutor(res.data));
@@ -87,5 +137,26 @@ export const actDeleteChooseTutor = id => {
     return {
         type: Types.DELETE_CHOOSE_TUTOR,
         id
+    }
+}
+
+//get tutor by id user
+export const actFetchTutorByIdUserRequest = () => {
+    return dispatch => {
+        return callApi(
+            `tutor/user/${localStorage.getItem("id")}`, "GET", null).then(res => {
+                if (res.status === 200 && res.data.success) {
+                    dispatch(actFetchTutorByIdUser(res.data))
+                }
+            }).catch(err => {
+                console.log(err);
+          });
+    }
+}
+
+export const actFetchTutorByIdUser = tutor => {
+    return {
+        type: Types.FETCH_TUTOR_BY_ID_USER,
+        tutor
     }
 }

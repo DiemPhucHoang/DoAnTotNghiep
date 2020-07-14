@@ -39,7 +39,7 @@ class DanhSachGiaSuDaDangKy extends Component {
                             <TableBody>
                                 {hasTutorRegisterClass && tutorRegisterClass.map((row) => (
                                    
-                                    <TableRow key={row.idTutor} style={{ backgroundColor: `${row.status === "Xem xét" ? '#d6d6d6' : (row.status === "Không đạt" ?'#9B0000' : "")}`}}>
+                                    <TableRow key={row.idTutor} style={{ backgroundColor: `${row.status === "Xem xét" ? '#e7e5e5' : (row.status === "Không đạt" ?'#9B0000' : "")}`}}>
                                         <TableCell align="center" component="th" scope="row">
                                             {row.idTutor}
                                         </TableCell>

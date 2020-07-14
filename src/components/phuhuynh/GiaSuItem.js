@@ -5,6 +5,7 @@ import {
     Button
 } from "@material-ui/core";
 import { Link } from 'react-router-dom';
+import { getStringName } from "../commons/util";
 
 class GiaSuItem extends Component {
 
@@ -13,12 +14,15 @@ class GiaSuItem extends Component {
     }
 
     render() {
-        let { tutorItem } = this.props;
-        let { subjects } = tutorItem;
-        // let subjectNames = subjects.map(function (subjects) {
-        //     return subjects['subjectName'];
+        const { tutorItem } = this.props;
+        const { subjects, districts } = tutorItem;
+        const hasValue = subjects && subjects.length > 0 && districts && districts.length > 0;
+
+        const subjectNames = hasValue && getStringName(subjects,'subjectName');
+        const districtNames = hasValue && getStringName(districts,'districtName');
+        // const subjectNames = subjects.map(function (subject) {
+        //     return subject['subjectName'];
         // });
-        let { districts } = tutorItem;
         return (
             <Grid item xs={4} className="paper">
 
@@ -41,8 +45,8 @@ class GiaSuItem extends Component {
                         <Grid item xs={12} style={{ padding: "20px" }}>
                             <p>Trường: {tutorItem.college}</p>
                             <p>Năm sinh: {tutorItem.yearOfBirth}</p>
-                            <p>Môn dạy: {subjects.join(', ')}</p>
-                            <p>Khu vực: {districts.join(', ')}</p>
+                            <p>Môn dạy: {subjectNames}</p>
+                            <p>Khu vực: {districtNames}</p>
                             <p>Yêu cầu: {tutorItem.salaryPerHour} vnđ/h</p>
                             
                             <p>

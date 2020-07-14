@@ -16,7 +16,6 @@ class FormDangKyNhanLop extends Component {
     }
     handleChange = (event) => {
         let { name, value } = event.target;
-        console.log('name, value: ', name, value);
         this.setState((prevState) => ({
             registerInfo: {
                 ...prevState.registerInfo,
@@ -42,6 +41,7 @@ class FormDangKyNhanLop extends Component {
                                     type="date"
                                     name="dateReceive"
                                     required
+                                    fullWidth
                                     defaultValue="2020-07-02"
                                     onChange={this.handleChange}
                                     className="date-receive"

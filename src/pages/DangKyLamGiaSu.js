@@ -31,7 +31,6 @@ class DangKyLamGiaSu extends Component {
             email: this.state.email,
             address: this.state.address
         }
-        console.log('userInfo: ', userInfo);
         let loginInfo = {
             phone: this.state.phone,
             password: this.state.password,
@@ -78,16 +77,18 @@ class DangKyLamGiaSu extends Component {
                                     <Grid container spacing={3}>
                                         <Grid item xs={12}>
                                             <TextField 
-                                                id="standard-basic" 
-                                                fullWidth label="Họ và tên"
+                                                id="name" 
+                                                fullWidth 
+                                                label="Họ và tên"
                                                 required
                                                 name="name"
                                                 onChange={this.handleChange} />
                                         </Grid>
                                         <Grid item xs={6}>
                                             <TextField 
-                                                id="standard-basic" 
-                                                fullWidth label="Số điện thoại"
+                                                id="phone" 
+                                                fullWidth 
+                                                label="Số điện thoại"
                                                 type="number"
                                                 name="phone" 
                                                 required
@@ -125,7 +126,7 @@ class DangKyLamGiaSu extends Component {
                                         </Grid>
                                         <Grid item xs={12}>
                                             <TextField 
-                                                id="standard-basic" 
+                                                id="address" 
                                                 fullWidth 
                                                 label="Địa chỉ" 
                                                 required
@@ -134,7 +135,7 @@ class DangKyLamGiaSu extends Component {
                                         </Grid>
                                         <Grid item xs={12}>
                                             <TextField 
-                                                id="standard-basic" 
+                                                id="email" 
                                                 fullWidth 
                                                 label="Email" 
                                                 name="email"

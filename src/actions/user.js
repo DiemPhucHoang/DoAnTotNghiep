@@ -6,15 +6,15 @@ import setAuthorizationToken from './../utils/setAuthorizationToken';
 
 //logout
 export const logoutRequest = (history) => {
-    
+
     return dispatch => {
         // history.push("/login");
-      localStorage.removeItem("token");
-      localStorage.removeItem("id");
-      setAuthorizationToken(false);
-      dispatch(setCurrentUser({}));
+        localStorage.removeItem("token");
+        localStorage.removeItem("id");
+        setAuthorizationToken(false);
+        dispatch(setCurrentUser({}));
     };
-  };
+};
 
 //login
 export const actLoginRequest = (userInfo, history, isTutor) => {
@@ -24,20 +24,20 @@ export const actLoginRequest = (userInfo, history, isTutor) => {
                 const token = res.data.accessToken;
                 localStorage.setItem("token", token);
                 setAuthorizationToken(token);
-                if(isTutor) {
-                    history.push("/ho-so-gia-su");
-                } else {
-                    history.push("/");
-                }
-                notification.success({
-                    message: "Success",
-                    description: "Đăng nhập thành công!"
-                });
 
                 callApi("auth", "GET", null).then(res => {
                     if (res.status === 200 && res.data.success) {
                         localStorage.setItem("id", res.data.result.id);
                         dispatch(setCurrentUser(res.data));
+                        if (isTutor) {
+                            history.push("/ho-so-gia-su");
+                        } else {
+                            history.push("/");
+                        }
+                        notification.success({
+                            message: "Success",
+                            description: "Đăng nhập thành công!"
+                        });
                     }
                 }).catch(err => {
                     console.log(err);
@@ -59,4 +59,45 @@ export const setCurrentUser = user => {
     };
 };
 
-  
+export const actFetchUserRequest = () => {
+    return dispatch => {
+        return callApi(`auth/${localStorage.getItem("id")}`, "GET", null).then(res => {
+            if (res.status === 200 && res.data.success) {
+                dispatch(actFetchUser(res.data));
+            }
+        }).catch(err => {
+            console.log(err);
+        });
+    }
+}
+
+export const actFetchUser = user => {
+    return {
+        type: Types.FETCH_USER_BY_ID,
+        user
+    }
+}
+
+//change info user
+export const actChangeInfoUserRequest = (userInfo) => {
+    return dispatch => {
+        return callApi(`auth/${localStorage.getItem("id")}`, "POST", userInfo).then(res => {
+            if (res.status === 200 && res.data.success) {
+                dispatch(actChangeInfoUser(res.data));
+                notification.success({
+                    message: "Success",
+                    description: "Chỉnh sửa thông tin thành công!"
+                });
+            }
+        }).catch(err => {
+            console.log(err);
+        });
+    }
+}
+
+export const actChangeInfoUser = user => {
+    return {
+        type: Types.CHANGE_INFO_USER,
+        user
+    }
+}
