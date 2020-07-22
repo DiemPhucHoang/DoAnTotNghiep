@@ -18,7 +18,7 @@ const chooseTutor = (state = initialState, action) => {
            state.push(action.tutor.result);
             const arr = [...state];
             const filteredArr = arr.reduce((acc, current) => {
-                const x = acc.find(item => item.id === current.id);
+                const x = acc.find(item => item.tutorInfoVO.id === current.tutorInfoVO.id);
                 if (!x) {
                   return acc.concat([current]);
                 } else {

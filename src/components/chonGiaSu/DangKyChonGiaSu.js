@@ -26,7 +26,7 @@ class DangKyChonGiaSu extends Component {
         e.preventDefault();
         let idArr = [];
         this.props.tutorItem.forEach(tutor => {
-            idArr.push(tutor.id);
+            idArr.push(tutor?.tutorInfoVO?.id);
         });
         this.setState((prevState) => ({
             classInfo: {
@@ -86,6 +86,7 @@ class DangKyChonGiaSu extends Component {
                                         onChange={this.onHandleChooseTutor}
                                         input={<Input />}
                                         name="subject"
+                                        variant="outlined"
                                         value={this.state.classInfo.subject}
                                         renderValue={(selected) => selected.join(', ')}
                                     >

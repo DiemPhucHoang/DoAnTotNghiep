@@ -41,17 +41,17 @@ class GiaSuDaChon extends Component {
                                     <TableCell align="center">
                                         <img 
                                             alt="avatar" 
-                                            src={`data:image/jpg;base64,${item.image}`} 
+                                            src={`data:image/jpg;base64,${item.tutorInfoVO?.image}`} 
                                             className="rounded-circle" 
                                             style={{ width: '60px' }} 
                                             />
                                     </TableCell>
-                                    <TableCell align="center">{item.name}</TableCell>
-                                    <TableCell align="center">{item.yearOfBirth}</TableCell>
-                                    <TableCell align="center">{item.college}</TableCell>
-                                    <TableCell align="center">{item.level}</TableCell>
+                                    <TableCell align="center">{item.tutorInfoVO?.name}</TableCell>
+                                    <TableCell align="center">{item.tutorInfoVO?.yearOfBirth}</TableCell>
+                                    <TableCell align="center">{item.tutorInfoVO?.college}</TableCell>
+                                    <TableCell align="center">{item.tutorInfoVO?.level}</TableCell>
                                     <TableCell align="center">
-                                        <IconButton aria-label="delete" onClick={() => this.onDeleteTutor(item.id)}>
+                                        <IconButton aria-label="delete" onClick={() => this.onDeleteTutor(item.tutorInfoVO?.id)}>
                                             <DeleteIcon fontSize="small" />
                                         </IconButton>
                                     </TableCell>

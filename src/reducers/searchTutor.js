@@ -6,6 +6,9 @@ const searchTutor = (state = initialState, action) => {
         case Types.SEARCH_INPUT:
            state = action.searchInput;
             return {...state};
+        case Types.DELETE_SEARCH_INPUT_TUTOR:
+            state = {};
+            return state;
         default: return state;
     }
 };

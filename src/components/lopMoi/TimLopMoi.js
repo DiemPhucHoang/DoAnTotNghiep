@@ -13,7 +13,8 @@ class TimLopMoi extends Component {
             district: "",
             classTeach: "",
             level: "",
-            gender: ""
+            gender: "",
+            setDefault: false
         }
     }
 
@@ -26,6 +27,9 @@ class TimLopMoi extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
+        this.setState({
+            setDefault: true
+        })
         let { subject, district, classTeach, level, gender } = this.state;
         let search = {
             subject: subject,
@@ -167,7 +171,7 @@ class TimLopMoi extends Component {
                                 <Grid item xs={4}>
                                     <Button label="Submit" type="submit" variant="contained" color="secondary" fullWidth>
                                         Tìm kiếm
-                                </Button>
+                                    </Button>
                                 </Grid>
                             </Grid>
                         </form>

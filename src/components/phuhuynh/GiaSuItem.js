@@ -20,13 +20,9 @@ class GiaSuItem extends Component {
 
         const subjectNames = hasValue && getStringName(subjects,'subjectName');
         const districtNames = hasValue && getStringName(districts,'districtName');
-        // const subjectNames = subjects.map(function (subject) {
-        //     return subject['subjectName'];
-        // });
         return (
             <Grid item xs={4} className="paper">
-
-                <Paper elevation={3} style={{ padding: "10px", height: '370px' }}>
+                <Paper elevation={3} style={{ padding: "10px", height: '400px' }}>
                     <Grid container spacing={3}>
                         <Grid item xs={4}>
                             <img

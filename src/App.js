@@ -16,6 +16,8 @@ import DangNhap from './pages/DangNhap';
 import LopDaDangKy from './pages/LopDaDangKy';
 import { notification } from "antd";
 import { connect } from "react-redux";
+import LoadingSpinerComponent from "./components/commons/loading";
+import DoiMatKhau from './pages/DoiMatKhau';
 
 const PrivateRoute = ({ component, isAuthenticated, ...rest }) => {
   return (
@@ -41,6 +43,7 @@ class App extends Component {
     return (
       <Router>
         <Header />
+        <LoadingSpinerComponent />
         <Switch>
           <Route path="/" exact={true} component={Home} />
           <Route path="/tim-gia-su" exact={true} component={PhuHuynh} />
@@ -49,6 +52,7 @@ class App extends Component {
           <Route path="/lop-moi" exact={true} component={LopMoi} />
           <Route path="/danh-gia-gia-su" exact={true} component={DanhGiaGiaSu} />
           <Route path="/chi-tiet-gia-su/:id" exact={true} component={ChiTietGiaSu} />
+          <Route path="/recovery-password/:token" exact={true} component={DoiMatKhau}/>
           <PrivateRoute 
             path="/ho-so-gia-su" 
             exact={true} 

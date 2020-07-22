@@ -24,8 +24,8 @@ export const actCreateClassesRequest = (classInfo, hasChooseTutors, history) => 
 
             } else {
                 notification.error({
-                    message: "Error ",
-                    description: "Đăng yêu cầu không thành công!. Số điện thoại đã đăng ký. Vui lòng đổi số điện thoại"
+                    message: "Failed",
+                    description: "Đăng yêu cầu không thành công!"
                 });
             }
         }).catch(err => {
@@ -40,14 +40,6 @@ export const actDeleteChooseTutors = () => {
         type: Types.DELETE_ALL_CHOOSE_TUTOR,
     }
 }
-
-//create class
-// export const actCreateClass = (classes) => {
-//     return {
-//         type: Types.CREATE_CLASS,
-//         classes
-//     }
-// }
 
 export const actFetchClassesRequest = (page) => {
     return dispatch => {
@@ -114,6 +106,13 @@ export const actFetchClassDetail = classes => {
         type: Types.FETCH_CLASS_DETAIL,
         classes
     }
+}
+
+//delete search
+export const actDeleteSearchInputClass = () => {
+    return {
+        type: Types.DELETE_SEARCH_INPUT_CLASS
+    };
 }
 
 

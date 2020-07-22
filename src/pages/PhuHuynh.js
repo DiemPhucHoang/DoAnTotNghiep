@@ -5,11 +5,12 @@ import TimGiaSuNhanh from "./../components/phuhuynh/TimGiaSuNhanh";
 import DanhSachGiaSu from "./../components/phuhuynh/DanhSachGiaSu";
 import DangYeuCauTimGiaSu from "./../components/phuhuynh/DangYeuCauTimGiaSu";
 import GiaSuItem from "./../components/phuhuynh/GiaSuItem";
-import { actFetchTutorsRequest } from "./../actions/tutor";
+import { actFetchTutorsRequest, actDeleteSearchInputTutor } from "./../actions/tutor";
 import { connect } from "react-redux";
-import callApi from "./../utils/apiCaller";
-import {actSearchTutorsRequest} from "./../actions/tutor";
+import { actSearchTutorsRequest } from "./../actions/tutor";
 import "./PhuHuynh.css";
+import { subjectConst, districtConst, classTeachConst } from '../constants/tutor';
+
 
 class PhuHuynh extends Component {
     constructor(props) {
@@ -17,61 +18,16 @@ class PhuHuynh extends Component {
         this.state = {
             submitRequest: false,
             activePage: 1,
-            subjects: [],
-            districts: [],
-            classTeaches: [],
+            subjects: subjectConst,
+            districts: districtConst,
+            classTeaches: classTeachConst,
 
         }
     }
 
     componentDidMount() {
-        let number = this.state.activePage - 1;
-        let {subject, district, classTeach, level, gender} = this.props.search;
-        if ((subject === undefined && 
-            district === undefined && 
-            classTeach === undefined && 
-            level === undefined &&
-            gender === undefined) 
-            || (subject === "" && 
-                 district === "" &&
-                classTeach === "" &&
-                level === "" &&
-                gender === "")
-        ) {
-            this.props.fetchAllTutors(number);
-          }
-        this.getAll();
-        
-    }
-
-    getAll = () => {
-        callApi('subject', "GET", null).then(res => {
-            if (res.status === 200) {
-                this.setState({
-                    subjects: res.data.result
-                })
-            }
-        }).catch(error => {
-            console.log(error);
-        });
-        callApi('district', "GET", null).then(res => {
-            if (res.status === 200) {
-                this.setState({
-                    districts: res.data.result
-                })
-            }
-        }).catch(error => {
-            console.log(error);
-        });
-        callApi('class-teach', "GET", null).then(res => {
-            if (res.status === 200) {
-                this.setState({
-                    classTeaches: res.data.result
-                })
-            }
-        }).catch(error => {
-            console.log(error);
-        });
+        this.props.deleteSearchInputTutor();
+        this.props.fetchAllTutors(0);
     }
 
     showSubmitRequest = () => {
@@ -141,6 +97,7 @@ class PhuHuynh extends Component {
             pathname: '/chon-gia-su',
             state: {tutorId: id}
         })
+        
     }
 
     render() {
@@ -213,6 +170,9 @@ const mapDispatchToProps = dispatch => {
         },
         onSearch: (searchInfo, pageSearch) => {
             dispatch(actSearchTutorsRequest(searchInfo, pageSearch));
+        },
+        deleteSearchInputTutor: () => {
+            dispatch(actDeleteSearchInputTutor());
         }
     };
 };

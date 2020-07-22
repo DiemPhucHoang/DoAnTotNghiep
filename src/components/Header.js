@@ -10,6 +10,10 @@ class Header extends Component {
         let { history } = this.props;
         this.props.onLogout(history);
     }
+
+    handleRating = () => {
+        console.log("handleRating");
+    }
     render() {
         const MenuLink = (props) => {
             const location = useLocation()
@@ -63,9 +67,9 @@ class Header extends Component {
                             <MenuLink {...this.props} title="TÌM GIA SƯ" name="tim-gia-su" />
                             <MenuLink {...this.props} title="LÀM GIA SƯ" name="lam-gia-su" />
                             <MenuLink {...this.props} title="LỚP MỚI" name="lop-moi" />
+                            <MenuLink {...this.props} title="ĐÁNH GIÁ" name="danh-gia-gia-su" />
                             <MenuLink {...this.props} title="ĐĂNG NHẬP" name="login" />
                         </ul>}
-
                 </div>
             </nav>
         );

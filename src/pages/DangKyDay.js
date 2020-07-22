@@ -49,6 +49,7 @@ class DangKyDay extends Component {
 
     render() {
         const { classes } = this.props;
+
         return (
             <div className="bg-color">
                 <div className="px-5 pt-5 pb-3 mx-5">
@@ -61,7 +62,7 @@ class DangKyDay extends Component {
                     </AppBar>
                     <Paper style={{ width: "100%", paddingBottom: "20px" }}>
                         <Grid container style={{ paddingRight: "20px" }}>
-                            <LopMoiDetail classItem={classes} />
+                            <LopMoiDetail length={this.props.tutorRegisterClass.length} classItem={classes} />
                             <FormDangKyNhanLop onRegisterClass={this.onRegisterClass} />
                         </Grid>
                         <hr />

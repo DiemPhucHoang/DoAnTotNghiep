@@ -39,20 +39,19 @@ class ThongTinCaNhan extends Component {
     }
 
     changeImage = (files) => {
-        console.log('sss: ', files);
         let formData = new FormData();
         formData.append("file", files);
         this.props.onHandleChangeImage(formData);
     }
 
     render() {
-        const { user, tutor } = this.props;
-        const hasTutor = tutor.image;
+        const { user } = this.props;
+        const hasUser = user?.image;
         return (
             <Grid item xs={4}>
                 <Paper>
                     <div style={{ textAlign: 'center', padding: '15px' }}>
-                        <img alt="avatar" src={!hasTutor ? 'image/av3.png' : `data:image/jpg;base64,${tutor.image}`} className="rounded-circle" style={{ width: '50%' }} />
+                        <img alt="avatar" src={!hasUser ? 'image/av3.png' : `data:image/jpg;base64,${user.image}`} className="rounded-circle" style={{ width: '50%' }} />
                         <br /><br />
                         <h6>{user?.name}</h6>
                         <Button variant="contained" color="primary" onClick={() => this.setState({ open: true })}>

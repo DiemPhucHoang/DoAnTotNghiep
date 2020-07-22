@@ -8,12 +8,12 @@ class LopNoiBat extends Component {
         const hasClassList = classList && classList.length > 0;
         return (
             <div className="p-5 mx-5">
-                <Paper elevation={0} >
+                <Paper elevation={0}>
                     <h4 style={{ textAlign: "center" }}>DANH SÁCH LỚP MỚI</h4>
                     <Grid container spacing={4} style={{ padding: '10px' }}>
                         {hasClassList && classList.map((classItem) => (
                             <Grid key={classItem.id} item xs={3} className="paper">
-                                <Card elevation={3} >
+                                <Card elevation={3} style={{height: '300px' }}>
                                     <AppBar position="static">
                                         <Toolbar variant="dense">
                                             <Typography variant="h6" color="inherit">

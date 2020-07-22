@@ -3,7 +3,8 @@ import { Grid} from '@material-ui/core';
 import ThongTinChung from './../components/chiTietGiaSu/ThongTinChung';
 import ThongTinChiTiet from './../components/chiTietGiaSu/ThongTinChiTiet';
 import { connect } from 'react-redux';
-import {actFetchTutorDetailRequest} from './../actions/tutor';
+import {actFetchTutorDetailRequest} from '../actions/tutor';
+import {actFetchRatesRequest} from '../actions/rate';
 
 class ChiTietGiaSu extends Component {
     componentDidMount() {
@@ -12,6 +13,7 @@ class ChiTietGiaSu extends Component {
             const id = match.params.id;
             const chooseTutor = false;
             this.props.onFetchTutorDetail(id, chooseTutor);
+            this.props.onFetchRate(id);
         }
     }
 
@@ -23,17 +25,17 @@ class ChiTietGiaSu extends Component {
     }
     
     render() {
-        let {tutor} = this.props;
+        const {tutor, rate} = this.props;
         return (
             
             <div className="bg-color">
                 <div className="p-5 mx-5">
                     <Grid container spacing={3}>
                         <Grid item xs={4}>
-                            <ThongTinChung tutorDetail={tutor} chooseTutor={this.chooseTutor}/>
+                            <ThongTinChung rate={rate} tutorDetail={tutor} chooseTutor={this.chooseTutor}/>
                         </Grid>
                         <Grid item xs={8}>
-                            <ThongTinChiTiet tutorDetail={tutor} />
+                            <ThongTinChiTiet tutorDetail={tutor} rate={rate}/>
                         </Grid>
                     </Grid>
                 </div>
@@ -44,7 +46,8 @@ class ChiTietGiaSu extends Component {
 
 const mapStateToProps = state => {
     return {
-        tutor: state.tutor
+        tutor: state.tutor,
+        rate: state.rate
     }
 }
 
@@ -52,6 +55,9 @@ const mapDispatchToProps = dispatch => {
     return {
       onFetchTutorDetail: (id, chooseTutor) => {
         dispatch(actFetchTutorDetailRequest(id, chooseTutor));
+      },
+      onFetchRate: (idTutor) => {
+          dispatch(actFetchRatesRequest(idTutor));
       }
     };
   };

@@ -35,7 +35,7 @@ class LopMoiDetail extends Component {
                             <p className="class-detail"><PersonOutlineIcon fontSize="small" /><strong> Yêu cầu giới tính:</strong> {classItem.genderRequirement}</p>
                             <p className="class-detail"><AttachMoneyIcon fontSize="small" /><strong> Lương:<span style={{ color: "#fc0505", fontSize: "18px" }}> {classItem.tuitionFee} vnđ/tháng</span></strong></p>
                             <p className="class-detail"><TurnedInNotIcon fontSize="small" /><strong> Phí nhận lớp:</strong> 25%</p>
-                            <p className="class-detail"> Đã có <strong> 2/5</strong> đề nghị dạy.</p>
+                {this.props.length > 0 ? <p className="class-detail"> Đã có <strong> {this.props.length}/5</strong> đề nghị dạy.</p> : ''}
                         </Grid>
                     </Grid>
                 )}

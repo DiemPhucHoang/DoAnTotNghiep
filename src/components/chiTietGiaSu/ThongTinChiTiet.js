@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
-import { Grid, Paper, AppBar, Toolbar, Typography, Table, TableCell, Avatar, TableRow, TableHead, TableBody } from '@material-ui/core';
+import { Paper, AppBar, Toolbar, Typography, Table, TableCell, TableRow, TableHead, TableBody } from '@material-ui/core';
 import ThoiGianDay from './ThoiGianDay';
 import { getStringName } from '../commons/util';
+import DanhGiaGiaSu from './DanhGiaGiaSu';
 
 class ThongTinChiTiet extends Component {
    render() {
-      const { tutorDetail } = this.props;
-      const { subjects, classTeaches,  districts} = tutorDetail;
+      const tutorDetail  = this.props.tutorDetail.tutorInfoVO;
+      const subjects = tutorDetail?.subjects;
+      const classTeaches = tutorDetail?.classTeaches;
+      const districts = tutorDetail?.districts;
+      
       const hasValue = subjects && subjects.length > 0 && classTeaches && classTeaches.length > 0
          && districts && districts.length > 0;
 
@@ -69,7 +73,7 @@ class ThongTinChiTiet extends Component {
                   </Typography>
                </Toolbar>
             </AppBar>
-            <ThoiGianDay freeTimes={tutorDetail.freeTimes}/>
+            <ThoiGianDay freeTimes={tutorDetail?.freeTimes}/>
             {/*Danh gia gia su */}
             <AppBar position="static">
                <Toolbar variant="dense">
@@ -78,28 +82,7 @@ class ThongTinChiTiet extends Component {
                   </Typography>
                </Toolbar>
             </AppBar>
-            <div style={{ padding: '20px' }}>
-               <Grid container spacing={3}>
-                  <Grid item xs={1}>
-                     <Avatar style={{ width: '50px', height: '50px' }}>T</Avatar>
-                  </Grid>
-                  <Grid item xs={11}>
-                     <h5>Lê Thị Thùy Trang <small><i>Đã nhận xét vào 17-01-2020</i></small></h5>
-                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                  </Grid>
-               </Grid>
-               <Grid container spacing={3}>
-                  <Grid item xs={1}>
-                     <Avatar style={{ width: '50px', height: '50px', backgroundColor: '#ff5722' }}>H</Avatar>
-                  </Grid>
-                  <Grid item xs={11}>
-                     <h5>Phạm Thị Ngọc Hường <small><i>Đã nhận xét vào 17-01-2020</i></small></h5>
-                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut.
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                     </p>
-                  </Grid>
-               </Grid>
-            </div>
+            <DanhGiaGiaSu rate={this.props.rate}/>
          </Paper>
       );
    }

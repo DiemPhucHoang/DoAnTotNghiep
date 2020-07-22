@@ -85,7 +85,6 @@ class DangYeuCauTimGiaSu extends Component {
                                         <InputLabel id="demo-mutiple-checkbox-outlined-label">Môn học</InputLabel>
                                         <Select
                                             labelId="demo-mutiple-checkbox-outlined-label"
-                                            id="demo-mutiple-checkbox-outlined"
                                             multiple
                                             label="Môn học"
                                             onChange={this.onChange}
@@ -124,7 +123,6 @@ class DangYeuCauTimGiaSu extends Component {
                                 </Grid> */}
                                 <Grid item xs={6}>
                                     <TextField
-                                        id="standard-select-currency"
                                         select
                                         name="classTeach"
                                         required
@@ -143,7 +141,6 @@ class DangYeuCauTimGiaSu extends Component {
                                 </Grid>
                                 <Grid item xs={6}>
                                     <TextField
-                                        id="standard-select-currency"
                                         select
                                         name="levelRequirement"
                                         label="Chọn trình độ gia sư"
@@ -168,7 +165,6 @@ class DangYeuCauTimGiaSu extends Component {
                                 </Grid>
                                 <Grid item xs={6}>
                                     <TextField
-                                        id="standard-select-currency"
                                         select
                                         name="genderRequirement"
                                         label="Chọn giới tính gia sư"
@@ -191,7 +187,6 @@ class DangYeuCauTimGiaSu extends Component {
                                 <Grid item xs={6}>
                                     <TextField
                                         fullWidth
-                                        id="standard-select-currency"
                                         name="tuitionFee"
                                         label="Học phí dự kiến (VNĐ/tháng)"
                                         variant="outlined"
@@ -204,7 +199,6 @@ class DangYeuCauTimGiaSu extends Component {
                                         fullWidth
                                         required
                                         name="timeTeach"
-                                        id="standard-select-currency"
                                         label="Thời gian dạy"
                                         variant="outlined"
                                         size="small"
@@ -214,7 +208,6 @@ class DangYeuCauTimGiaSu extends Component {
                                 </Grid>
                                 <Grid item xs={6}>
                                     <TextField
-                                        id="standard-select-currency"
                                         select
                                         label="Chọn quận"
                                         name="district"
@@ -234,7 +227,6 @@ class DangYeuCauTimGiaSu extends Component {
                                 <Grid item xs={6}>
                                     <TextField
                                         fullWidth
-                                        id="standard-select-currency"
                                         label="Địa chỉ cụ thể"
                                         name="address"
                                         required
@@ -248,7 +240,6 @@ class DangYeuCauTimGiaSu extends Component {
                                     <TextField
                                         required
                                         fullWidth
-                                        id="standard-select-currency"
                                         label="Họ tên của phụ huynh"
                                         name="name"
                                         variant="outlined"
@@ -260,7 +251,6 @@ class DangYeuCauTimGiaSu extends Component {
                                     <TextField
                                         required
                                         fullWidth
-                                        id="standard-select-currency"
                                         name="phone"
                                         label="Số điện thoại"
                                         variant="outlined"
@@ -271,7 +261,6 @@ class DangYeuCauTimGiaSu extends Component {
                                 <Grid item xs={4}>
                                     <TextField
                                         fullWidth
-                                        id="standard-select-currency"
                                         name="email"
                                         label="Email (nếu có)"
                                         variant="outlined"

@@ -6,6 +6,9 @@ const searchClass = (state = initialState, action) => {
         case Types.SEARCH_INPUT_CLASS:
            state = action.searchInput;
             return {...state};
+        case Types.DELETE_SEARCH_INPUT_CLASS:
+            state =  {};
+            return state;
         default: return state;
     }
 };

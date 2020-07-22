@@ -7,7 +7,12 @@ import LopMoiItem from './../components/lopMoi/LopMoiItem';
 import { connect } from 'react-redux';
 import {actFetchClassesRequest} from './../actions/classes';
 import {actSearchClassesRequest} from './../actions/classes';
+import { actFetchTutorByIdUserRequest } from "./../actions/tutor";
 import callApi from "./../utils/apiCaller";
+import { notification } from "antd";
+import "antd/dist/antd.css";
+import { subjectConst, districtConst, classTeachConst } from '../constants/tutor';
+import { actDeleteSearchInputClass } from '../actions/classes';
 
 class LopMoi extends Component {
     constructor(props) {
@@ -15,30 +20,23 @@ class LopMoi extends Component {
         this.state = {
             submitRequest: false,
             activePage: 1,
-            subjects: [],
-            districts: [],
-            classTeaches: [],
-
+            subjects: subjectConst,
+            districts: districtConst,
+            classTeaches: classTeachConst
         }
     }
 
     componentDidMount() {
-        let number = this.state.activePage - 1;
-        let {subject, district, classTeach, level, gender} = this.props.search;
-        if ((subject === undefined && 
-            district === undefined && 
-            classTeach === undefined && 
-            level === undefined &&
-            gender === undefined) 
-            || (subject === "" && 
-                 district === "" &&
-                classTeach === "" &&
-                level === "" &&
-                gender === "")
-        ) {
-            this.props.fetchAllClasses(number);
-          }
-        this.getAll();
+        this.props.deleteSearchInputClass();
+        this.props.fetchAllClasses(0);
+        // if (!subject && !district && !classTeach && !level && !gender) {
+        //     this.props.fetchAllClasses(number);
+        // }
+       
+        // this.getAll();
+        if(localStorage.getItem("id")) { 
+            this.props.fetchTutorByIdUser();
+        }
     }
 
     showClasses = (classes) => {
@@ -46,10 +44,27 @@ class LopMoi extends Component {
         const hasClasses = classes && classes.length > 0;
         if (hasClasses) {
             result = classes.map((classItem, index) => {
-                return <LopMoiItem key={index} classItem={classItem}/>
+                return <LopMoiItem key={index} classItem={classItem} redirectRegisterClass={this.redirectRegisterClass}/>
             });
         }
         return result;
+    }
+
+    redirectRegisterClass = (idClass) => {
+        if(localStorage.getItem("id") === null) {
+            this.props.history.push('/login');
+            return;
+        }
+        if(Object.keys(this.props.tutorDetail).length === 0 && this.props.tutorDetail.constructor === Object) {
+            notification.error({
+                message: "Failed",
+                description: "Để có thể hoàn thành đăng ký và nhận được lớp dạy, xin vui lòng hoàn thiện hồ sơ gia sư!"
+            })
+            this.props.history.push('/ho-so-gia-su');
+            return;
+        } else {
+            this.props.history.push(`/dang-ky-day/${idClass}`);
+        };
     }
 
     onChange = (event, page) => {
@@ -57,7 +72,6 @@ class LopMoi extends Component {
             activePage: page,
         });
         let number = page - 1;
-        this.props.fetchAllClasses(number);
         if(this.props.search.isSearch) {
             this.props.onSearch(this.props.search, number);
           }else {
@@ -165,7 +179,8 @@ class LopMoi extends Component {
 const mapStateToProps = state => {
     return {
         classes: state.classes,
-        search: state.searchClass
+        search: state.searchClass,
+        tutorDetail: state.tutorDetail
     };
 };
 
@@ -176,6 +191,12 @@ const mapDispatchToProps = dispatch => {
         },
         onSearch: (searchInfo, pageSearch) => {
             dispatch(actSearchClassesRequest(searchInfo, pageSearch));
+        },
+        fetchTutorByIdUser: () => {
+            dispatch(actFetchTutorByIdUserRequest());
+        },
+        deleteSearchInputClass: () => {
+            dispatch(actDeleteSearchInputClass());
         }
     };
 };

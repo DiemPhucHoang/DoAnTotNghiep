@@ -137,6 +137,15 @@ a:hover {
   box-shadow: 2px 2px 1px rgba(0, 0, 0, 0.21);
 }
 
+.statusCancel {
+  background-color: #f9b86d;
+  width: 26px;
+  height: 26px;
+  margin-left: 60px;
+  margin-right: 5px;
+  box-shadow: 2px 2px 1px rgba(0, 0, 0, 0.21);
+}
+
 .padding-class {
   padding-left: 20px;
   padding-right: 20px;
@@ -150,4 +159,16 @@ a:hover {
 .form-login {
   width: '100%';
   margin-top: 20px;
+}
+.display-flexbox {
+  display: flex;
+}
+.padding-rate {
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 20px;
+}
+.test {
+  max-width: 10% !important;
+  width: 10% !important;
 }

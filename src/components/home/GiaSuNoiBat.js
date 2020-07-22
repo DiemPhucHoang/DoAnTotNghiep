@@ -11,18 +11,18 @@ class GiaSuNoiBat extends Component {
         const hasTutorList = tutorList && tutorList.length > 0;
         return (
             <div className="p-5 mx-5">
-                <Paper elevation={0} >
+                <Paper elevation={0}>
                     <h4 style={{ textAlign: "center" }}>GIA SƯ NỔI BẬT</h4>
                     <Grid container spacing={3} style={{ padding: '10px' }}>
                         {hasTutorList && tutorList.map((tutorItem) => (
                             <Grid key={tutorItem.id} item xs={3} className="paper">
-                                <Card elevation={3} style={{ padding: '5px' }}>
+                                <Card elevation={3} style={{ padding: '5px'}}>
                                     <CardActionArea>
                                         <div style={{ textAlign: 'center', padding: '15px' }}>
                                             <img alt="avatar" src={`data:image/jpg;base64,${tutorItem.image}`} className="rounded-circle" style={{ width: '55%' }} />
                                         </div>
                                         <CardContent>
-                                            <Typography gutterBottom variant="h6" component="h2">
+                                            <Typography gutterBottom variant="subtitle1" component="h2">
                                                 {tutorItem.name}
                                             </Typography>
                                             <Typography variant="body2" color="textSecondary" component="p">

@@ -4,9 +4,6 @@ import { Button } from '@material-ui/core';
 class FreeTimeArea extends Component {
 
     handleClickButtonFreeTime = (id, name, value) => {
-        console.log('value: ', value);
-        console.log('name: ', name);
-        console.log('id: ', id);
         this.props.onChangeFreeTime(id, name, !value);
     }
 

@@ -56,7 +56,7 @@ class ChonGiaSu extends Component {
     }
 
     render() {
-        const { tutor } = this.props;
+        const {tutor} = this.props;
         let { subjects, districts, classTeaches } = this.state;
         const {history} = this.props;
         return (

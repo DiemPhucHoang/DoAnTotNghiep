@@ -109,6 +109,7 @@ export const actFetchTutorDetailRequest = (id, chooseTutor) => {
                         dispatch(actChooseTutor(res.data));
                     } else {
                         dispatch(actFetchTutorDetail(res.data));
+                        console.log('res.data: ', res.data.result);
                     }
                 }
             }).catch(err => {
@@ -159,4 +160,11 @@ export const actFetchTutorByIdUser = tutor => {
         type: Types.FETCH_TUTOR_BY_ID_USER,
         tutor
     }
+}
+
+//delete search
+export const actDeleteSearchInputTutor = () => {
+    return {
+        type: Types.DELETE_SEARCH_INPUT_TUTOR
+    };
 }

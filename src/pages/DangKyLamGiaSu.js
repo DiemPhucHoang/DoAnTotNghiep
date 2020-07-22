@@ -5,6 +5,7 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import callApi from './../utils/apiCaller';
 import {actLoginRequest} from './../actions/user';
 import { connect } from 'react-redux';
+import { notification } from "antd";
 import "antd/dist/antd.css";
 
 class DangKyLamGiaSu extends Component {
@@ -41,7 +42,11 @@ class DangKyLamGiaSu extends Component {
                 this.props.onLogin(loginInfo, history, isTutor);
             }
         }).catch(error => {
-            console.log(error);
+            notification.error({
+                message: "Failed",
+                description:
+                    "Đăng ký không thành công. Vui lòng kiểm tra lại thông tin!"
+            });
         });
 
     }

@@ -4,15 +4,15 @@ import { trackPromise } from 'react-promise-tracker';
 const axiosIntance = axios.create({});
 
 export default function callApi(endpoint, method = 'GET', body) {
-      return axios({
-            method: method,
-            url: `${Config.API_URL}/${endpoint}`,
-            data: body
-      });
-      // let ax = axiosIntance({
+      // return axios({
       //       method: method,
-      //       url : `${Config.API_URL}/${endpoint}`,
-      //       data : body
+      //       url: `${Config.API_URL}/${endpoint}`,
+      //       data: body
       // });
-      // return trackPromise(ax);
+      let ax = axios({
+            method: method,
+            url : `${Config.API_URL}/${endpoint}`,
+            data : body
+      });
+      return trackPromise(ax);
 };

@@ -40,11 +40,9 @@ class DanhSachLopTuongTu extends Component {
                                         </strong>
                                         </p>
                                         <div style={{ float: "right", paddingBottom: '15px' }}>
-                                            {/* <Link to={`/dang-ky-day/${classItem.id}`}> */}
                                                 <Button onClick={(e, id) => this.showClassDetail(classItem.id)} variant="contained" color="secondary" size="small">
                                                     Đăng ký dạy
                                                 </Button>
-                                            {/* </Link> */}
                                         </div>
                                     </CardContent>
                                 </Card>

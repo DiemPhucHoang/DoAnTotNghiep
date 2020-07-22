@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import RoomSharpIcon from '@material-ui/icons/RoomSharp';
 import {
     Grid, Button, Card, CardContent, AppBar, Toolbar, Typography
 } from '@material-ui/core';
 
 class LopMoiItem extends Component {
-    showInfoClass = () => {
-
+    onClickRegisterClass = (idClass) => {
+        this.props.redirectRegisterClass(idClass);
     }
-
-    
 
     render() {
         const { classItem } = this.props;
@@ -37,11 +34,10 @@ class LopMoiItem extends Component {
                         </strong>
                         </p>
                         <div style={{ float: "right", paddingBottom: '15px' }}>
-                            <Link to={`/dang-ky-day/${classItem.id}`}>
-                                <Button variant="contained" color="secondary" size="small">
-                                    Đăng ký dạy
-                                </Button>
-                            </Link>
+
+                            <Button onClick={() => this.onClickRegisterClass(classItem.id)} variant="contained" color="secondary" size="small">
+                                Đăng ký dạy
+                            </Button>
                         </div>
                     </CardContent>
                 </Card>

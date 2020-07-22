@@ -7,14 +7,27 @@ import Container from '@material-ui/core/Container';
 import {actLoginRequest} from './../actions/user';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import QuenMatKhau from './QuenMatKhau';
 
 class DangNhap extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            userInfo: {}
+            userInfo: {},
+            open: false,
         }
+    }
+
+    showForgotPassword = () => {
+        this.setState({
+            open: true,
+        });
+    };
+    onCloseForgotPassword = () => {
+        this.setState({
+            open: !this.state.open
+        });
     }
 
     handleSubmit = (e) => {
@@ -78,12 +91,12 @@ class DangNhap extends Component {
                             Đăng nhập
                         </Button>
                         <Grid container className="pt-3">
-                            <Grid item xs>
-                                <Link to="/quen-mat-khau" variant="body2">
+                            <Grid item xs={6}>
+                                <Button size="small" onClick={this.showForgotPassword}  variant="outlined" color="primary" >
                                     Quên mật khẩu
-                                </Link>
+                                </Button>
                             </Grid>
-                            <Grid item >
+                            <Grid item xs={6}>
                                 <Link to='/lam-gia-su' variant="body2">
                                     {"Don't have an account? Sign Up"}
                                 </Link>
@@ -91,6 +104,7 @@ class DangNhap extends Component {
                         </Grid>
                     </form>
                 </div>
+                <QuenMatKhau showForgotPassword={this.state.open} closeForgotPassword={this.onCloseForgotPassword}/>
             </Container>
         );
     }

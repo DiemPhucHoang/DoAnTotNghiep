@@ -165,11 +165,11 @@ class HoSoGiaSu extends Component {
         if(Object.keys(tutor).length === 0 && tutor.constructor === Object) {
             console.log("create tutor");
             await this.props.onCreateTutor(tutorModel);
-            await this.props.fetchTutorByIdUser();
+            // await this.props.fetchTutorByIdUser();
         } else {
             console.log("edit tutor");
             await this.props.onEditInfoTutor(tutorModel, tutor.id);
-            await this.props.fetchTutorByIdUser();
+            // await this.props.fetchTutorByIdUser();
         }
     }
 
@@ -185,23 +185,32 @@ class HoSoGiaSu extends Component {
     }
 
     onHandleChangeImage = (formData) => {
-        const {tutor} = this.props;
-        if(Object.keys(tutor).length === 0 && tutor.constructor === Object) {
-            notification.error({
-                message: "Failed",
-                description: "Bạn chưa cập nhật thông tin hồ sơ gia sư!"
-              });
-            return;
-        } else {
-            callApi(`tutor/change-image/${localStorage.getItem("id")}`, "POST", formData).then(res => {
+        const {user} = this.props;
+        if(user?.image) {
+            callApi(`auth/change-image/${localStorage.getItem("id")}`, "POST", formData).then(res => {
                 if (res.status === 200) {
                   notification.success({
                     message: "Success",
                     description: "Cập nhật ảnh thành công!"
                   });
-                  this.props.fetchTutorByIdUser();
+                  this.props.fetchUser();
                   this.setState({
-                    tutorInfo: this.props.tutor
+                    user: this.props.user
+                });
+                }
+              }).catch(error => {
+                console.log("Error: ", error);
+            });
+        } else {
+            callApi(`auth/upload-image/${localStorage.getItem("id")}`, "POST", formData).then(res => {
+                if (res.status === 200) {
+                  notification.success({
+                    message: "Success",
+                    description: "Cập nhật ảnh thành công!"
+                  });
+                  this.props.fetchUser();
+                  this.setState({
+                    user: this.props.user
                 });
                 }
               }).catch(error => {
@@ -259,7 +268,7 @@ class HoSoGiaSu extends Component {
 const mapStateToProps = state => {
     return {
         auth: state.auth,
-        tutor: state.tutor
+        tutor: state.tutorDetail
     };
 };
 
