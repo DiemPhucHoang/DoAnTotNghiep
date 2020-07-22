@@ -104,17 +104,16 @@ public class TutorRegisterClassServiceImpl implements TutorRegisterClassService 
     }
 
     @Override
-    public ClassRegisterVO changeStatusTutorRegisterClass(Long id) {
+    public void changeStatusTutorRegisterClass(Long id) {
         logger.info("Change status tutor register class with id_register " + id);
         TutorRegisterClass tutorRegisterClass = tutorRegisterClassDAO.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException("Tutor register class", "id", id));
         System.out.println("status" + tutorRegisterClass.getStatus());
         if(tutorRegisterClass.getStatus().equals(TutorRegisterClassStatus.XEMXET)) {
-            tutorRegisterClassDAO.changeStatusClassRegister(TutorRegisterClassStatus.DAHUY.getKey(), tutorRegisterClass.getId());
+            tutorRegisterClassDAO.changeStatusClassRegister
+                    (String.valueOf(TutorRegisterClassStatus.DAHUY.ordinal()), tutorRegisterClass.getId());
         } else {
             throw new BadRequestException("Can not change status");
         }
-        return tutorRegisterClassParsing.toClassRegisterVO(tutorRegisterClassDAO.findById(id).orElseThrow(() ->
-                new ResourceNotFoundException("Tutor register class", "id", id)));
     }
 }

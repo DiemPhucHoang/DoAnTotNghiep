@@ -21,6 +21,8 @@ public interface UserDAO extends JpaRepository<User, Long> {
 
     Boolean existsByName(String name);
 
+    Optional<User> findByEmail(String email);
+
     @Modifying
     @Transactional
     @Query(value = "update Users as u set u.password = ?1 where u.id_user = ?2", nativeQuery = true)

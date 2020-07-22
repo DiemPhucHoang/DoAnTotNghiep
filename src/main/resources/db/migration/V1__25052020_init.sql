@@ -2,9 +2,10 @@ CREATE TABLE `users` (
   `id_user` bigint NOT NULL AUTO_INCREMENT,
   `address` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
+  `name` varchar(255) NOT NULL,
   `password` varchar(255) DEFAULT NULL,
-  `phone` varchar(11) DEFAULT NULL,
+  `phone` varchar(11) NOT NULL,
+  `image` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id_user`),
   UNIQUE KEY `UKdu5v5sr43g5bfnji4vb8hg5s3` (`phone`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -28,7 +29,6 @@ CREATE TABLE `tutors` (
   `id_tutor` bigint NOT NULL AUTO_INCREMENT,
   `gender` varchar(11) NOT NULL,
   `year_of_birth` varchar(11) NOT NULL,
-  `image` varchar(255) DEFAULT NULL,
   `major` varchar(255) NOT NULL,
   `college` varchar(255) NOT NULL,
   `graduation_year` varchar(11) NOT NULL,
@@ -151,11 +151,24 @@ CREATE TABLE `tutor_register_class` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `invoice` (
-  `id_invoice` bigint NOT NULL,
+  `id_invoice` bigint NOT NULL AUTO_INCREMENT,
   `id_register` bigint DEFAULT NULL,
   `service_fee` double DEFAULT NULL,
   `time` datetime DEFAULT NULL,
   PRIMARY KEY (`id_invoice`),
   KEY `id_register` (`id_register`),
   CONSTRAINT `invoice_ibfk_1` FOREIGN KEY (`id_register`) REFERENCES `tutor_register_class` (`id_register`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `rate` (
+  `id_rate` bigint NOT NULL AUTO_INCREMENT,
+  `id_parent` bigint DEFAULT NULL,
+  `id_tutor` bigint DEFAULT NULL,
+  `star` bigint DEFAULT NULL,
+  `comment` longtext DEFAULT NULL,
+  PRIMARY KEY (`id_rate`),
+  KEY `id_parent` (`id_parent`),
+  KEY `id_tutor` (`id_tutor`),
+  CONSTRAINT `rate_ibfk_1` FOREIGN KEY (`id_parent`) REFERENCES `users` (`id_user`),
+  CONSTRAINT `rate_ibfk_2` FOREIGN KEY (`id_tutor`) REFERENCES `tutors` (`id_tutor`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

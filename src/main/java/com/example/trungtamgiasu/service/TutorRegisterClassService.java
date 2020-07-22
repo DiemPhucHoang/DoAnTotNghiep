@@ -18,5 +18,7 @@ public interface TutorRegisterClassService {
 
     List<TutorRegisterClassInfoVO> getAllTutorRegisterClass(Long idClass);
 
-    ClassRegisterVO changeStatusTutorRegisterClass(Long id);
+    void changeStatusTutorRegisterClass(Long id);
+
+
 }

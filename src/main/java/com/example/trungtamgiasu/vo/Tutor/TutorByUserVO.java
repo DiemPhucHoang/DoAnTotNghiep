@@ -14,9 +14,9 @@ import java.util.List;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class TutorInfoVO {
+@NoArgsConstructor
+public class TutorByUserVO {
     private Long id;
 
     @NotBlank
@@ -24,9 +24,6 @@ public class TutorInfoVO {
 
     @NotBlank
     private String yearOfBirth;
-
-    @NotBlank
-    private byte[] image;
 
     @NotBlank
     private String major;
@@ -59,5 +56,4 @@ public class TutorInfoVO {
     private String name;
 
     private double salaryPerHour;
-
 }

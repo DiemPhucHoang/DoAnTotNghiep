@@ -22,8 +22,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Service
 public class ClassesServiceImpl implements ClassesService {
@@ -54,15 +56,22 @@ public class ClassesServiceImpl implements ClassesService {
             throw new BadRequestException("Class is null");
         }
         classesVO.setStatus(ClassesStatus.LOPMOI.getKey());
+        boolean checkUser = false;
+        User user = new User();
         if (userDAO.existsByPhone(classesVO.getPhone())) {
-            throw new BadRequestException("Phone is already use!");
+            checkUser = true;
+            user = userDAO.findByPhone(classesVO.getPhone()).orElseThrow(() ->
+                    new ResourceNotFoundException("User", "phone", classesVO.getPhone()));
         }
-        User userInfo = new User(classesVO.getName(), classesVO.getPhone(), classesVO.getEmail());
-        RoleName roleName = RoleName.ROLE_PARENT;
-        Role role = roleDAO.findByName(roleName).orElseThrow(() -> new BadRequestException("Role does not exists"));
-        userInfo.getRoles().add(role);
-        User user =  userDAO.save(userInfo);
+
         Classes classMap = classesParsing.toClasses(classesVO);
+        if(!checkUser) {
+            User userInfo = new User(classesVO.getName(), classesVO.getPhone(), classesVO.getEmail());
+            RoleName roleName = RoleName.ROLE_PARENT;
+            Role role = roleDAO.findByName(roleName).orElseThrow(() -> new BadRequestException("Role does not exists"));
+            userInfo.getRoles().add(role);
+            user =  userDAO.save(userInfo);
+        }
         classMap.setUser(user);
         Classes classes = classesDAO.save(classMap);
         ParentRegisterTutorStatus status = ParentRegisterTutorStatus.CHUADONGY;
@@ -136,5 +145,24 @@ public class ClassesServiceImpl implements ClassesService {
         logger.info("Get top 3 classes by class teach " + classes.getClassTeach());
         List<Classes> classesList = classesDAO.getTop3Similar(classes.getClassTeach(), idClass);
         return classesParsing.toClassesInfoVOList(classesList);
+    }
+
+    @Override
+    public List<ClassesInfoVO> getClassesSuggest(Long idUser) {
+        logger.info("Get classes suggest by id user " + idUser);
+        Tutor tutor = tutorDAO.findByUser(userDAO.findById(idUser).
+                orElseThrow(() -> new ResourceNotFoundException("User", "id ", idUser))).
+                orElseThrow(() -> new ResourceNotFoundException("Tutor", "id",idUser));
+        Set<ClassTeach> classTeaches = tutor.getClassTeaches();
+        Set<District> districts = tutor.getDistricts();
+        List<Classes> result = new ArrayList<>();
+        ClassesStatus classesStatus = ClassesStatus.LOPMOI;
+        for (ClassTeach classTeach : classTeaches) {
+            for (District district : districts) {
+                result.addAll(classesDAO.findTop6ByClassTeachAndDistrictAndStatus
+                        (classTeach.getClassTeachName(), district.getDistrictName(), classesStatus));
+            }
+        }
+        return classesParsing.toClassesInfoVOList(result);
     }
 }

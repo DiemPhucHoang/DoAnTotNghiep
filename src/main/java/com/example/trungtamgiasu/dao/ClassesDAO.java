@@ -21,4 +21,6 @@ public interface ClassesDAO extends JpaRepository<Classes, Long>, JpaSpecificati
 
     @Query(value = "select *  from classes where class_teach = ?1 and id_class != ?2 limit 3", nativeQuery = true)
     List<Classes> getTop3Similar(String classTeach, Long idClass);
+
+    List<Classes> findTop6ByClassTeachAndDistrictAndStatus(String classTeach, String district, ClassesStatus status);
 }

@@ -1,7 +1,9 @@
 package com.example.trungtamgiasu.controller;
+
 import com.example.trungtamgiasu.parsing.TutorParsing;
 import com.example.trungtamgiasu.service.TutorService;
 import com.example.trungtamgiasu.vo.SearchVO;
+import com.example.trungtamgiasu.vo.Tutor.TutorByUserVO;
 import com.example.trungtamgiasu.vo.Tutor.TutorInfoVO;
 import com.example.trungtamgiasu.vo.Tutor.TutorVO;
 import com.example.trungtamgiasu.vo.payload.ApiResponse;
@@ -12,9 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/tutor")
@@ -27,22 +27,14 @@ public class TutorController {
     @Autowired
     private TutorParsing tutorParsing;
 
-    @PostMapping("/upload-image/{idUser}")
-    public ApiResponse uploadImage(@RequestPart("file")MultipartFile file, @PathVariable("idUser") Long idUser,
-                                   Authentication auth) {
-        return new ApiResponse(
-                true,
-                "Upload image successfully",
-                tutorService.uploadImage(file, idUser, auth));
-    }
-
     @PostMapping("/{idUser}")
     public ApiResponse createTutor(@RequestBody TutorVO tutorVO, @PathVariable("idUser") Long idUser) {
         try {
+            TutorByUserVO tutorByUserVO = tutorParsing.toTutorByUserVO(tutorService.createTutor(tutorVO, idUser));
             return new ApiResponse(
                     true,
                     "Create tutor successfully",
-                    tutorService.createTutor(tutorVO, idUser));
+                    tutorByUserVO);
         } catch (Exception e) {
             return new ApiResponse(true, "Create tutor failed ", e);
         }
@@ -82,8 +74,8 @@ public class TutorController {
     public ApiResponse getTutorByIdUser(@PathVariable("idUser") Long idUser) {
         logger.info("Get tutor by id user" + idUser);
         try {
-            TutorInfoVO tutorInfoVO = tutorParsing.toTutorInfoVO(tutorService.getTutorByIdUser(idUser));
-            return new ApiResponse(true, "Get tutor by id user" +  idUser + " successfully", tutorInfoVO);
+            TutorByUserVO tutorByUserVO = tutorParsing.toTutorByUserVO(tutorService.getTutorByIdUser(idUser));
+            return new ApiResponse(true, "Get tutor by id user" +  idUser + " successfully", tutorByUserVO);
         } catch (Exception e) {
             return new ApiResponse(false, "Get tutor by id user" +  idUser + " failed", e.toString());
         }
@@ -108,18 +100,6 @@ public class TutorController {
 //                tutorService.readBytesFromFile(idTutor));
 //    }
 
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_TUTOR')")
-    @PostMapping("/change-image/{idUser}")
-    public ApiResponse changeImageTutor(@PathVariable("idUser") Long idUser,
-                                        @RequestPart("file") MultipartFile file, Authentication auth)
-    {
-        logger.info("Change image by idUser" + idUser);
-        return new ApiResponse(
-                true,
-                "Change image tutor successfully",
-                tutorService.changeImage(idUser, file, auth));
-    }
-
     @GetMapping("/top4")
     public ApiResponse getTop4Tutors() {
         return new ApiResponse(true, "Get top4 tutors successfully", tutorService.getTop4Tutors());
@@ -134,6 +114,12 @@ public class TutorController {
         } catch (Exception e) {
             return new ApiResponse(false, "Change info tutor " + idTutor + " failed " + e.toString());
         }
+    }
+
+    @GetMapping("/parent/{phone}")
+    public ApiResponse getAllTutorByIdParent(@PathVariable("phone") String phone) {
+        return new ApiResponse(true, "Get all successfully",
+                tutorService.getAllTutorRegisterClassOfParent(phone));
     }
 
 }

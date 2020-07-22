@@ -21,4 +21,6 @@ public interface ClassesService {
     List<ClassesInfoVO> getTop4();
 
     List<ClassesInfoVO> getTop3ByClassTeach(Long idClass);
+
+    List<ClassesInfoVO> getClassesSuggest(Long idUser);
 }

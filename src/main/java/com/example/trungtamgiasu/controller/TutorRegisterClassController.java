@@ -32,13 +32,20 @@ public class TutorRegisterClassController {
         }
     }
 
-    @GetMapping("/tutor/{idTutor}")
+    @GetMapping("/tutor/{idUser}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_TUTOR')")
-    public ApiResponse getAllClassRegisterByTutor(@PathVariable("idTutor") Long idTutor) {
-        List<ClassRegisterVO> classRegisterVOList = tutorRegisterClassService.getAllClassRegister(idTutor);
-        return new ApiResponse(true,
-                "Get all class register by tutor " + idTutor + " successfully"
-                , classRegisterVOList);
+    public ApiResponse getAllClassRegisterByTutor(@PathVariable("idUser") Long idUser) {
+        try {
+            List<ClassRegisterVO> classRegisterVOList = tutorRegisterClassService.getAllClassRegister(idUser);
+            return new ApiResponse(true,
+                    "Get all class register by user " + idUser + " successfully"
+                    , classRegisterVOList);
+        } catch (Exception e) {
+            return new ApiResponse(false,
+                    "Get all class register by user " + idUser + " failed"
+                    , e.toString());
+        }
+
     }
 
     @GetMapping("/class/{idClass}")
@@ -55,8 +62,8 @@ public class TutorRegisterClassController {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_TUTOR')")
     public ApiResponse changeStatusTutorRegisterClass(@PathVariable("idRegister") Long idRegister) {
         try {
-            ClassRegisterVO classRegisterVO = tutorRegisterClassService.changeStatusTutorRegisterClass(idRegister);
-            return new ApiResponse(true, "Change status successfully", classRegisterVO);
+            tutorRegisterClassService.changeStatusTutorRegisterClass(idRegister);
+            return new ApiResponse(true, "Change status successfully");
         } catch (Exception e) {
             return new ApiResponse(false, "Change status failed", e.toString());
         }

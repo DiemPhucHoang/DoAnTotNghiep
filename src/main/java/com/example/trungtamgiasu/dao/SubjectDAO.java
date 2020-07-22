@@ -10,6 +10,7 @@ import java.util.Optional;
 @Repository
 public interface SubjectDAO extends JpaRepository<Subject, Long> {
     Optional<Subject> findById(Long id);
+
     Optional<Subject> findBySubjectName(String name);
 
     List<Subject> findAll();

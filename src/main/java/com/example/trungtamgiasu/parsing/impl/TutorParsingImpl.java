@@ -1,12 +1,15 @@
 package com.example.trungtamgiasu.parsing.impl;
 
 import com.example.trungtamgiasu.dao.TutorDAO;
+import com.example.trungtamgiasu.dao.UserDAO;
 import com.example.trungtamgiasu.exception.BadRequestException;
 import com.example.trungtamgiasu.exception.ResourceNotFoundException;
 import com.example.trungtamgiasu.model.*;
 import com.example.trungtamgiasu.model.enums.TutorStatus;
 import com.example.trungtamgiasu.parsing.TutorParsing;
+import com.example.trungtamgiasu.vo.Tutor.TutorByUserVO;
 import com.example.trungtamgiasu.vo.Tutor.TutorInfoVO;
+import com.example.trungtamgiasu.vo.Tutor.TutorRatingVO;
 import com.example.trungtamgiasu.vo.Tutor.TutorVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -26,6 +29,9 @@ public class TutorParsingImpl implements TutorParsing {
     @Autowired
     private TutorDAO tutorDAO;
 
+    @Autowired
+    private UserDAO userDAO;
+
     @Override
     public Tutor toTutor(TutorVO tutorVO) {
         if (tutorVO == null) {
@@ -35,7 +41,7 @@ public class TutorParsingImpl implements TutorParsing {
             tutor.setId(tutorVO.getId());
             tutor.setGender(tutorVO.getGender());
             tutor.setYearOfBirth(tutorVO.getYearOfBirth());
-            tutor.setImage(tutorVO.getImage());
+//            tutor.setImage(tutorVO.getImage());
             tutor.setMajor(tutorVO.getMajor());
             tutor.setCollege(tutorVO.getCollege());
             tutor.setGraduationYear(tutorVO.getGraduationYear());
@@ -67,8 +73,8 @@ public class TutorParsingImpl implements TutorParsing {
         tutorInfoVO.setId(tutor.getId());
         tutorInfoVO.setGender(tutor.getGender());
         tutorInfoVO.setYearOfBirth(tutor.getYearOfBirth());
-        if(tutor.getImage() != null) {
-            tutorInfoVO.setImage(readBytesFromFile(tutor.getId()));
+        if(tutor.getUser().getImage() != null) {
+            tutorInfoVO.setImage(readBytesFromFile(tutor.getUser().getId()));
         }
         tutorInfoVO.setMajor(tutor.getMajor());
         tutorInfoVO.setCollege(tutor.getCollege());
@@ -110,6 +116,54 @@ public class TutorParsingImpl implements TutorParsing {
     }
 
     @Override
+    public TutorByUserVO toTutorByUserVO(Tutor tutor) {
+        if(tutor == null) {
+            return null;
+        }
+        TutorByUserVO tutorByUserVO = new TutorByUserVO();
+        tutorByUserVO.setId(tutor.getId());
+        tutorByUserVO.setGender(tutor.getGender());
+        tutorByUserVO.setYearOfBirth(tutor.getYearOfBirth());
+        tutorByUserVO.setMajor(tutor.getMajor());
+        tutorByUserVO.setCollege(tutor.getCollege());
+        tutorByUserVO.setGraduationYear(tutor.getGraduationYear());
+        tutorByUserVO.setLevel(tutor.getLevel());
+        tutorByUserVO.setSalaryPerHour(tutor.getSalaryPerHour());
+        tutorByUserVO.setMoreInfo(tutor.getMoreInfo());
+        tutorByUserVO.setStatus(tutor.getStatus().getKey());
+
+        Set<Subject> subjectSet = tutor.getSubjects();
+        if(subjectSet != null) {
+            List<Subject> sortedSubjectList = subjectSet.stream().sorted
+                    (Comparator.comparing(Subject::getId)).collect(Collectors.toList());
+            tutorByUserVO.setSubjects(sortedSubjectList);
+        }
+
+        Set<ClassTeach> classTeachSet = tutor.getClassTeaches();
+        if(classTeachSet != null) {
+            List<ClassTeach> sortedClassTeachList = classTeachSet.stream().sorted
+                    (Comparator.comparing(ClassTeach::getId)).collect(Collectors.toList());
+            tutorByUserVO.setClassTeaches(sortedClassTeachList);
+        }
+
+        Set<District> districtSet = tutor.getDistricts();
+        if(districtSet != null) {
+            List<District> sortedDistrictList = districtSet.stream().sorted
+                    (Comparator.comparing(District::getId)).collect(Collectors.toList());
+            tutorByUserVO.setDistricts(sortedDistrictList);
+        }
+
+        Set<FreeTime> freeTimeSet = tutor.getFreeTimes();
+        if ( freeTimeSet != null ) {
+            List<FreeTime> sortedFreeTimeList = freeTimeSet.stream().sorted
+                    (Comparator.comparing(FreeTime::getDayName)).collect(Collectors.toList());
+            tutorByUserVO.setFreeTimes(sortedFreeTimeList);
+        }
+        tutorByUserVO.setName(tutor.getUser().getName());
+        return tutorByUserVO;
+    }
+
+    @Override
     public List<TutorInfoVO> toTutorsInfoVOList(List<Tutor> tutorsList) {
         if (tutorsList == null) {
             return null;
@@ -145,11 +199,11 @@ public class TutorParsingImpl implements TutorParsing {
         return tutors;
     }
 
-    public byte[] readBytesFromFile(Long idTutor) {
-        if(!tutorDAO.existsById(idTutor)) {
-            throw new ResourceNotFoundException("Tutor", "id", idTutor);
+    public byte[] readBytesFromFile(Long idUser) {
+        if(!userDAO.existsById(idUser)) {
+            throw new ResourceNotFoundException("User", "id", idUser);
         }
-        String fileName = tutorDAO.findById(idTutor).orElseThrow(() ->
+        String fileName = userDAO.findById(idUser).orElseThrow(() ->
                 new BadRequestException("File name does not exists")).getImage();
         String filePath = "uploads\\" + fileName;
         FileInputStream fileInputStream = null;
@@ -173,5 +227,33 @@ public class TutorParsingImpl implements TutorParsing {
             }
         }
         return bytesArray;
+    }
+
+    @Override
+    public TutorRatingVO toTutorRatingVO(Tutor tutor) {
+        if(tutor == null) {
+            return null;
+        }
+        TutorRatingVO tutorRatingVO = new TutorRatingVO();
+        tutorRatingVO.setId(tutor.getId());
+        tutorRatingVO.setName(tutor.getUser().getName());
+        tutorRatingVO.setGender(tutor.getGender());
+        tutorRatingVO.setLevel(tutor.getLevel());
+        if(tutor.getUser().getImage() != null) {
+            tutorRatingVO.setImage(readBytesFromFile(tutor.getUser().getId()));
+        }
+        return tutorRatingVO;
+    }
+
+    @Override
+    public List<TutorRatingVO> toTutorRatingVOList(List<Tutor> tutors) {
+        if(tutors == null) {
+            return null;
+        }
+        List<TutorRatingVO> ratingVOList = new ArrayList<>();
+        for (Tutor tutor : tutors) {
+            ratingVOList.add(toTutorRatingVO(tutor));
+        }
+        return ratingVOList;
     }
 }

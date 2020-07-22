@@ -10,7 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/class")
@@ -67,6 +70,19 @@ public class ClassesController {
                 true,
                 "Get top 3 by class teach successfully",
                 classesService.getTop3ByClassTeach(idClass));
+    }
+
+    @GetMapping("/suggest/{idUser}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_TUTOR')")
+    public ApiResponse getClassesSuggest(@PathVariable("idUser") Long idUser) {
+        try {
+            List<ClassesInfoVO> classesInfoVOS = classesService.getClassesSuggest(idUser);
+            return new ApiResponse(true,
+                    "Get classes suggest by id " +  idUser+ " successfully", classesInfoVOS);
+        } catch (Exception e) {
+            return new ApiResponse(false,
+                    "Get classes suggest by id" + idUser + " failed", e.toString());
+        }
     }
 
 }

@@ -25,4 +25,6 @@ public class UserInfoVO {
     @Email
     private String email;
 
+    private byte[] image;
+
 }

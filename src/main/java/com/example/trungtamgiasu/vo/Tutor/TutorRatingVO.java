@@ -1,4 +1,4 @@
-package com.example.trungtamgiasu.vo.TutorRegisterClass;
+package com.example.trungtamgiasu.vo.Tutor;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,17 +9,14 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TutorRegisterClassInfoVO {
+public class TutorRatingVO {
+    private Long id;
 
-    private Long idTutor;
+    private byte[] image;
 
     private String name;
 
     private String gender;
 
     private String level;
-
-    private String payment;
-
-    private String status;
 }

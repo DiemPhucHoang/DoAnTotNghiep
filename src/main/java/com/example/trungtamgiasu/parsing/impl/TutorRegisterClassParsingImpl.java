@@ -1,5 +1,6 @@
 package com.example.trungtamgiasu.parsing.impl;
 
+import com.example.trungtamgiasu.model.Rate;
 import com.example.trungtamgiasu.model.TutorRegisterClass;
 import com.example.trungtamgiasu.model.enums.TutorRegisterClassStatus;
 import com.example.trungtamgiasu.parsing.TutorRegisterClassParsing;
@@ -8,10 +9,14 @@ import com.example.trungtamgiasu.vo.TutorRegisterClass.TutorRegisterClassInfoVO;
 import com.example.trungtamgiasu.vo.TutorRegisterClass.TutorRegisterClassVO;
 import org.springframework.stereotype.Component;
 
+import java.text.Format;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 @Component
 public class TutorRegisterClassParsingImpl implements TutorRegisterClassParsing {
@@ -85,6 +90,11 @@ public class TutorRegisterClassParsingImpl implements TutorRegisterClassParsing 
                 format(tutorRegisterClass.getClasses().getTuitionFee()));
         classRegisterVO.setPayment(tutorRegisterClass.getPayment());
         classRegisterVO.setStatus(tutorRegisterClass.getStatus().getKey());
+        if(tutorRegisterClass.getTime() != null) {
+            Format formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+            String s = formatter.format(tutorRegisterClass.getTime());
+            classRegisterVO.setTime(s);
+        }
         return classRegisterVO;
     }
 
@@ -94,7 +104,10 @@ public class TutorRegisterClassParsingImpl implements TutorRegisterClassParsing 
             return null;
         }
         List<ClassRegisterVO> classRegisterVOList = new ArrayList<>();
-        for (TutorRegisterClass item: tutorRegisterClasses) {
+        List<TutorRegisterClass> sortedList= tutorRegisterClasses.stream()
+                .sorted(Comparator.comparing(TutorRegisterClass::getTime).reversed())
+                .collect(Collectors.toList());
+        for (TutorRegisterClass item: sortedList) {
             classRegisterVOList.add(toClassRegisterVO(item));
         }
         return classRegisterVOList;

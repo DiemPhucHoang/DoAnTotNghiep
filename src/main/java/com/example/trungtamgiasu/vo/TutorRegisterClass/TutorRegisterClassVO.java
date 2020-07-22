@@ -23,4 +23,5 @@ public class TutorRegisterClassVO {
     private String payment;
 
     private String moreRequire;
+
 }

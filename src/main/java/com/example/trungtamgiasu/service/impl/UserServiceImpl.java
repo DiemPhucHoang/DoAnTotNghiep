@@ -1,20 +1,35 @@
 package com.example.trungtamgiasu.service.impl;
 
+import com.example.trungtamgiasu.dao.PasswordResetTokenDAO;
 import com.example.trungtamgiasu.dao.UserDAO;
 import com.example.trungtamgiasu.exception.BadRequestException;
 import com.example.trungtamgiasu.exception.ResourceNotFoundException;
-import com.example.trungtamgiasu.mapper.UserMapper;
+import com.example.trungtamgiasu.model.PasswordResetToken;
 import com.example.trungtamgiasu.model.User;
+import com.example.trungtamgiasu.parsing.UserParsing;
 import com.example.trungtamgiasu.security.UserPrincipal;
 import com.example.trungtamgiasu.service.UserService;
 import com.example.trungtamgiasu.vo.User.ChangePasswordVO;
+import com.example.trungtamgiasu.vo.User.ForgotPasswordVO;
 import com.example.trungtamgiasu.vo.User.UserInfoVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.Calendar;
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -25,10 +40,19 @@ public class UserServiceImpl implements UserService {
     private UserDAO userDAO;
 
     @Autowired
+    protected UserService userService;
+
+    @Autowired
     PasswordEncoder passwordEncoder;
 
     @Autowired
-    private UserMapper userMapper;
+    private UserParsing userParsing;
+
+    @Autowired
+    private PasswordResetTokenDAO passwordResetTokenDAO;
+
+    @Value("${file.upload-dir}")
+    String path;
 
     @Override
     public User saveUser(User user) {
@@ -37,13 +61,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserInfoVO getById(Long idUser) {
+    public User getById(Long idUser) {
         logger.info("Get user by id " + idUser);
-        User user = userDAO.findById(idUser).orElseThrow(() ->
+        return userDAO.findById(idUser).orElseThrow(() ->
                 new ResourceNotFoundException("User", "id" , idUser));
-        UserInfoVO userInfoVO = new UserInfoVO();
-//        userInfoVO.setTutor(user.getTutor());
-        return userMapper.toUserInfoVO(user);
     }
 
     @Override
@@ -52,9 +73,8 @@ public class UserServiceImpl implements UserService {
 
         User user =  userDAO.findByPhone(phone).orElseThrow(() ->
                 new ResourceNotFoundException("User", "phone" , phone));
-//        UserInfoVO userInfoVO = new UserInfoVO();
 //        userInfoVO.setTutor(user.getTutor());
-        return userMapper.toUserInfoVO(user);
+        return userParsing.toUserInfoVO(user);
     }
 
     @Override
@@ -90,6 +110,168 @@ public class UserServiceImpl implements UserService {
         user.setAddress(userInfoVO.getAddress());
         user.setEmail(userInfoVO.getEmail());
         logger.info("Update user by idUser" + user.getId());
-        return userMapper.toUserInfoVO(saveUser(user));
+        return userParsing.toUserInfoVO(saveUser(user));
+    }
+
+    @Override
+    public void createPasswordResetTokenForUser(User user, String token) {
+        logger.info("Create password  reset token for user");
+
+        PasswordResetToken myToken = new PasswordResetToken(token, user);
+        passwordResetTokenDAO.save(myToken);
+    }
+
+    @Override
+    public User getByEmail(String email) {
+        logger.info("Get user by email: " + email);
+        return userDAO.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException("User", "email", email));
+    }
+
+    @Override
+    public User savePassword(User user, String password) {
+        user.setPassword(passwordEncoder.encode(password));
+        return userDAO.save(user);
+    }
+
+    @Override
+    public void changePasswordForgot(ForgotPasswordVO passwordVO) {
+        logger.info("Change password forgot");
+        PasswordResetToken passwordResetToken = passwordResetTokenDAO.findByToken(passwordVO.getToken());
+        if (passwordVO.getToken() == null) {
+            throw new ResourceNotFoundException("PasswordResetToken", "token", passwordResetToken.getToken());
+        }
+        //check expiration date
+        Calendar cal = Calendar.getInstance();
+        if ((passwordResetToken.getExpirationDate()
+                .getTime() - cal.getTime()
+                .getTime()) <= 0) {
+            throw new BadRequestException("Expiration token. Can not change password forgot");
+        }
+        User user = userDAO.findById(passwordResetToken.getUser().getId()).orElseThrow(() ->
+                new BadRequestException("Can't found user"));
+        userService.savePassword(user, passwordVO.getPassword());
+        passwordResetTokenDAO.deleteByToken(passwordVO.getToken());
+    }
+
+    @Override
+    public boolean checkFileNameExist(String fileName, Long idUser) {
+        List<User> users = userDAO.findAll();
+        for (User item: users) {
+            if(item.getImage() == null) {
+               continue;
+            }
+            if(fileName.equals(item.getImage()) && !(item.getId().equals(idUser)))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public String changeFileNameIfExist(MultipartFile file, Long idUser) {
+        int index = 1;
+        String fileName = file.getOriginalFilename();
+        if(fileName == null) {
+            throw new BadRequestException("File name does not exists");
+        }
+        String firstFileName = fileName.substring(0, fileName.lastIndexOf("."));
+        String lastFileName = fileName.substring(fileName.lastIndexOf("."));
+        if(getById(idUser).getImage() != null) {
+            boolean checkExist = checkFileNameExist(fileName, idUser);
+            while (checkExist)
+            {
+                index++;
+                checkExist = checkFileNameExist(String.format("%s (%d)%s", firstFileName, index, lastFileName), idUser);
+                if (!checkExist) {
+                    fileName = String.format("%s (%d)%s", firstFileName, index, lastFileName);
+                }
+            }
+        }
+
+        return fileName;
+    }
+
+    @Override
+    public String uploadImage(MultipartFile file, Long idUser, Authentication auth) {
+        UserPrincipal userPrincipal = (UserPrincipal) auth.getPrincipal();
+        User user = userDAO.findByPhone(userPrincipal.getPhone()).orElseThrow(() ->
+                new UsernameNotFoundException("User not found with phone: " + userPrincipal.getPhone()));
+        if(!(idUser.equals(user.getId())))
+        {
+            throw new UsernameNotFoundException("Can not found user " + idUser);
+        }
+
+        if(file.isEmpty())
+        {
+            throw new BadRequestException("Failed to store empty file");
+        }
+//        String fileName = file.getOriginalFilename();
+        String oldFileName =  file.getOriginalFilename();
+        if(oldFileName == null) {
+            throw new BadRequestException("Can not found file name");
+        }
+        String newFileName = changeFileNameIfExist(file, idUser);
+        try {
+            if(newFileName.contains("..")){
+                throw new BadRequestException("Sorry! Filename contains invalid path sequence " + newFileName);
+            }
+            Path dir = Paths.get(path).toAbsolutePath().normalize();
+            try {
+                Files.createDirectories(dir);
+            } catch (Exception ex) {
+                throw new BadRequestException("Could not create the directory where the uploaded files will be stored.");
+            }
+            // Copy file to the target location (Replacing existing file with the same name)
+            Path targetLocation = dir.resolve(newFileName);
+            InputStream is = file.getInputStream();
+            Files.copy(is, targetLocation,
+                    StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new BadRequestException("Could not store file " + newFileName + ". Please try again!");
+        }
+        user.setImage(newFileName);
+        saveUser(user);
+        return newFileName;
+    }
+
+    @Override
+    public String changeImage(Long idUser, MultipartFile file, Authentication auth) {
+        UserPrincipal userPrincipal = (UserPrincipal) auth.getPrincipal();
+        User user = userDAO.findByPhone(userPrincipal.getPhone()).orElseThrow(() ->
+                new UsernameNotFoundException("User not found with phone: " + userPrincipal.getPhone()));
+        if(!(idUser.equals(user.getId())))
+        {
+            throw new UsernameNotFoundException("Can not found user");
+        }
+        String oldFileName =  user.getImage();
+        String newFileName = changeFileNameIfExist(file, idUser);
+        if(file.isEmpty())
+        {
+            throw new BadRequestException("Failed to store empty file");
+        }
+        try {
+            if(newFileName.contains("..")){
+                throw new BadRequestException("Sorry! Filename contains invalid path sequence " + newFileName);
+            }
+            Path dir = Paths.get(path).toAbsolutePath().normalize();
+            // Copy file to the target location (Replacing existing file with the same name)
+            Path targetLocation = dir.resolve(newFileName);
+            InputStream is = file.getInputStream();
+            if(oldFileName != null) {
+                Path oldPath = Paths.get("uploads\\"+oldFileName);
+                //delete old file
+                Files.delete(oldPath);
+            }
+            //copy new file
+            Files.copy(is, targetLocation,
+                    StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new BadRequestException("Could not store file " + newFileName + ". Please try again!");
+        }
+        user.setImage(newFileName);
+        saveUser(user);
+        return newFileName;
     }
 }

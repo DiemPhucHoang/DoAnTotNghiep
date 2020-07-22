@@ -3,14 +3,16 @@ package com.example.trungtamgiasu.controller;
 import com.example.trungtamgiasu.dao.RoleDAO;
 import com.example.trungtamgiasu.dao.UserDAO;
 import com.example.trungtamgiasu.exception.AppException;
-import com.example.trungtamgiasu.mapper.UserMapper;
 import com.example.trungtamgiasu.model.Role;
 import com.example.trungtamgiasu.model.User;
 import com.example.trungtamgiasu.model.enums.RoleName;
+import com.example.trungtamgiasu.parsing.UserParsing;
 import com.example.trungtamgiasu.security.JwtTokenProvider;
 import com.example.trungtamgiasu.security.UserPrincipal;
+import com.example.trungtamgiasu.service.SimpleMailSenderService;
 import com.example.trungtamgiasu.service.UserService;
 import com.example.trungtamgiasu.vo.User.ChangePasswordVO;
+import com.example.trungtamgiasu.vo.User.ForgotPasswordVO;
 import com.example.trungtamgiasu.vo.User.UserInfoVO;
 import com.example.trungtamgiasu.vo.User.UserVO;
 import com.example.trungtamgiasu.vo.payload.ApiResponse;
@@ -19,6 +21,7 @@ import com.example.trungtamgiasu.vo.payload.LoginRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,11 +31,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.Collections;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -42,6 +47,15 @@ public class AuthController {
 
     @Autowired
     AuthenticationManager authenticationManager;
+
+    @Autowired
+    private SimpleMailSenderService simpleMailSenderService;
+
+    @Value("${web.ip}")
+    private String webIp;
+
+    @Value("${web.port}")
+    private String webPort;
 
     @Autowired
     UserDAO userDAO;
@@ -59,7 +73,7 @@ public class AuthController {
     JwtTokenProvider tokenProvider;
 
     @Autowired
-    private UserMapper userMapper;
+    private UserParsing userParsing;
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -83,7 +97,8 @@ public class AuthController {
         }
 
         // create user
-        User user = new User(userVO.getName(), userVO.getPhone(), userVO.getAddress(), userVO.getEmail(), userVO.getPassword());
+        User user = new User(userVO.getName(), userVO.getPhone(), userVO.getAddress(),
+                userVO.getEmail(), userVO.getPassword(), userVO.getImage());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         Role userRole = roleDAO.findByName(RoleName.valueOf(userVO.getRole()))
@@ -144,11 +159,58 @@ public class AuthController {
     @GetMapping("/{idUser}")
     public ApiResponse getUserById(@PathVariable("idUser") Long idUser) {
         try {
-            UserInfoVO userInfoVO = userService.getById(idUser);
+            UserInfoVO userInfoVO = userParsing.toUserInfoVO(userService.getById(idUser));
             return new ApiResponse(true, "Get user by id " + idUser + "successfully", userInfoVO);
         } catch (Exception e) {
             return new ApiResponse(false, "Get user failed", e.toString());
         }
     }
+
+    @PostMapping("/forgot-password")
+    public ApiResponse sendMail(@RequestParam("email") String email) {
+        try {
+            User user = userService.getByEmail(email);
+            String token = UUID.randomUUID().toString();
+            userService.createPasswordResetTokenForUser(user, token);
+            simpleMailSenderService.constructResetTokenEmail(token, user);
+            return new ApiResponse(true, "Send mail successfully");
+        } catch (Exception e) {
+            return new ApiResponse(false, "Send mail failed", e.toString());
+        }
+
+    }
+
+    @PatchMapping("/change-password-forgot")
+    public ApiResponse changePasswordForgot(@RequestBody ForgotPasswordVO forgotPasswordVO) {
+        try {
+            userService.changePasswordForgot(forgotPasswordVO);
+            return new ApiResponse(true, "change password forgot successfully");
+        } catch (Exception e) {
+            return new ApiResponse(false, "change password forgot failed", e.toString());
+        }
+    }
+
+    @PostMapping("/upload-image/{idUser}")
+    public ApiResponse uploadImage(@RequestPart("file") MultipartFile file, @PathVariable("idUser") Long idUser,
+                                   Authentication auth) {
+        return new ApiResponse(
+                true,
+                "Upload image successfully",
+                userService.uploadImage(file, idUser, auth));
+    }
+
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_TUTOR')")
+    @PostMapping("/change-image/{idUser}")
+    public ApiResponse changeImageTutor(@PathVariable("idUser") Long idUser,
+                                        @RequestPart("file") MultipartFile file, Authentication auth)
+    {
+        logger.info("Change image by idUser" + idUser);
+        return new ApiResponse(
+                true,
+                "Change image tutor successfully",
+                userService.changeImage(idUser, file, auth));
+    }
+
+
 
 }

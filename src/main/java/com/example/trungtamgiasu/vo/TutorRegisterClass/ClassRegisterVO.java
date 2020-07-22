@@ -23,4 +23,6 @@ public class ClassRegisterVO {
     private String payment;
 
     private String status;
+
+    private String time;
 }

@@ -22,10 +22,10 @@ public class User {
     @Column(name = "id_user")
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "phone", length = 11)
+    @Column(name = "phone", length = 11, nullable = false)
     private String phone;
 
     @Column(name = "address")
@@ -37,6 +37,9 @@ public class User {
 
     @Column(name = "password")
     private String password;
+
+    @Column(name = "image")
+    private String image;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "id_user"),
@@ -51,12 +54,24 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<Classes> classes = new HashSet<>();
 
+    @OneToMany(mappedBy = "user")
+    private Set<Rate> rates = new HashSet<>();
+
     public User(String name, String phone, String address, @Email String email, String password) {
         this.name = name;
         this.phone = phone;
         this.address = address;
         this.email = email;
         this.password = password;
+    }
+
+    public User(String name, String phone, String address, @Email String email, String password, String image) {
+        this.name = name;
+        this.phone = phone;
+        this.address = address;
+        this.email = email;
+        this.password = password;
+        this.image = image;
     }
 
     public User(String name, String phone, @Email String email) {

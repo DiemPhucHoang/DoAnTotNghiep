@@ -5,10 +5,9 @@ import lombok.Getter;
 @Getter
 public enum TutorRegisterClassStatus {
     DANHANLOP("Đã nhận lớp", 0),
-    DUDIEUKIEN("Đủ điều kiện", 1),
-    XEMXET("Xem xét", 2),
-    KHONGDAT("Không đạt", 3),
-    DAHUY("Đã hủy",4);
+    XEMXET("Xem xét", 1),
+    KHONGDAT("Không đạt", 2),
+    DAHUY("Đã hủy",3);
 
     private final String key;
     private final Integer value;
@@ -22,8 +21,6 @@ public enum TutorRegisterClassStatus {
         switch (key) {
             case "Đã nhận lớp":
                 return TutorRegisterClassStatus.DANHANLOP;
-            case "Đủ điều kiện":
-                return TutorRegisterClassStatus.DUDIEUKIEN;
             case "Xem xét":
                 return TutorRegisterClassStatus.XEMXET;
             case "Không đạt":
@@ -39,8 +36,6 @@ public enum TutorRegisterClassStatus {
         switch (value) {
             case 0:
                 return TutorRegisterClassStatus.DANHANLOP;
-            case 1:
-                return TutorRegisterClassStatus.DUDIEUKIEN;
             case 2:
                 return TutorRegisterClassStatus.XEMXET;
             case 3:

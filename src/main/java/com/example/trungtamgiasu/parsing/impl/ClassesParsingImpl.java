@@ -1,6 +1,7 @@
 package com.example.trungtamgiasu.parsing.impl;
 
 import com.example.trungtamgiasu.model.Classes;
+import com.example.trungtamgiasu.model.Rate;
 import com.example.trungtamgiasu.model.enums.ClassesStatus;
 import com.example.trungtamgiasu.parsing.ClassesParsing;
 import com.example.trungtamgiasu.vo.classes.ClassesInfoVO;
@@ -11,8 +12,10 @@ import java.text.Format;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 @Component
 public class ClassesParsingImpl implements ClassesParsing {
@@ -103,7 +106,10 @@ public class ClassesParsingImpl implements ClassesParsing {
             return null;
         }
         List<ClassesInfoVO> classesInfoVOList = new ArrayList<>();
-        for (Classes classes : classesList) {
+        List<Classes> sortedClasses = classesList.stream()
+                .sorted(Comparator.comparing(Classes::getTime).reversed())
+                .collect(Collectors.toList());
+        for (Classes classes : sortedClasses) {
             classesInfoVOList.add(toClassesInfoVO(classes));
         }
         return classesInfoVOList;

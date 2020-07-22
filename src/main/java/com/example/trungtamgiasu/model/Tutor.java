@@ -25,9 +25,6 @@ public class Tutor {
     @Column(name = "yearOfBirth", nullable = false)
     private String yearOfBirth;
 
-    @Column(name = "image", nullable = false)
-    private String image;
-
     @Column(name = "major", nullable = false)
     private String major;
 
@@ -74,4 +71,7 @@ public class Tutor {
     @JoinColumn(name = "id_user")
     @JsonIgnore
     private User user;
+
+    @OneToMany(mappedBy = "tutor")
+    private Set<Rate> rates = new HashSet<>();
 }
