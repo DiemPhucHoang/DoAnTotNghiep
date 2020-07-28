@@ -36,6 +36,11 @@ class DoiMatKhau extends Component {
                     description: "Đổi mật khẩu thành công!"
                 });
                 this.props.history.push('/login');
+            } else {
+                notification.error({
+                    message: "Failed",
+                    description: "Đổi mật khẩu không thành công. Vui lòng kiểm tra lại thông tin!"
+                });
             }
         }).catch(error => {
             console.log(error);

@@ -32,7 +32,6 @@ class FirstPart extends Component {
                     </div>
                 </div>
             </div>
-
         );
     }
 }

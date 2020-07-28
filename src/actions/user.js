@@ -88,9 +88,17 @@ export const actChangeInfoUserRequest = (userInfo) => {
                     message: "Success",
                     description: "Chỉnh sửa thông tin thành công!"
                 });
+            } else {
+                notification.error({
+                    message: "Failed",
+                    description: "Chỉnh sửa thông tin thất bại. Vui lòng kiểm tra lại thông tin!"
+                });
             }
         }).catch(err => {
-            console.log(err);
+            notification.error({
+                message: "Failed",
+                description: "Chỉnh sửa thông tin thất bại. Vui lòng kiểm tra lại thông tin!"
+            });
         });
     }
 }

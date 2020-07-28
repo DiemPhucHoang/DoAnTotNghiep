@@ -43,7 +43,7 @@ class GiaSuItem extends Component {
                             <p>Năm sinh: {tutorItem.yearOfBirth}</p>
                             <p>Môn dạy: {subjectNames}</p>
                             <p>Khu vực: {districtNames}</p>
-                            <p>Yêu cầu: {tutorItem.salaryPerHour} vnđ/h</p>
+                            <p>Yêu cầu lương: {tutorItem.salaryPerHour} vnđ/h</p>
                             
                             <p>
                                 <Link to={`/chi-tiet-gia-su/${tutorItem.id}`}>

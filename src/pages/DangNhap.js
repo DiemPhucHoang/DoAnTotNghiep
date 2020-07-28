@@ -98,7 +98,7 @@ class DangNhap extends Component {
                             </Grid>
                             <Grid item xs={6}>
                                 <Link to='/lam-gia-su' variant="body2">
-                                    {"Don't have an account? Sign Up"}
+                                    {"Bạn chưa có tài khoản? Đăng ký"}
                                 </Link>
                             </Grid>
                         </Grid>

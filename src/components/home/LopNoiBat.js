@@ -9,7 +9,7 @@ class LopNoiBat extends Component {
         return (
             <div className="p-5 mx-5">
                 <Paper elevation={0}>
-                    <h4 style={{ textAlign: "center" }}>DANH SÁCH LỚP MỚI</h4>
+                    <h4 style={{ textAlign: "center" }}>LỚP NỔI BẬT</h4>
                     <Grid container spacing={4} style={{ padding: '10px' }}>
                         {hasClassList && classList.map((classItem) => (
                             <Grid key={classItem.id} item xs={3} className="paper">

@@ -22,9 +22,17 @@ class DialogDanhGia extends Component {
         }
     }
 
-    onClickStar = (name) => {
+    onClickStar = (id) => {
+
+        const startVote = {
+            starOne: id >= 1 ? true : false,
+            starTwo: id >= 2 ? true : false,
+            starThree: id >= 3 ? true : false,
+            starFour: id >= 4 ? true : false,
+            starFive: id >= 5 ? true : false,
+        }
         this.setState({
-            [name]: !this.state[name]
+            ...startVote,
         })
     }
 
@@ -73,6 +81,18 @@ class DialogDanhGia extends Component {
         });
     }
 
+    cancelDialogRating = () => {
+        this.props.onCloseDialogRating();
+        this.setState({
+            starOne: false,
+            starTwo: false,
+            starThree: false,
+            starFour: false,
+            starFive: false,
+            comment: ''
+        })
+    }
+
     render() {
         let lstStar = [
             { id: 1, name: 'starOne'},
@@ -81,9 +101,6 @@ class DialogDanhGia extends Component {
             { id: 4, name: 'starFour'},
             { id: 5, name: 'starFive'}
         ]
-
-        const {idTutor} = this.props;
-        console.log('idTutor: ', idTutor);
 
         return (
             <Dialog
@@ -103,10 +120,10 @@ class DialogDanhGia extends Component {
                                 <Grid item xs={9}>
                                     {lstStar.map((star, index) => (
                                         this.state[star.name] ? 
-                                        <IconButton key={index} aria-label="star" onClick={() => this.onClickStar(star.name)}>
+                                        <IconButton key={index} aria-label="star" onClick={() => this.onClickStar(star.id)}>
                                             <StarIcon fontSize="large" style={{ fill: "#EE4D2D" }} />
                                         </IconButton> :
-                                        <IconButton key={index} aria-label="star" onClick={() => this.onClickStar(star.name)}>
+                                        <IconButton key={index} aria-label="star" onClick={() => this.onClickStar(star.id)}>
                                             <StarBorderIcon fontSize="large" style={{ fill: "#EE4D2D" }} />
                                         </IconButton>
                                     ))}
@@ -126,7 +143,7 @@ class DialogDanhGia extends Component {
                             </Grid>
                         </Grid>
                         <DialogActions>
-                            <Button variant="contained" onClick={this.props.onCloseDialogRating}>
+                            <Button variant="contained" onClick={this.cancelDialogRating}>
                                 Cancel
                             </Button>
                             <Button

@@ -14,7 +14,6 @@ export const actCreateClassesRequest = (classInfo, hasChooseTutors, history) => 
                 }
                 else {
                     history.push("/lop-moi");
-                    // dispatch(actCreateClass(res.data));
                 }
                 notification.success({
                     message: "Success",

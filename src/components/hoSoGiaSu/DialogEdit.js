@@ -31,6 +31,9 @@ class DialogEdit extends Component {
         e.preventDefault();
         this.props.editInfoTutor(this.state.user);
         this.props.onCloseEditTutor();
+        this.setState({
+            user: this.props.user
+        })
     }
 
     onChange = (e) => {

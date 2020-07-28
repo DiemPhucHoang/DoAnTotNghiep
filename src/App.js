@@ -18,6 +18,7 @@ import { notification } from "antd";
 import { connect } from "react-redux";
 import LoadingSpinerComponent from "./components/commons/loading";
 import DoiMatKhau from './pages/DoiMatKhau';
+import { BackTop } from "antd";
 
 const PrivateRoute = ({ component, isAuthenticated, ...rest }) => {
   return (
@@ -58,7 +59,6 @@ class App extends Component {
             exact={true} 
             component={HoSoGiaSu} 
             isAuthenticated={isAuthenticated}/>
-          {/* <Route path="/ho-so-gia-su" exact={true} component={HoSoGiaSu}/> */}
           <PrivateRoute 
             path="/dang-ky-day/:id" 
             exact={true} 
@@ -69,9 +69,12 @@ class App extends Component {
             component={LopDaDangKy} isAuthenticated={isAuthenticated} />
 
           <Route path="/login" exact={true} component={DangNhap} />
-
         </Switch>
         <Footer />
+        {/* <div>
+            <BackTop />
+            <strong style={{ color: "rgba(64, 64, 64, 0.6)" }}> gray </strong>
+          </div> */}
       </Router>
     );
   }

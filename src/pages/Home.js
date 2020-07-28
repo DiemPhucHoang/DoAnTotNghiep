@@ -50,8 +50,8 @@ class Home extends Component {
         return (
             <div>
                 <FirstPart />
-                <GiaSuNoiBat tutorList={this.state.listTutorsTop} chooseTutor={this.chooseTutor}/>
-                <SecondPart />
+                {isAuthenticated ? "" : <GiaSuNoiBat tutorList={this.state.listTutorsTop} chooseTutor={this.chooseTutor}/>}
+                {isAuthenticated ? "" : <SecondPart />}
                 <LopNoiBat classList={this.state.listClassesTop} />
             </div>
         );

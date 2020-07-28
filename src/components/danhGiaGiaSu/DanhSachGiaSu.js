@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import {
     Grid, Paper, Button, Typography, Table, TableContainer,
-    TableHead, TableRow, TableCell, TableBody } from '@material-ui/core';
+    TableHead, TableRow, TableCell, TableBody
+} from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import DialogDanhGia from '../danhGiaGiaSu/DialogDanhGia';
 import Avatar from '@material-ui/core/Avatar';
@@ -10,13 +11,15 @@ class DanhSachGiaSu extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            openRating: false
+            openRating: false,
+            idTutor : null,
         }
     }
 
-    showDialogRating = () => {
+    showDialogRating = idTutor => {
         this.setState({
-            openRating: true
+            openRating: true,
+            idTutor,
         })
     }
 
@@ -27,8 +30,8 @@ class DanhSachGiaSu extends Component {
     }
 
     render() {
-        const {tutors} = this.props;
-        const hasTutors= tutors && tutors.length > 0;
+        const { tutors } = this.props;
+        const hasTutors = tutors && tutors.length > 0;
 
         return (
             <Paper style={{ marginTop: "15px" }}>
@@ -56,7 +59,7 @@ class DanhSachGiaSu extends Component {
                                                 00{row.id}
                                             </TableCell>
                                             <TableCell align="center" className="test">
-                                                <Avatar style={{width: "90%", height: "90%"}} alt="Remy Sharp" src={`data:image/jpg;base64,${row.image}`} />
+                                                <Avatar style={{ width: "90%", height: "90%" }} alt="Remy Sharp" src={`data:image/jpg;base64,${row.image}`} />
                                             </TableCell>
                                             <TableCell align="center">{row.name}</TableCell>
                                             <TableCell align="center">{row.gender}</TableCell>
@@ -67,17 +70,12 @@ class DanhSachGiaSu extends Component {
                                                 </Link>
                                                 <Button
                                                     style={{ marginLeft: '10px' }}
-                                                    onClick={this.showDialogRating}
+                                                    onClick={() => this.showDialogRating(row.id)}
                                                     variant="contained"
                                                     size="small"
                                                     color="primary">
                                                     Đánh giá
                                                 </Button>
-                                                <DialogDanhGia
-                                                    phone={this.props.phone}
-                                                    idTutor={row.id}
-                                                    openRating={this.state.openRating}
-                                                    onCloseDialogRating={this.onCloseDialogRating}/>
                                             </TableCell>
                                         </TableRow>
                                     ))}
@@ -86,6 +84,11 @@ class DanhSachGiaSu extends Component {
                         </TableContainer>
                     </Grid>
                 </Grid>
+                <DialogDanhGia
+                    phone={this.props.phone}
+                    idTutor={this.state.idTutor}
+                    openRating={this.state.openRating}
+                    onCloseDialogRating={this.onCloseDialogRating} />
             </Paper>
 
         );
