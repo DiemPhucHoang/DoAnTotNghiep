@@ -56,22 +56,18 @@ public class ClassesServiceImpl implements ClassesService {
             throw new BadRequestException("Class is null");
         }
         classesVO.setStatus(ClassesStatus.LOPMOI.getKey());
-        boolean checkUser = false;
-        User user = new User();
+        User user;
         if (userDAO.existsByPhone(classesVO.getPhone())) {
-            checkUser = true;
             user = userDAO.findByPhone(classesVO.getPhone()).orElseThrow(() ->
                     new ResourceNotFoundException("User", "phone", classesVO.getPhone()));
-        }
-
-        Classes classMap = classesParsing.toClasses(classesVO);
-        if(!checkUser) {
+        } else {
             User userInfo = new User(classesVO.getName(), classesVO.getPhone(), classesVO.getEmail());
             RoleName roleName = RoleName.ROLE_PARENT;
             Role role = roleDAO.findByName(roleName).orElseThrow(() -> new BadRequestException("Role does not exists"));
             userInfo.getRoles().add(role);
             user =  userDAO.save(userInfo);
         }
+        Classes classMap = classesParsing.toClasses(classesVO);
         classMap.setUser(user);
         Classes classes = classesDAO.save(classMap);
         ParentRegisterTutorStatus status = ParentRegisterTutorStatus.CHUADONGY;
@@ -109,7 +105,8 @@ public class ClassesServiceImpl implements ClassesService {
         if(searchVO == null) {
             throw new BadRequestException("SearchVO is not found");
         }
-        List<Classes> classesList = classesDAO.findAll(Objects.requireNonNull(Objects.requireNonNull(Objects.requireNonNull(Specification.
+        List<Classes> classesList = classesDAO.findAll(Objects.requireNonNull(Objects.requireNonNull(Objects.
+                requireNonNull(Specification.
                 where(ClassesSpecification.withSubject(searchVO.getSubject(), ClassesStatus.LOPMOI))
                 .and(ClassesSpecification.withClassTeach(searchVO.getClassTeach(), ClassesStatus.LOPMOI)))
                 .and(ClassesSpecification.withDistrict(searchVO.getDistrict(), ClassesStatus.LOPMOI)))

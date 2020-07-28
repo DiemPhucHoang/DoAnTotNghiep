@@ -118,8 +118,13 @@ public class TutorController {
 
     @GetMapping("/parent/{phone}")
     public ApiResponse getAllTutorByIdParent(@PathVariable("phone") String phone) {
-        return new ApiResponse(true, "Get all successfully",
-                tutorService.getAllTutorRegisterClassOfParent(phone));
+        try {
+            return new ApiResponse(true, "Get all successfully",
+                    tutorService.getAllTutorRegisterClassOfParent(phone));
+        } catch (Exception e) {
+            return new ApiResponse(false, "Get all failed", e.toString());
+        }
+
     }
 
 }

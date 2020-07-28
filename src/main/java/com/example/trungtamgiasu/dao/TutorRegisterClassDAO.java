@@ -16,7 +16,8 @@ public interface TutorRegisterClassDAO extends JpaRepository<TutorRegisterClass,
 
     List<TutorRegisterClass> findAllByClasses(Classes classes);
 
-    @Query(value = "select * from tutor_register_class where id_class = ?1 and status !='3'", nativeQuery = true)
+    @Query(value = "select * from tutor_register_class where id_class = ?1 and status != '3' and status != '0'",
+            nativeQuery = true)
     List<TutorRegisterClass> getAllByClasses(Long idClass);
 
     @Query(value = "select  * from tutor_register_class where id_tutor = ?1", nativeQuery = true)
@@ -33,6 +34,6 @@ public interface TutorRegisterClassDAO extends JpaRepository<TutorRegisterClass,
     Optional<TutorRegisterClass> findById(Long id);
 
     @Query(value = "select distinct id_tutor from tutor_register_class\n" +
-            "where status = 1 and id_class in (select id_class from classes where id_parent = ?1)", nativeQuery = true)
+            "where status = '0' and id_class in (select id_class from classes where id_parent = ?1)", nativeQuery = true)
     List<Long> getAllByIdParent(Long idParent);
 }
