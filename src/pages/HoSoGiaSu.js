@@ -2,22 +2,24 @@ import React, { Component } from 'react';
 import { Grid } from '@material-ui/core';
 import ThongTinCaNhan from './../components/hoSoGiaSu/ThongTinCaNhan';
 import ThongTinHoSo from './../components/hoSoGiaSu/ThongTinHoSo';
-import {actFetchUserRequest, actChangeInfoUserRequest} from './../actions/user';
-import {actFetchTutorByIdUserRequest, actCreateTutorRequest, actChangeInfoTutorRequest} from './../actions/tutor';
+import { actFetchUserRequest, actChangeInfoUserRequest } from './../actions/user';
+import { actFetchTutorByIdUserRequest, actCreateTutorRequest, actChangeInfoTutorRequest } from './../actions/tutor';
 import { connect } from "react-redux";
 import { freeTimeConst, subjectConst, districtConst, classTeachConst } from '../constants/tutor';
 import _ from 'lodash';
 import callApi from '../utils/apiCaller';
 import { notification } from "antd";
 import "antd/dist/antd.css";
+import Footer from '../components/Footer';
+import Header from '../components/Header';
 
 class HoSoGiaSu extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            lstFreeTime : [],
+            lstFreeTime: [],
             subjects: subjectConst,
-            districts:districtConst,
+            districts: districtConst,
             classTeaches: classTeachConst,
             subjectIds: [],
             tutorInfo: {
@@ -35,9 +37,9 @@ class HoSoGiaSu extends Component {
                 salaryPerHour: ''
             },
             user: {},
-            isMergeSubjects : false,
-            isMergeDistricts : false,
-            isMergeClassTeaches : false,
+            isMergeSubjects: false,
+            isMergeDistricts: false,
+            isMergeClassTeaches: false,
             subjectsBackup: [],
             classTeachesBackup: [],
             districtsBackup: []
@@ -47,32 +49,32 @@ class HoSoGiaSu extends Component {
     onChangeFreeTime = (id, name, value) => {
         this.setState(prevState => ({
             lstFreeTime: prevState.lstFreeTime.map(
-            obj => (obj.id === id ? Object.assign(obj, { [name]: value }) : obj)
-          )
+                obj => (obj.id === id ? Object.assign(obj, { [name]: value }) : obj)
+            )
         }));
     }
-    
+
     onHandleClickSubject = (id, checked) => {
         this.setState(prevState => ({
             subjects: prevState.subjects.map(
-                subject => (subject.id === Number(id) ? 
-                Object.assign(subject, { status: checked }) : subject))
+                subject => (subject.id === Number(id) ?
+                    Object.assign(subject, { status: checked }) : subject))
         }));
     }
 
     onHandleClickClassTeach = (id, checked) => {
         this.setState(prevState => ({
             classTeaches: prevState.classTeaches.map(
-                classTeach => (classTeach.id === Number(id) ? 
-                Object.assign(classTeach, { status: checked }) : classTeach))
+                classTeach => (classTeach.id === Number(id) ?
+                    Object.assign(classTeach, { status: checked }) : classTeach))
         }));
     }
 
     onHandleClickDistrict = (id, checked) => {
         this.setState(prevState => ({
             districts: prevState.districts.map(
-                district => (district.id === Number(id) ? 
-                Object.assign(district, { status: checked }) : district))
+                district => (district.id === Number(id) ?
+                    Object.assign(district, { status: checked }) : district))
         }));
     }
 
@@ -98,16 +100,16 @@ class HoSoGiaSu extends Component {
     getTutorModel = () => {
         const tutorModel = this.state.tutorInfo;
         let subjectArr = [];
-            this.state.subjects.forEach(obj => {
-                if(obj.status === true) {
-                    subjectArr.push(obj.id);
-                }
-            });
+        this.state.subjects.forEach(obj => {
+            if (obj.status === true) {
+                subjectArr.push(obj.id);
+            }
+        });
         tutorModel.subject = subjectArr;
 
         let districtArr = [];
         this.state.districts.forEach(obj => {
-            if(obj.status === true) {
+            if (obj.status === true) {
                 districtArr.push(obj.id);
             }
         });
@@ -115,9 +117,10 @@ class HoSoGiaSu extends Component {
 
         let classTeachArr = [];
         this.state.classTeaches.forEach(obj => {
-            if(obj.status === true) {
+            if (obj.status === true) {
                 classTeachArr.push(obj.id);
-            }});
+            }
+        });
 
         tutorModel.classTeach = classTeachArr;
         tutorModel.freeTime = this.state.lstFreeTime;
@@ -126,13 +129,13 @@ class HoSoGiaSu extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (
-          JSON.stringify(this.props.tutor) !==
-          JSON.stringify(prevProps.tutor)
+            JSON.stringify(this.props.tutor) !==
+            JSON.stringify(prevProps.tutor)
         ) {
-          this.setState({ 
-            tutorInfo: _.cloneDeep(this.props.tutor),
-            lstFreeTime: _.cloneDeep(this.props.tutor.freeTimes)
-           });
+            this.setState({
+                tutorInfo: _.cloneDeep(this.props.tutor),
+                lstFreeTime: _.cloneDeep(this.props.tutor.freeTimes)
+            });
         }
     }
 
@@ -141,28 +144,28 @@ class HoSoGiaSu extends Component {
     }
 
     mergeLst = (lstFirst, lstSecond, name, isMerged, backup) => {
-        if(lstSecond && lstFirst && lstFirst.length > 0  && lstSecond.length > 0) {
-            const lstSecondNew = lstSecond.map(obj => 
-                 ({...obj, status: true}));
-            let newLst =  lstFirst.filter(
-                first => ! lstSecondNew.find (second => first.id === second.id));
-            newLst =  newLst.concat(lstSecondNew).sort((a, b) => { 
+        if (lstSecond && lstFirst && lstFirst.length > 0 && lstSecond.length > 0) {
+            const lstSecondNew = lstSecond.map(obj =>
+                ({ ...obj, status: true }));
+            let newLst = lstFirst.filter(
+                first => !lstSecondNew.find(second => first.id === second.id));
+            newLst = newLst.concat(lstSecondNew).sort((a, b) => {
                 return a.id - b.id;
             });
-            const lstBackup = _.cloneDeep(newLst) ;
+            const lstBackup = _.cloneDeep(newLst);
             this.setState({
                 [backup]: lstBackup,
-                [name] : newLst,
-                [isMerged] : true,
+                [name]: newLst,
+                [isMerged]: true,
             })
         }
     }
 
-    handleSubmitTutor = async() => {
+    handleSubmitTutor = async () => {
         let tutorModel = this.getTutorModel();
-        const {tutor} = this.props;
+        const { tutor } = this.props;
         //check tutor empty
-        if(Object.keys(tutor).length === 0 && tutor.constructor === Object) {
+        if (Object.keys(tutor).length === 0 && tutor.constructor === Object) {
             console.log("create tutor");
             await this.props.onCreateTutor(tutorModel);
             // await this.props.fetchTutorByIdUser();
@@ -177,43 +180,43 @@ class HoSoGiaSu extends Component {
         this.setState({
             tutorInfo: this.props.tutor,
             lstFreeTime: this.props.tutor?.freeTimes ? _.cloneDeep(this.props.tutor?.freeTimes) : _.cloneDeep(freeTimeConst),
-            subjects:  _.cloneDeep(this.state.subjectsBackup),
+            subjects: _.cloneDeep(this.state.subjectsBackup),
             districts: _.cloneDeep(this.state.districtsBackup),
             classTeaches: _.cloneDeep(this.state.classTeachesBackup)
         });
-       
+
     }
 
     onHandleChangeImage = (formData) => {
-        const {user} = this.props;
-        if(user?.image) {
+        const { user } = this.props;
+        if (user?.image) {
             callApi(`auth/change-image/${localStorage.getItem("id")}`, "POST", formData).then(res => {
                 if (res.status === 200) {
-                  notification.success({
-                    message: "Success",
-                    description: "Cập nhật ảnh thành công!"
-                  });
-                  this.props.fetchUser();
-                  this.setState({
-                    user: this.props.user
-                });
+                    notification.success({
+                        message: "Success",
+                        description: "Cập nhật ảnh thành công!"
+                    });
+                    this.props.fetchUser();
+                    this.setState({
+                        user: this.props.user
+                    });
                 }
-              }).catch(error => {
+            }).catch(error => {
                 console.log("Error: ", error);
             });
         } else {
             callApi(`auth/upload-image/${localStorage.getItem("id")}`, "POST", formData).then(res => {
                 if (res.status === 200) {
-                  notification.success({
-                    message: "Success",
-                    description: "Cập nhật ảnh thành công!"
-                  });
-                  this.props.fetchUser();
-                  this.setState({
-                    user: this.props.user
-                });
+                    notification.success({
+                        message: "Success",
+                        description: "Cập nhật ảnh thành công!"
+                    });
+                    this.props.fetchUser();
+                    this.setState({
+                        user: this.props.user
+                    });
                 }
-              }).catch(error => {
+            }).catch(error => {
                 console.log("Error: ", error);
             });
         }
@@ -230,36 +233,40 @@ class HoSoGiaSu extends Component {
             this.mergeLst(districts, this.props.tutor?.districts, 'districts', 'isMergeDistricts', 'districtsBackup');
         };
         if (!this.state.isMergeClassTeaches) {
-            this.mergeLst(classTeaches, this.props.tutor?.classTeaches,'classTeaches', 'isMergeClassTeaches', 'classTeachesBackup');
+            this.mergeLst(classTeaches, this.props.tutor?.classTeaches, 'classTeaches', 'isMergeClassTeaches', 'classTeachesBackup');
         };
-        const {user} = this.props.auth;
+        const { user } = this.props.auth;
         let tutorInfo = this.state.tutorInfo;
 
         return (
-            <div className="bg-color">
-                <div className="p-5 mx-5">
-                    <Grid container spacing={3}>
-                        <ThongTinCaNhan
-                            onHandleChangeImage={this.onHandleChangeImage}
-                            history={this.props.history}
-                            tutor={tutorInfo}
-                            changeInfoUser={this.changeInfoUser} 
-                            user={user}/>
-                        <ThongTinHoSo
-                            cancelUpdate={this.cancelUpdate}
-                            tutor={tutorInfo}
-                            onChangeInfoTutor={this.onChangeInfoTutor} 
-                            handleSubmitTutor={this.handleSubmitTutor}
-                            onHandleClickSubject={this.onHandleClickSubject}
-                            onHandleClickClassTeach={this.onHandleClickClassTeach}
-                            onHandleClickDistrict={this.onHandleClickDistrict}
-                            lstFreeTime={lstFreeTime} 
-                            onChangeFreeTime={this.onChangeFreeTime} 
-                            subjects={subjects}
-                            districts={districts}
-                            classTeaches={classTeaches}/>
-                    </Grid>
+            <div>
+                <Header />
+                <div className="bg-color">
+                    <div className="p-5 mx-5">
+                        <Grid container spacing={3}>
+                            <ThongTinCaNhan
+                                onHandleChangeImage={this.onHandleChangeImage}
+                                history={this.props.history}
+                                tutor={tutorInfo}
+                                changeInfoUser={this.changeInfoUser}
+                                user={user} />
+                            <ThongTinHoSo
+                                cancelUpdate={this.cancelUpdate}
+                                tutor={tutorInfo}
+                                onChangeInfoTutor={this.onChangeInfoTutor}
+                                handleSubmitTutor={this.handleSubmitTutor}
+                                onHandleClickSubject={this.onHandleClickSubject}
+                                onHandleClickClassTeach={this.onHandleClickClassTeach}
+                                onHandleClickDistrict={this.onHandleClickDistrict}
+                                lstFreeTime={lstFreeTime}
+                                onChangeFreeTime={this.onChangeFreeTime}
+                                subjects={subjects}
+                                districts={districts}
+                                classTeaches={classTeaches} />
+                        </Grid>
+                    </div>
                 </div>
+                <Footer />
             </div>
         );
     }

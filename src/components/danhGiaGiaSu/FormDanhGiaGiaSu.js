@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { Grid, Button, TextField, Card } from '@material-ui/core';
+import { validatePhone } from '../../constants/validate';
 
 class FormDanhGiaGiaSu extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            phone: ''
+            phone: '',
+            errPhone: ''
         }
     }
     onHandleSubmit = (e) => {
@@ -19,6 +21,16 @@ class FormDanhGiaGiaSu extends Component {
             phone: value
         })
     }
+
+    validateField = (value, errName) => {
+        if(errName ==='errPhone') {
+            let err = validatePhone(value);
+            this.setState({
+                errPhone: err
+            })
+        }       
+    }
+
     render() {
         return (
             <Grid container spacing={3}>
@@ -41,7 +53,9 @@ class FormDanhGiaGiaSu extends Component {
                                         name="phone"
                                         type="number"
                                         onChange={this.onChange}
+                                        onBlur={() => this.validateField(this.state.phone, 'errPhone')}
                                     />
+                                    {(this.state.errPhone !=='') ? <p style={{color: "red"}}>{this.state.errPhone}</p> : ''}
                                 </Grid>
                             </Grid>
                             <div style={{ textAlign: "center", marginTop: "10px" }}>

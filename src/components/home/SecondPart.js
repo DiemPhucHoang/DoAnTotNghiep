@@ -12,8 +12,8 @@ class SecondPart extends Component {
                         <div className="card-body ">
                             <h1 className="card-title">Tìm kiếm gia sư</h1>
                             <p className="card-text">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. In maximus tincidunt erat pellentesque venenatis.
-                                Maecenas molestie quis sem nec laoreet. Nam tellus orci, tincidunt vitae massa ac, auctor dignissim nulla.
+                                Thật đơn giản, bạn chỉ cần gửi yêu cầu học, các giáo viên sẽ gửi đề nghị dạy tới bạn cùng với mức học phí mong muốn. 
+                                Bạn sẽ chủ động chọn lựa giáo viên phù hợp với bạn nhất.
                             </p>
                             <Link to="/tim-gia-su">
                                 <Button variant="contained" color="secondary" startIcon={<PlayArrow />}>
@@ -28,8 +28,8 @@ class SecondPart extends Component {
                         <div className="card-body">
                             <h1 className="card-title">Trở thành gia sư</h1>
                             <p className="card-text">
-                                In maximus tincidunt erat pellentesque venenatis. Maecenas molestie quis sem nec laoreet.
-                                Nam tellus orci, tincidunt vitae massa ac, auctor dignissim nulla. Duis rutrum tristique mauris eget pharetra.
+                            Nếu bạn có một khả năng nào đó, hãy đăng ký trở thành gia sư trên hệ thống Ánh Dương, bạn sẽ được tiếp cận 
+                            với hàng ngàn học viên và có cơ hội được truyền đạt kiến thức của mình.
                             </p>
                             <Link to="/lam-gia-su">
                                 <Button variant="contained" color="secondary" startIcon={<PlayArrow />}>

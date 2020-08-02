@@ -3,8 +3,6 @@ import './App.css';
 import Home from './pages/Home';
 import PhuHuynh from './pages/PhuHuynh';
 import { Redirect, Switch, Route, BrowserRouter as Router } from 'react-router-dom';
-import Footer from './components/Footer';
-import Header from './components/Header';
 import ChonGiaSu from './pages/ChonGiaSu';
 import DangKyLamGiaSu from './pages/DangKyLamGiaSu';
 import ChiTietGiaSu from './pages/ChiTietGiaSu';
@@ -43,7 +41,6 @@ class App extends Component {
     const { isAuthenticated } = this.props.auth;
     return (
       <Router>
-        <Header />
         <LoadingSpinerComponent />
         <Switch>
           <Route path="/" exact={true} component={Home} />
@@ -70,11 +67,10 @@ class App extends Component {
 
           <Route path="/login" exact={true} component={DangNhap} />
         </Switch>
-        <Footer />
-        {/* <div>
+        <div>
             <BackTop />
-            <strong style={{ color: "rgba(64, 64, 64, 0.6)" }}> gray </strong>
-          </div> */}
+            <strong style={{ color: "rgba(64, 64, 64, 0.6)" }}></strong>
+          </div>
       </Router>
     );
   }

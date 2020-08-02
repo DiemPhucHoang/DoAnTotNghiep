@@ -42,8 +42,8 @@ class GiaSuNoiBat extends Component {
                                                 color="secondary" 
                                                 size="small" 
                                                 style={{ marginLeft: '15px' }}
-                                                onClick={(e, id) => this.chooseTutor(tutorItem.id)}>
-                                                Mời dạy
+                                                onClick={() => this.chooseTutor(tutorItem.id)}>
+                                                Chọn gia sư
                                             </Button>
                                     </CardActions>
                                 </Card>

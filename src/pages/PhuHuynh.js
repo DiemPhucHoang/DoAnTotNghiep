@@ -10,6 +10,8 @@ import { connect } from "react-redux";
 import { actSearchTutorsRequest } from "./../actions/tutor";
 import "./PhuHuynh.css";
 import { subjectConst, districtConst, classTeachConst } from '../constants/tutor';
+import Footer from '../components/Footer';
+import Header from '../components/Header';
 
 
 class PhuHuynh extends Component {
@@ -44,29 +46,30 @@ class PhuHuynh extends Component {
     onSearchTutors = (search) => {
         this.setState({
             activePage: 1,
-          }, () => {    
+        }, () => {
             let number = 0;
-            let {subject, district, classTeach, level, gender} = this.props.search;
-            if (!(subject === undefined && 
-                district === undefined && 
-                classTeach === undefined && 
+            let { subject, district, classTeach, level, gender } = this.props.search;
+            if (!(subject === undefined &&
+                district === undefined &&
+                classTeach === undefined &&
                 level === undefined &&
-                gender === undefined) 
-                || (subject === "" && 
+                gender === undefined)
+                || (subject === "" &&
                     district === "" &&
                     classTeach === "" &&
                     level === "" &&
                     gender === "")
             ) {
-            let searchInfo = {
-              subject: search.subject,
-              classTeach: search.classTeach,
-              district: search.district,
-              level: search.level,
-              gender: search.gender
-            };
-            this.props.onSearch(searchInfo, number);
-          }});
+                let searchInfo = {
+                    subject: search.subject,
+                    classTeach: search.classTeach,
+                    district: search.district,
+                    level: search.level,
+                    gender: search.gender
+                };
+                this.props.onSearch(searchInfo, number);
+            }
+        });
     }
 
     onChange = (event, page) => {
@@ -74,9 +77,9 @@ class PhuHuynh extends Component {
             activePage: page,
         });
         let number = page - 1;
-        if(this.props.search.isSearch) {
+        if (this.props.search.isSearch) {
             this.props.onSearch(this.props.search, number);
-          }else {
+        } else {
             this.props.fetchAllTutors(number);
         }
     }
@@ -95,65 +98,69 @@ class PhuHuynh extends Component {
     chooseTutor = id => {
         this.props.history.push({
             pathname: '/chon-gia-su',
-            state: {tutorId: id}
+            state: { tutorId: id }
         })
-        
+
     }
 
     render() {
-        const {tutor} = this.props;
+        const { tutor } = this.props;
         const content = tutor.content;
-        let {subjects, districts, classTeaches} = this.state;
-        let {history} = this.props;
+        let { subjects, districts, classTeaches } = this.state;
+        let { history } = this.props;
         return (
-            <div className="bg-color">
-                <div className="p-5 mx-5">
-                    <TimGiaSuNhanh 
-                        onSearchTutors={this.onSearchTutors} 
-                        subjects={subjects} 
-                        districts={districts} 
-                        classTeaches={classTeaches}
-                    />
-                    <br />
-                    <Paper style={{ padding: "20px" }}>
-                        <p>
-                            <b>DANH SÁCH GIA SƯ</b>
-                            <Button
-                                onClick={this.showSubmitRequest}
-                                variant="contained"
-                                color="primary"
-                                style={{ float: "right" }}
-                            >
-                                + Đăng yêu cầu
+            <div>
+                <Header />
+                <div className="bg-color">
+                    <div className="p-5 mx-5">
+                        <TimGiaSuNhanh
+                            onSearchTutors={this.onSearchTutors}
+                            subjects={subjects}
+                            districts={districts}
+                            classTeaches={classTeaches}
+                        />
+                        <br />
+                        <Paper style={{ padding: "20px" }}>
+                            <p>
+                                <b>DANH SÁCH GIA SƯ</b>
+                                <Button
+                                    onClick={this.showSubmitRequest}
+                                    variant="contained"
+                                    color="primary"
+                                    style={{ float: "right" }}
+                                >
+                                    + Đăng yêu cầu
                             </Button>
-                            <DangYeuCauTimGiaSu
-                                submitRequest={this.state.submitRequest}
-                                onCloseSubmitRequest={this.onCloseSubmitRequest}
-                                subjects={subjects} 
-                                districts={districts} 
-                                classTeaches={classTeaches}
-                                history={history}
-                            />
-                        </p>{" "}
-                        <br />
-                        <DanhSachGiaSu>{this.showTutors(content)}</DanhSachGiaSu>
-                        <br />
-                        {/* Phan trang */}
-                        <div style={{ float: "right" }}>
-                            <Pagination 
-                            count={tutor.totalPages}
-                            page={tutor.number + 1}
-                            onChange={this.onChange}
-                            color="primary" />
-                        </div>
-                        <br />
-                        <br />
-                    </Paper>
+                                <DangYeuCauTimGiaSu
+                                    submitRequest={this.state.submitRequest}
+                                    onCloseSubmitRequest={this.onCloseSubmitRequest}
+                                    subjects={subjects}
+                                    districts={districts}
+                                    classTeaches={classTeaches}
+                                    history={history}
+                                />
+                            </p>{" "}
+                            <br />
+                            <DanhSachGiaSu>{this.showTutors(content)}</DanhSachGiaSu>
+                            <br />
+                            {/* Phan trang */}
+                            <div style={{ float: "right" }}>
+                                <Pagination
+                                    count={tutor.totalPages}
+                                    page={tutor.number + 1}
+                                    onChange={this.onChange}
+                                    color="primary" />
+                            </div>
+                            <br />
+                            <br />
+                        </Paper>
+                    </div>
                 </div>
+                <Footer />
             </div>
         );
     }
-   
+
 }
 
 const mapStateToProps = state => {

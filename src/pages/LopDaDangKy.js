@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
-import {AppBar, Toolbar, Typography
+import {
+    AppBar, Toolbar, Typography
 } from '@material-ui/core';
 import { actFetchClassRegisterRequest, actChangeStatusClassRegisterRequest } from './../actions/classRegister';
 import { connect } from 'react-redux';
 import LopGoiY from '../components/lopDaDangKy/LopGoiY';
 import callApi from '../utils/apiCaller';
 import DanhSachLop from '../components/lopDaDangKy/DanhSachLop';
+import Footer from '../components/Footer';
+import Header from '../components/Header';
 
 class LopDaDangKy extends Component {
 
@@ -18,7 +21,7 @@ class LopDaDangKy extends Component {
     componentDidMount() {
         this.props.fetchClassRegister();
         callApi(`class/suggest/${localStorage.getItem("id")}`, 'GET', null).then(res => {
-            if(res.status === 200 && res.data.success) {
+            if (res.status === 200 && res.data.success) {
                 this.setState({
                     classesSuggest: res.data.result
                 });
@@ -37,19 +40,23 @@ class LopDaDangKy extends Component {
 
     render() {
         return (
-            <div className="bg-color">
-                <div className="px-5 pt-5 pb-3 mx-5">
-                    <AppBar position="static">
-                        <Toolbar variant="dense">
-                            <Typography variant="h6" color="inherit">
-                                LỚP ĐÃ ĐĂNG KÝ
+            <div>
+                <Header />
+                <div className="bg-color">
+                    <div className="px-5 pt-5 pb-3 mx-5">
+                        <AppBar position="static">
+                            <Toolbar variant="dense">
+                                <Typography variant="h6" color="inherit">
+                                    LỚP ĐÃ ĐĂNG KÝ
                             </Typography>
-                        </Toolbar>
-                    </AppBar>
-                    <DanhSachLop classRegister={this.props.classRegister} onChangeStatus={this.onChangeStatus}/>
-                    <br />
-                    <LopGoiY classesSuggest={this.state.classesSuggest} history={this.props.history}/>
+                            </Toolbar>
+                        </AppBar>
+                        <DanhSachLop classRegister={this.props.classRegister} onChangeStatus={this.onChangeStatus} />
+                        <br />
+                        <LopGoiY classesSuggest={this.state.classesSuggest} history={this.props.history} />
+                    </div>
                 </div>
+                <Footer />
             </div>
         );
     }

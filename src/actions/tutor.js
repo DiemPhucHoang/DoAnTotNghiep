@@ -109,7 +109,6 @@ export const actFetchTutorDetailRequest = (id, chooseTutor) => {
                         dispatch(actChooseTutor(res.data));
                     } else {
                         dispatch(actFetchTutorDetail(res.data));
-                        console.log('res.data: ', res.data.result);
                     }
                 }
             }).catch(err => {

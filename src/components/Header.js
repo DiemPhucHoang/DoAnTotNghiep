@@ -25,14 +25,6 @@ class Header extends Component {
                         style={{ fontSize: "18px", marginBottom: "0px", color: props.name.toLowerCase() === path ? "#f50057" : "black" }} >
                             {props.title}
                     </Link>
-                    {/* {path === 'logout' ? <a onClick={this.logout.bind(this)} href='/login' className="nav-link" onClick={props.handleClick}
-                        style={{ fontSize: "18px", marginBottom: "0px", color: props.name.toLowerCase() === path ? "#f50057" : "black" }} >
-                        {props.title}
-                    </a> : <Link to={`/${props.name}`} className="nav-link" onClick={props.handleClick}
-                        style={{ fontSize: "18px", marginBottom: "0px", color: props.name.toLowerCase() === path ? "#f50057" : "black" }} >
-                            {props.title}
-                        </Link>
-                    } */}
                     <div className={props.name.toLowerCase() === path ? "line-show" : "line"}></div>
                 </li>
             )

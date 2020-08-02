@@ -3,6 +3,7 @@ import { Grid, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextFi
 import callApi from '../../utils/apiCaller';
 import { notification } from "antd";
 import "antd/dist/antd.css";
+import {validateConfirmPassword, validatePassword} from '../../constants/validate';
 
 class DoiMatKhau extends Component {
 
@@ -12,7 +13,9 @@ class DoiMatKhau extends Component {
             passwordInfo: {
                 oldPassword: '',
                 newPassword: '',
-                confirmPassword: ''
+                confirmPassword: '',
+                errPassword: '',
+                errConfirmPassword: ''
             },
             
         }
@@ -56,6 +59,22 @@ class DoiMatKhau extends Component {
             }
         }));
     }
+
+    validateField = (valueFirst, valueSecond, errName) => {
+        if(errName === 'errPassword') {
+            let err = validatePassword(valueFirst);
+            this.setState({
+                errPassword: err
+            })
+        }  
+        if(errName === 'errConfirmPassword') {
+            let err = validateConfirmPassword(valueFirst, valueSecond);
+            this.setState({
+                errConfirmPassword: err
+            })
+        }  
+    }
+
     render() {
         return (
             <Dialog
@@ -93,7 +112,9 @@ class DoiMatKhau extends Component {
                                         variant="outlined"
                                         size="small"
                                         onChange={this.onChange}
+                                        onBlur={() => this.validateField(this.state.passwordInfo.newPassword, null, 'errPassword')}
                                     />
+                                    {(this.state.errPassword !=='') ? <p style={{color: "red"}}>{this.state.errPassword}</p> : ''}
                                 </Grid>
                                 <Grid item xs={12}>
                                     <TextField
@@ -106,7 +127,9 @@ class DoiMatKhau extends Component {
                                         variant="outlined"
                                         size="small"
                                         onChange={this.onChange}
+                                        onBlur={() => this.validateField(this.state.passwordInfo.newPassword, this.state.passwordInfo.confirmPassword, 'errConfirmPassword')}
                                     />
+                                    {(this.state.errConfirmPassword !=='') ? <p style={{color: "red"}}>{this.state.errConfirmPassword}</p> : ''}
                                 </Grid>
                             </Grid>
                         </Grid>

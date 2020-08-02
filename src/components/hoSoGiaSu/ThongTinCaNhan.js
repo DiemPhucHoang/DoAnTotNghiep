@@ -66,7 +66,6 @@ class ThongTinCaNhan extends Component {
                             open={this.state.open}
                             onClose={() => this.setState({ open: false })}
                             onSave={(files) => {
-                                console.log('Files:', files);
                                 this.setState({ open: false });
                                 this.changeImage(files[0]);
                             }}

@@ -20,6 +20,7 @@ class QuenMatKhau extends Component {
         e.preventDefault();
         callApi(`auth/forgot-password?email=${this.state.email}`, "POST", null).then(res => {
             if (res.status === 200 && res.data.success) {
+                console.log("ssssssss");
                 this.props.closeForgotPassword();
                 notification.success({
                     message: "Success",

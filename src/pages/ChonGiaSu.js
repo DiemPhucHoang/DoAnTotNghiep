@@ -8,6 +8,8 @@ import DangKyChonGiaSu from "./../components/chonGiaSu/DangKyChonGiaSu";
 import { connect } from 'react-redux';
 import callApi from "./../utils/apiCaller";
 import { actFetchTutorDetailRequest } from './../actions/tutor';
+import Footer from '../components/Footer';
+import Header from '../components/Header';
 
 class ChonGiaSu extends Component {
     constructor(props) {
@@ -56,45 +58,49 @@ class ChonGiaSu extends Component {
     }
 
     render() {
-        const {tutor} = this.props;
+        const { tutor } = this.props;
         let { subjects, districts, classTeaches } = this.state;
-        const {history} = this.props;
+        const { history } = this.props;
         return (
-            <div className="bg-color">
-                <br />
-                <div className="container ">
-                    <Card elevation={3}>
-                        <AppBar position="static">
-                            <Toolbar variant="dense">
-                                <IconButton edge="start" color="inherit" aria-label="menu">
-                                    <Menu />
-                                </IconButton>
-                                <Typography color="inherit">
-                                    GIA SƯ ĐÃ CHỌN
+            <div>
+                <Header />
+                <div className="bg-color">
+                    <br />
+                    <div className="container ">
+                        <Card elevation={3}>
+                            <AppBar position="static">
+                                <Toolbar variant="dense">
+                                    <IconButton edge="start" color="inherit" aria-label="menu">
+                                        <Menu />
+                                    </IconButton>
+                                    <Typography color="inherit">
+                                        GIA SƯ ĐÃ CHỌN
                                 </Typography>
-                            </Toolbar>
-                        </AppBar>
-                        <GiaSuDaChon tutorItem={tutor} />
-                        <AppBar position="static">
-                            <Toolbar variant="dense">
-                                <IconButton edge="start" color="inherit" aria-label="menu">
-                                    <Menu />
-                                </IconButton>
-                                <Typography color="inherit">
-                                    ĐIỀN THÔNG TIN ĐĂNG KÝ CHỌN GIA SƯ
+                                </Toolbar>
+                            </AppBar>
+                            <GiaSuDaChon tutorItem={tutor} />
+                            <AppBar position="static">
+                                <Toolbar variant="dense">
+                                    <IconButton edge="start" color="inherit" aria-label="menu">
+                                        <Menu />
+                                    </IconButton>
+                                    <Typography color="inherit">
+                                        ĐIỀN THÔNG TIN ĐĂNG KÝ CHỌN GIA SƯ
                                 </Typography>
-                            </Toolbar>
-                        </AppBar>
-                        <DangKyChonGiaSu
-                            tutorItem={tutor}
-                            subjects={subjects}
-                            districts={districts}
-                            classTeaches={classTeaches}
-                            history={history}
-                        />
-                        <br /><br />
-                    </Card>
+                                </Toolbar>
+                            </AppBar>
+                            <DangKyChonGiaSu
+                                tutorItem={tutor}
+                                subjects={subjects}
+                                districts={districts}
+                                classTeaches={classTeaches}
+                                history={history}
+                            />
+                            <br /><br />
+                        </Card>
+                    </div>
                 </div>
+                <Footer />
             </div>
 
         );

@@ -8,6 +8,8 @@ import DanhSachGiaSuDaDangKy from './../components/dangKyDay/DanhSachGiaSuDaDang
 import DanhSachLopTuongTu from './../components/dangKyDay/DanhSachLopTuongTu';
 import { actTutorRegisterClassRequest, actFetchTutorRegisterClassRequest } from './../actions/tutorRegisterClass';
 import callApi from './../utils/apiCaller';
+import Footer from '../components/Footer';
+import Header from '../components/Header';
 
 class DangKyDay extends Component {
 
@@ -49,56 +51,59 @@ class DangKyDay extends Component {
 
     render() {
         const { classes } = this.props;
-
         return (
-            <div className="bg-color">
-                <div className="px-5 pt-5 pb-3 mx-5">
-                    <AppBar position="static">
-                        <Toolbar variant="dense">
-                            <Typography variant="h6" color="inherit">
-                                LỚP ĐANG CẦN GIA SƯ
+            <div>
+                <Header />
+                <div className="bg-color">
+                    <div className="px-5 pt-5 pb-3 mx-5">
+                        <AppBar position="static">
+                            <Toolbar variant="dense">
+                                <Typography variant="h6" color="inherit">
+                                    LỚP ĐANG CẦN GIA SƯ
                             </Typography>
-                        </Toolbar>
-                    </AppBar>
-                    <Paper style={{ width: "100%", paddingBottom: "20px" }}>
-                        <Grid container style={{ paddingRight: "20px" }}>
-                            <LopMoiDetail length={this.props.tutorRegisterClass.length} classItem={classes} />
-                            <FormDangKyNhanLop onRegisterClass={this.onRegisterClass} />
-                        </Grid>
-                        <hr />
-                        {this.props.tutorRegisterClass.length <= 0 ? (
-                            <Grid container className="padding-class">
-                                <strong>Hiện tại chưa có gia sư nào đăng ký nhận lớp này</strong>
+                            </Toolbar>
+                        </AppBar>
+                        <Paper style={{ width: "100%", paddingBottom: "20px" }}>
+                            <Grid container style={{ paddingRight: "20px" }}>
+                                <LopMoiDetail length={this.props.tutorRegisterClass?.content?.length} classItem={classes} />
+                                <FormDangKyNhanLop onRegisterClass={this.onRegisterClass} />
                             </Grid>
-                        ) : (
-                                <DanhSachGiaSuDaDangKy tutorRegisterClass={this.props.tutorRegisterClass} />
-                            )}
+                            <hr />
+                            {this.props.tutorRegisterClass.length <= 0 ? (
+                                <Grid container className="padding-class">
+                                    <strong>Hiện tại chưa có gia sư nào đăng ký nhận lớp này</strong>
+                                </Grid>
+                            ) : (
+                                    <DanhSachGiaSuDaDangKy tutorRegisterClass={this.props.tutorRegisterClass?.content} />
+                                )}
 
-                        <hr />
-                        <Grid container className="padding-class">
-                            <Grid item xs={12}>
-                                <p style={{ fontStyle: "italic" }}>
-                                    <strong style={{ color: "red" }}>(*)</strong>Cho phép tối đa 5 người
+                            <hr />
+                            <Grid container className="padding-class">
+                                <Grid item xs={12}>
+                                    <p style={{ fontStyle: "italic" }}>
+                                        <strong style={{ color: "red" }}>(*)</strong>Cho phép tối đa 5 người
                                     đăng ký. Chỉ giao lớp cho 1 người đủ điều kiện đóng lệ phí trước.
                                 </p>
-                                <p>
-                                    <strong style={{ color: "red" }}>Lưu ý</strong>: Trung tâm{" "}
-                                    <span style={{ fontWeight: "bold" }}>Gia sư Ánh Dương</span> ưu tiên
+                                    <p>
+                                        <strong style={{ color: "red" }}>Lưu ý</strong>: Trung tâm{" "}
+                                        <span style={{ fontWeight: "bold" }}>Gia sư Ánh Dương</span> ưu tiên
                                     người đủ điều kiện, đóng lệ phí sớm. Trước khi chuyển khoản hoặc tới
                                     trung tâm theo giờ bạn đã hẹn hãy gọi số{" "}
-                                    <span style={{ fontWeight: "bold" }}>
-                                        0902684422 hoặc 0902504900
+                                        <span style={{ fontWeight: "bold" }}>
+                                            0902684422 hoặc 0902504900
                                     </span>{" "}
                                     để kiểm tra trạng thái lớp chính xác.
                                 </p>
+                                </Grid>
                             </Grid>
-                        </Grid>
-                    </Paper>
+                        </Paper>
+                    </div>
+                    <DanhSachLopTuongTu
+                        showClassDetail={this.showClassDetail}
+                        classesSimilar={this.state.classesSimilar}
+                        history={this.props.history} />
                 </div>
-                <DanhSachLopTuongTu
-                    showClassDetail={this.showClassDetail}
-                    classesSimilar={this.state.classesSimilar}
-                    history={this.props.history} />
+                <Footer />
             </div>
         );
     }

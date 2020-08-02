@@ -24,7 +24,7 @@ export const actCreateClassesRequest = (classInfo, hasChooseTutors, history) => 
             } else {
                 notification.error({
                     message: "Failed",
-                    description: "Đăng yêu cầu không thành công!"
+                    description: "Số điện thoại đã đăng ký tài khoản gia sư. Vui lòng sử dụng số điện thoại khác!"
                 });
             }
         }).catch(err => {

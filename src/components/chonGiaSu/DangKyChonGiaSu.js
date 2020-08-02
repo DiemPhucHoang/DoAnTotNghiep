@@ -4,12 +4,12 @@ import {
 } from '@material-ui/core';
 import { actCreateClassesRequest } from './../../actions/classes';
 import { connect } from "react-redux";
-import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
+import { validateEmail, validatePhone } from '../../constants/validate';
 
 class DangKyChonGiaSu extends Component {
 
@@ -18,7 +18,9 @@ class DangKyChonGiaSu extends Component {
         this.state = {
             classInfo: {
                 subject: []
-            }
+            },
+            errPhone: '',
+            errEmail: '',
         }
     }
 
@@ -65,6 +67,21 @@ class DangKyChonGiaSu extends Component {
         }));
     }
 
+    validateField = (value, errName) => {
+        if(errName ==='errPhone') {
+            let err = validatePhone(value);
+            this.setState({
+                errPhone: err
+            })
+        }
+        if(errName ==='errEmail') {
+            let err = validateEmail(value);
+            this.setState({
+                errEmail: err
+            })
+        }        
+    }
+
     render() {
         const { subjects, classTeaches, districts } = this.props;
         const hasSubjects = subjects && subjects.length > 0;
@@ -76,7 +93,7 @@ class DangKyChonGiaSu extends Component {
                     <Grid container spacing={3} style={{ padding: '20px' }}>
                         <Grid container spacing={3}>
                             <Grid item xs={6}>
-                                <FormControl variant="outlined" fullWidth required>
+                                <FormControl fullWidth required variant="outlined" size="small">
                                     <InputLabel id="demo-mutiple-checkbox-outlined-label">Môn học</InputLabel>
                                     <Select
                                         labelId="demo-mutiple-checkbox-outlined-label"
@@ -84,7 +101,6 @@ class DangKyChonGiaSu extends Component {
                                         multiple
                                         label="Môn học"
                                         onChange={this.onHandleChooseTutor}
-                                        input={<Input />}
                                         name="subject"
                                         variant="outlined"
                                         value={this.state.classInfo.subject}
@@ -101,7 +117,6 @@ class DangKyChonGiaSu extends Component {
                             </Grid>
                             <Grid item xs={6}>
                                 <TextField
-                                    id="standard-select-currency"
                                     name="classTeach"
                                     select
                                     label="Lớp dạy"
@@ -120,7 +135,6 @@ class DangKyChonGiaSu extends Component {
                             </Grid>
                             <Grid item xs={6}>
                                 <TextField
-                                    id="standard-select-currency"
                                     select
                                     name="levelRequirement"
                                     label="Chọn trình độ gia sư"
@@ -145,7 +159,6 @@ class DangKyChonGiaSu extends Component {
                             </Grid>
                             <Grid item xs={6}>
                                 <TextField
-                                    id="standard-select-currency"
                                     select
                                     name="genderRequirement"
                                     label="Chọn giới tính gia sư"
@@ -168,7 +181,6 @@ class DangKyChonGiaSu extends Component {
                             <Grid item xs={6}>
                                 <TextField
                                     fullWidth
-                                    id="standard-select-currency"
                                     name="tuitionFee"
                                     label="Học phí dự kiến (VNĐ/tháng)"
                                     variant="outlined"
@@ -181,7 +193,6 @@ class DangKyChonGiaSu extends Component {
                                     fullWidth
                                     required
                                     name="timeTeach"
-                                    id="standard-select-currency"
                                     label="Thời gian dạy"
                                     variant="outlined"
                                     size="small"
@@ -191,7 +202,6 @@ class DangKyChonGiaSu extends Component {
                             </Grid>
                             <Grid item xs={6}>
                                 <TextField
-                                    id="standard-select-currency"
                                     name="district"
                                     select
                                     label="Chọn quận"
@@ -211,7 +221,6 @@ class DangKyChonGiaSu extends Component {
                             <Grid item xs={6}>
                                 <TextField
                                     fullWidth
-                                    id="standard-select-currency"
                                     name="address"
                                     label="Địa chỉ cụ thể"
                                     placeholder="Số nhà, tên đường, tên phường"
@@ -225,7 +234,6 @@ class DangKyChonGiaSu extends Component {
                                 <TextField
                                     required
                                     fullWidth
-                                    id="standard-select-currency"
                                     name="name"
                                     label="Họ tên của phụ huynh"
                                     variant="outlined"
@@ -235,26 +243,29 @@ class DangKyChonGiaSu extends Component {
                             </Grid>
                             <Grid item xs={4}>
                                 <TextField
+                                    type="number"
                                     required
                                     fullWidth
-                                    id="standard-select-currency"
                                     name="phone"
                                     label="Số điện thoại"
                                     variant="outlined"
                                     size="small"
                                     onChange={this.onHandleChooseTutor}
+                                    onBlur={() => this.validateField(this.state.classInfo.phone, 'errPhone')}
                                 />
+                                {(this.state.errPhone !=='') ? <p style={{color: "red"}}>{this.state.errPhone}</p> : ''}
                             </Grid>
                             <Grid item xs={4}>
                                 <TextField
                                     fullWidth
-                                    id="standard-select-currency"
                                     name="email"
                                     label="Email (nếu có)"
                                     variant="outlined"
                                     size="small"
                                     onChange={this.onHandleChooseTutor}
+                                    onBlur={() => this.validateField(this.state.classInfo.email, 'errEmail')}
                                 />
+                                {(this.state.errEmail !== '') ? <p style={{color: "red"}}>{this.state.errEmail}</p> : ''}
                             </Grid>
                         </Grid>
                     </Grid>
