@@ -1,7 +1,6 @@
 package com.example.trungtamgiasu.parsing.impl;
 
 import com.example.trungtamgiasu.model.Classes;
-import com.example.trungtamgiasu.model.Rate;
 import com.example.trungtamgiasu.model.enums.ClassesStatus;
 import com.example.trungtamgiasu.parsing.ClassesParsing;
 import com.example.trungtamgiasu.vo.classes.ClassesInfoVO;

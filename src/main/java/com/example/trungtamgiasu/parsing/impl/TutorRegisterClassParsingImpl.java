@@ -1,6 +1,5 @@
 package com.example.trungtamgiasu.parsing.impl;
 
-import com.example.trungtamgiasu.model.Rate;
 import com.example.trungtamgiasu.model.TutorRegisterClass;
 import com.example.trungtamgiasu.model.enums.TutorRegisterClassStatus;
 import com.example.trungtamgiasu.parsing.TutorRegisterClassParsing;

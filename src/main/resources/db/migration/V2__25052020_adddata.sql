@@ -1,3 +1,5 @@
+insert into roles (role_name) values (0), (1), (2);
+
 insert into subjects(subject_name)
 values('Toán'), ('Vật lý'), ('Hóa học'), ('Ngữ văn'), ('Sinh học'), ('Lịch sử'), ('Địa lý'), ('Báo bài'),
 ('Tiếng Anh'), ('Tiếng Việt'), ('Tiếng Trung'), ('Tiếng Hàn'), ('Tiếng Nhật'), ('Đàn nhạc'), ('Tin học'), ('Vẽ');

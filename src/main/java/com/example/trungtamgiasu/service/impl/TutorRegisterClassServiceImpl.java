@@ -20,6 +20,9 @@ import com.example.trungtamgiasu.vo.TutorRegisterClass.TutorRegisterClassVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -97,10 +100,16 @@ public class TutorRegisterClassServiceImpl implements TutorRegisterClassService 
     }
 
     @Override
-    public List<TutorRegisterClassInfoVO> getAllTutorRegisterClass(Long idClass) {
+    public Page<TutorRegisterClassInfoVO> getAllTutorRegisterClass(Long idClass, Pageable pageable) {
         logger.info("Get all tutor register class " + idClass);
         List<TutorRegisterClass> tutorRegisterClassList = tutorRegisterClassDAO.getAllByClasses(idClass);
-        return  tutorRegisterClassParsing.toTutorRegisterClassInfoVOList(tutorRegisterClassList);
+        List<TutorRegisterClassInfoVO> classInfoVOS = tutorRegisterClassParsing.
+                toTutorRegisterClassInfoVOList(tutorRegisterClassList);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), classInfoVOS.size());
+        Page<TutorRegisterClassInfoVO> classesInfoVOPage = new PageImpl<>
+                (classInfoVOS.subList(start, end), pageable, classInfoVOS.size());
+        return  classesInfoVOPage;
     }
 
     @Override

@@ -6,6 +6,8 @@ import com.example.trungtamgiasu.vo.TutorRegisterClass.TutorRegisterClassInfoVO;
 import com.example.trungtamgiasu.vo.TutorRegisterClass.TutorRegisterClassVO;
 import com.example.trungtamgiasu.vo.payload.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -50,9 +52,9 @@ public class TutorRegisterClassController {
 
     @GetMapping("/class/{idClass}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_TUTOR')")
-    public ApiResponse getAllTutorRegisterClass(@PathVariable("idClass") Long idClass) {
-        List<TutorRegisterClassInfoVO> tutorRegisterClassInfoVOList =
-                tutorRegisterClassService.getAllTutorRegisterClass(idClass);
+    public ApiResponse getAllTutorRegisterClass(@PathVariable("idClass") Long idClass, Pageable pageable) {
+        Page<TutorRegisterClassInfoVO> tutorRegisterClassInfoVOList =
+                tutorRegisterClassService.getAllTutorRegisterClass(idClass, pageable);
         return new ApiResponse(true,
                 "Get all tutor register class " + idClass + " successfully"
                 , tutorRegisterClassInfoVOList);
