@@ -18,9 +18,9 @@ class HoSoGiaSu extends Component {
         super(props);
         this.state = {
             lstFreeTime: [],
-            subjects: subjectConst,
-            districts: districtConst,
-            classTeaches: classTeachConst,
+            subjects: _.cloneDeep(subjectConst),
+            districts: _.cloneDeep(districtConst),
+            classTeaches: _.cloneDeep(classTeachConst),
             subjectIds: [],
             tutorInfo: {
                 college: '',
@@ -240,7 +240,7 @@ class HoSoGiaSu extends Component {
 
         return (
             <div>
-                <Header />
+                <Header history={this.props.history}/>
                 <div className="bg-color">
                     <div className="p-5 mx-5">
                         <Grid container spacing={3}>

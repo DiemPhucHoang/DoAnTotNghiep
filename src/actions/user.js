@@ -8,11 +8,12 @@ import setAuthorizationToken from './../utils/setAuthorizationToken';
 export const logoutRequest = (history) => {
 
     return dispatch => {
-        // history.push("/login");
+        history.push("/login");
         localStorage.removeItem("token");
         localStorage.removeItem("id");
         setAuthorizationToken(false);
         dispatch(setCurrentUser({}));
+        dispatch({ type: Types.DESTROY_SESSION });
     };
 };
 

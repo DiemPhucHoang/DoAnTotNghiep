@@ -9,6 +9,7 @@ import tutorRegisterClass from './tutorRegisterClass';
 import classRegister from './classRegister';
 import tutorDetail from './tutorDetail';
 import rate from './rate';
+import { DESTROY_SESSION } from "../constants/ActionTypes";
 
 const appReducers = combineReducers ({
       auth,
@@ -23,4 +24,12 @@ const appReducers = combineReducers ({
       rate
 });
 
-export default appReducers;
+const rootReducer = (state, action) => {   
+      // Clear all data in redux store to initial.
+      if(action.type === DESTROY_SESSION)
+         state = undefined;
+      
+      return appReducers(state, action);
+};
+
+export default rootReducer;

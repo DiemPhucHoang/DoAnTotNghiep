@@ -22,13 +22,12 @@ class FirstPart extends Component {
                             <p className=" animated bounceInRight" style={{ fontSize: "0.9rem", animationDelay: "1s", marginTop: "20px" }}>
                                 Hãy liên hệ với chúng tôi!
                             </p>
-                            <Link href="/lienhe">
+                            <Link to="/">
                                 <Button variant="contained" startIcon={<PlayArrow />} className="animated bounceInRight" style={{ fontSize: "1rem", animationDelay: "1.2s", marginTop: "20px" }} color="secondary" >
                                     Liên hệ với chúng tôi
                                 </Button>
                             </Link>
                         </div>
-
                     </div>
                 </div>
             </div>

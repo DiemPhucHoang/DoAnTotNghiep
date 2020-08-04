@@ -116,7 +116,7 @@ class LopMoi extends Component {
         let { subjects, districts, classTeaches } = this.state;
         return (
             <div>
-                <Header />
+                <Header history={this.props.history}/>
                 <div className="bg-color">
                     <div className="p-5 mx-5">
                         <TimLopMoi

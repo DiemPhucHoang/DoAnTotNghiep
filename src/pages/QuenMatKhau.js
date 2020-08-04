@@ -6,13 +6,15 @@ import {
 import { notification } from "antd";
 import "antd/dist/antd.css";
 import callApi from '../utils/apiCaller';
+import { validateEmail } from '../constants/validate';
 
 class QuenMatKhau extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            email: ''
+            email: '',
+            errEmail: ''
         }
     }
 
@@ -20,7 +22,6 @@ class QuenMatKhau extends Component {
         e.preventDefault();
         callApi(`auth/forgot-password?email=${this.state.email}`, "POST", null).then(res => {
             if (res.status === 200 && res.data.success) {
-                console.log("ssssssss");
                 this.props.closeForgotPassword();
                 notification.success({
                     message: "Success",
@@ -35,6 +36,15 @@ class QuenMatKhau extends Component {
     onChange = (e) => {
         let { value } = e.target;
         this.setState({ email: value });
+    }
+
+    validateField = (value, errName) => {
+        if(errName === 'errEmail') {
+            let err = validateEmail(value);
+            this.setState({
+                errEmail: err
+            })
+        }  
     }
 
     render() {
@@ -66,7 +76,9 @@ class QuenMatKhau extends Component {
                                         variant="outlined"
                                         size="small"
                                         onChange={this.onChange}
+                                        onBlur={() => this.validateField(this.state.email, 'errEmail')}
                                     />
+                                    {(this.state.errEmail !=='') ? <p style={{color: "red"}}>{this.state.errEmail}</p> : ''}
                                 </Grid>
                             </Grid>
                         </Grid>

@@ -51,7 +51,7 @@ class Home extends Component {
         const {isAuthenticated} = this.props.auth;
         return (
             <div>
-                <Header />
+                <Header history={this.props.history}/>
                 <FirstPart />
                 {isAuthenticated ? "" : <GiaSuNoiBat tutorList={this.state.listTutorsTop} chooseTutor={this.chooseTutor}/>}
                 {isAuthenticated ? "" : <SecondPart />}

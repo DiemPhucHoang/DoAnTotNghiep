@@ -9,7 +9,7 @@ import { notification } from "antd";
 import "antd/dist/antd.css";
 import Footer from '../components/Footer';
 import Header from '../components/Header';
-import {validateEmail, validatePhone} from '../constants/validate';
+import { validateEmail, validatePhone, validatePassword } from '../constants/validate';
 
 class DangKyLamGiaSu extends Component {
     constructor(props) {
@@ -88,7 +88,13 @@ class DangKyLamGiaSu extends Component {
             this.setState({
                 errEmail: err
             })
-        }        
+        } 
+        if (errName === 'errPassword') {
+            let err = validatePassword(value);
+            this.setState({
+                errPassword: err
+            })
+        }       
     }
 
     render() {
@@ -141,6 +147,7 @@ class DangKyLamGiaSu extends Component {
                                                         name="password"
                                                         value={password}
                                                         onChange={this.handleChange}
+                                                        onBlur={() => this.validateField(this.state.password, 'errPassword')}
                                                         endAdornment={
                                                             <InputAdornment position="end">
                                                                 <IconButton
@@ -153,6 +160,7 @@ class DangKyLamGiaSu extends Component {
                                                             </InputAdornment>
                                                         }
                                                     />
+                                                    {(this.state.errPassword !== '') ? <p style={{ color: "red" }}>{this.state.errPassword}</p> : ''}
                                                 </FormControl>
                                             </Grid>
                                             <Grid item xs={12}>

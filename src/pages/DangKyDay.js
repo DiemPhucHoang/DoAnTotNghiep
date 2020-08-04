@@ -53,7 +53,7 @@ class DangKyDay extends Component {
         const { classes } = this.props;
         return (
             <div>
-                <Header />
+                <Header history={this.props.history}/>
                 <div className="bg-color">
                     <div className="px-5 pt-5 pb-3 mx-5">
                         <AppBar position="static">
