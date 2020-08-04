@@ -157,7 +157,6 @@ public class TutorServiceImpl implements TutorService {
         List<TutorRegisterClass>  tutorRegisterClassList = tutorRegisterClassDAO.numberOfClassTeach(id);
         Tutor tutor = tutorDAO.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException("Tutor", "id", id));
-
         return new TutorDetailVO(tutorParsing.toTutorInfoVO(tutor), tutorRegisterClassList.size());
 
     }
@@ -187,7 +186,8 @@ public class TutorServiceImpl implements TutorService {
     @Override
     public List<TutorInfoVO> getTop4Tutors() {
         logger.info("Get top 4");
-        return tutorParsing.toTutorsInfoVOList(tutorDAO.findTop4ByStatus(TutorStatus.CHUANHANLOP));
+//        return tutorParsing.toTutorsInfoVOList(tutorDAO.findTop4ByStatus(TutorStatus.CHUANHANLOP));
+        return tutorParsing.toTutorsInfoVOList(tutorDAO.getTop4BySumOfClassTeach());
     }
 
     @Override

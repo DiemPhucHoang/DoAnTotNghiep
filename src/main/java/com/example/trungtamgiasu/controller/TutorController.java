@@ -91,15 +91,6 @@ public class TutorController {
         );
     }
 
-//    @GetMapping("/image/{idTutor}")
-//    public ApiResponse readBytesArrayImage(@PathVariable("idTutor") Long idTutor) {
-//        logger.info("Read bytes array by idTutor: " + idTutor);
-//        return new ApiResponse(
-//                true,
-//                "Successfully",
-//                tutorService.readBytesFromFile(idTutor));
-//    }
-
     @GetMapping("/top4")
     public ApiResponse getTop4Tutors() {
         return new ApiResponse(true, "Get top4 tutors successfully", tutorService.getTop4Tutors());
