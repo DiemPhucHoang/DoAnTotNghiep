@@ -1,21 +1,32 @@
 package com.example.trungtamgiasu.service.impl;
 
 import com.example.trungtamgiasu.dao.PasswordResetTokenDAO;
+import com.example.trungtamgiasu.dao.RoleDAO;
 import com.example.trungtamgiasu.dao.UserDAO;
+import com.example.trungtamgiasu.exception.AppException;
 import com.example.trungtamgiasu.exception.BadRequestException;
 import com.example.trungtamgiasu.exception.ResourceNotFoundException;
 import com.example.trungtamgiasu.model.PasswordResetToken;
+import com.example.trungtamgiasu.model.Role;
 import com.example.trungtamgiasu.model.User;
+import com.example.trungtamgiasu.model.enums.RoleName;
 import com.example.trungtamgiasu.parsing.UserParsing;
 import com.example.trungtamgiasu.security.UserPrincipal;
 import com.example.trungtamgiasu.service.UserService;
+import com.example.trungtamgiasu.specification.UserSpecification;
+import com.example.trungtamgiasu.vo.SearchUserVO;
 import com.example.trungtamgiasu.vo.User.ChangePasswordVO;
 import com.example.trungtamgiasu.vo.User.ForgotPasswordVO;
 import com.example.trungtamgiasu.vo.User.UserInfoVO;
+import com.example.trungtamgiasu.vo.User.UserVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,7 +40,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -54,6 +68,9 @@ public class UserServiceImpl implements UserService {
     @Value("${file.upload-dir}")
     String path;
 
+    @Autowired
+    private RoleDAO roleDAO;
+
     @Override
     public User saveUser(User user) {
         logger.info("Save user with id: " + user.getId());
@@ -61,10 +78,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getById(Long idUser) {
+    public UserVO getById(Long idUser) {
         logger.info("Get user by id " + idUser);
-        return userDAO.findById(idUser).orElseThrow(() ->
+        User user = userDAO.findById(idUser).orElseThrow(() ->
                 new ResourceNotFoundException("User", "id" , idUser));
+        UserVO userVO = new UserVO(user);
+        return userVO;
     }
 
     @Override
@@ -73,8 +92,10 @@ public class UserServiceImpl implements UserService {
 
         User user =  userDAO.findByPhone(phone).orElseThrow(() ->
                 new ResourceNotFoundException("User", "phone" , phone));
-//        userInfoVO.setTutor(user.getTutor());
-        return userParsing.toUserInfoVO(user);
+
+        UserInfoVO userInfoVO = new UserInfoVO(user);
+        return userInfoVO;
+
     }
 
     @Override
@@ -274,4 +295,73 @@ public class UserServiceImpl implements UserService {
         saveUser(user);
         return newFileName;
     }
+
+    @Override
+    public List<User> findAllByRole(RoleName roleName) {
+        Role role = roleDAO.findByName(roleName).get();
+        return userDAO.findAllByRoles(role);
+    }
+
+    @Override
+    public User addUser(UserVO userVO) {
+        User user = userParsing.parseUserVOToEntity(userVO);
+        Role userRole = roleDAO.findByName(RoleName.from(userVO.getRole()))
+                .orElseThrow(() -> new AppException("User Role not set"));
+        user.setRoles(Collections.singleton(userRole));
+        return userDAO.save(user);
+    }
+
+    @Override
+    public Page<UserVO> findAll(Pageable pageable) {
+        List<User> users = userDAO.findAll();
+        List<UserVO> userVOS = userParsing.toUserVOList(users);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), userVOS.size());
+        Page<UserVO> userVOPage = new PageImpl<>
+                (userVOS.subList(start, end), pageable, userVOS.size());
+        return userVOPage;
+    }
+
+    @Override
+    public void updateUser(UserVO userVO) throws Exception {
+        User userDB = userDAO.findById(userVO.getId()).orElse(null);
+        if (userDB == null) {
+            throw new Exception("User not found");
+        }
+        try {
+            userDB.setName(userVO.getName());
+            userDB.setPhone(userVO.getPhone());
+            userDB.setAddress(userVO.getAddress());
+            userDB.setEmail(userVO.getEmail());
+            saveUser(userDB);
+        } catch (Exception e) {
+            throw new Exception("Update user fail");
+        }
+
+    }
+
+    @Override
+    public Page<UserVO> searchUsers(SearchUserVO searchUserVO, Pageable pageable) {
+        if(searchUserVO == null) {
+            throw new BadRequestException("searchUserVO is not found");
+        }
+
+//        Set<Role> roles = new HashSet<>();
+//        Role role = roleDAO.findByName(RoleName.valueOf(searchUserVO.getRole())).orElse(null);
+//        roles.add(role);
+
+        List<User> userList = userDAO.findAll(Objects.requireNonNull
+                (Specification.
+                        where(UserSpecification.withName(searchUserVO.getName()))
+                        .and(UserSpecification.withPhone(searchUserVO.getPhone())))
+                );
+
+        List<UserVO> userVOS = userParsing.toUserVOList(userList);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), userVOS.size());
+        Page<UserVO> userVOPage = new PageImpl<>
+                (userVOS.subList(start, end), pageable, userVOS.size());
+        return userVOPage;
+    }
+
 }

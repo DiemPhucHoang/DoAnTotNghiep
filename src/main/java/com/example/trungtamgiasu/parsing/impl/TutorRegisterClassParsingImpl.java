@@ -1,5 +1,6 @@
 package com.example.trungtamgiasu.parsing.impl;
 
+import com.example.trungtamgiasu.model.Classes;
 import com.example.trungtamgiasu.model.Rate;
 import com.example.trungtamgiasu.model.TutorRegisterClass;
 import com.example.trungtamgiasu.model.enums.TutorRegisterClassStatus;
@@ -70,6 +71,7 @@ public class TutorRegisterClassParsingImpl implements TutorRegisterClassParsing 
             return null;
         }
         List<TutorRegisterClassInfoVO> registerClassInfoVOS = new ArrayList<>();
+
         for (TutorRegisterClass registerClass : tutorRegisterClasses) {
             registerClassInfoVOS.add(toTutorRegisterClassInfoVO(registerClass));
         }

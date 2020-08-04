@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity(name = "User")
-@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = "phone")})
+@Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -77,6 +77,13 @@ public class User {
     public User(String name, String phone, @Email String email) {
         this.name = name;
         this.phone = phone;
+        this.email = email;
+    }
+
+    public User(String name, String phone, String address, @Email String email) {
+        this.name = name;
+        this.phone = phone;
+        this.address = address;
         this.email = email;
     }
 }

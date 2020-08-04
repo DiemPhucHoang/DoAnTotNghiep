@@ -72,6 +72,7 @@ public class ClassesController {
                 classesService.getTop3ByClassTeach(idClass));
     }
 
+
     @GetMapping("/suggest/{idUser}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_TUTOR')")
     public ApiResponse getClassesSuggest(@PathVariable("idUser") Long idUser) {
@@ -82,6 +83,70 @@ public class ClassesController {
         } catch (Exception e) {
             return new ApiResponse(false,
                     "Get classes suggest by id" + idUser + " failed", e.toString());
+        }
+    }
+
+
+    @GetMapping("/countDataChart")
+    public ApiResponse countNumberOfClass(){
+        return new ApiResponse(
+                true,
+                "Count number of Class",
+                classesService.countNumberOfClass()
+        );
+    }
+
+    @PatchMapping("")
+    public ApiResponse updateClass(@RequestBody ClassesInfoVO classesInfoVO)
+    {
+        try {
+            classesService.saveClass(classesInfoVO);
+            return new ApiResponse(
+                    true,
+                    "Update class successfully");
+        } catch (Exception e) {
+            return new ApiResponse(
+                    false,
+                    "Update class fail: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/all")
+    public ApiResponse getAllClass(@PageableDefault(size = 6)Pageable pageable) {
+        Page<ClassesInfoVO> classesInfoVOPage = classesService.getAllClass(pageable);
+        return new ApiResponse(true, "Get all classes successfully", classesInfoVOPage);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ApiResponse deleteClass(@PathVariable(value = "id")Long id)  {
+        try {
+            classesService.deleteClass(id);
+            return new ApiResponse(
+                    true,
+                    "Delete class successfully");
+        } catch (Exception e) {
+            return new ApiResponse(
+                    false,
+                    "Delete class fail: " + e.getMessage());
+        }
+    }
+    @PostMapping("/searchAll")
+    public ApiResponse searchAllClass(@RequestBody SearchVO searchVO, @PageableDefault(size = 10)Pageable pageable) {
+        try {
+            Page<ClassesInfoVO> classesInfoVOPage = classesService.searchAllClasses(searchVO, pageable);
+            return new ApiResponse(true, "Get all classes by search successfully", classesInfoVOPage);
+        } catch (Exception e) {
+            return new ApiResponse(false, "Get all classes by search failed", e.toString());
+        }
+    }
+
+    @PostMapping("/addClass")
+    public ApiResponse addClass(@RequestBody ClassesInfoVO classesInfoVO, @RequestParam("phone")String phone) {
+        try {
+            classesService.creatClass(classesInfoVO, phone);
+            return new ApiResponse(true, "Add class successfully");
+        } catch (Exception e) {
+            return new ApiResponse(false, "Add class failed", e.getMessage());
         }
     }
 

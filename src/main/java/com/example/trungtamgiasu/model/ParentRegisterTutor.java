@@ -6,8 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity(name = "ParentRegisterTutor")
 @Table(name = "parent_register_tutor")
@@ -38,5 +40,7 @@ public class ParentRegisterTutor {
     @Enumerated(EnumType.ORDINAL)
     private ParentRegisterTutorStatus status;
 
+    @CreatedDate
+    private Date time;
 
 }

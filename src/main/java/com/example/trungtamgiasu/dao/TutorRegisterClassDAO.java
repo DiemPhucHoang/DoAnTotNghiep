@@ -36,4 +36,8 @@ public interface TutorRegisterClassDAO extends JpaRepository<TutorRegisterClass,
     @Query(value = "select distinct id_tutor from tutor_register_class\n" +
             "where status = '0' and id_class in (select id_class from classes where id_parent = ?1)", nativeQuery = true)
     List<Long> getAllByIdParent(Long idParent);
+
+    @Query(value = "select * from tutor_register_class where id_class = ?1", nativeQuery = true)
+    List<TutorRegisterClass> getAllTutorRegisterByClasses(Long idClass);
+
 }

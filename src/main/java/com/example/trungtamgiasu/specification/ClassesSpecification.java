@@ -61,4 +61,54 @@ public class ClassesSpecification {
         }
     }
 
+    //
+    public static Specification<Classes> withSubject(String subject) {
+        if (subject == "" || subject.isEmpty()) {
+            return null;
+        } else {
+            return (root, query, cb) -> cb.and(
+                    cb.like(root.get("subject"), "%"+subject+"%")
+            );
+        }
+    }
+    public static Specification<Classes> withClassTeach(String classTeach) {
+        if (classTeach == "" || classTeach.isEmpty()) {
+            return null;
+        } else {
+            return (root, query, cb) -> cb.and(
+                    cb.equal(root.get("classTeach"), classTeach)
+            );
+        }
+    }
+
+    public static Specification<Classes> withDistrict(String district) {
+        if (district == "" || district.isEmpty()) {
+            return null;
+        } else {
+            return (root, query, cb) -> cb.and(
+                    cb.equal(root.get("district"), district)
+            );
+        }
+    }
+
+    public static Specification<Classes> withLevel(String level) {
+        if (level == "" || level.isEmpty()) {
+            return null;
+        } else {
+            return (root, query, cb) -> cb.and(
+                    cb.equal(root.get("levelRequirement"), level)
+            );
+        }
+    }
+
+    public static Specification<Classes> withGender(String gender) {
+        if (gender == "" || gender.isEmpty()) {
+            return null;
+        } else {
+            return (root, query, cb) -> cb.and(
+                    cb.equal(root.get("genderRequirement"), gender)
+            );
+        }
+    }
+
 }

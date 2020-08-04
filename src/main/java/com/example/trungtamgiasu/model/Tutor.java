@@ -2,7 +2,9 @@ package com.example.trungtamgiasu.model;
 
 import com.example.trungtamgiasu.model.enums.TutorStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -13,6 +15,8 @@ import java.util.Set;
 @Table(name = "tutors")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Tutor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

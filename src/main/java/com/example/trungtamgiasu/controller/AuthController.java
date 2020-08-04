@@ -11,6 +11,7 @@ import com.example.trungtamgiasu.security.JwtTokenProvider;
 import com.example.trungtamgiasu.security.UserPrincipal;
 import com.example.trungtamgiasu.service.SimpleMailSenderService;
 import com.example.trungtamgiasu.service.UserService;
+import com.example.trungtamgiasu.vo.SearchUserVO;
 import com.example.trungtamgiasu.vo.User.ChangePasswordVO;
 import com.example.trungtamgiasu.vo.User.ForgotPasswordVO;
 import com.example.trungtamgiasu.vo.User.UserInfoVO;
@@ -21,7 +22,13 @@ import com.example.trungtamgiasu.vo.payload.LoginRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.beans.factory.annotation.Value;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -155,16 +162,16 @@ public class AuthController {
         }
     }
 
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_TUTOR')")
-    @GetMapping("/{idUser}")
-    public ApiResponse getUserById(@PathVariable("idUser") Long idUser) {
-        try {
-            UserInfoVO userInfoVO = userParsing.toUserInfoVO(userService.getById(idUser));
-            return new ApiResponse(true, "Get user by id " + idUser + "successfully", userInfoVO);
-        } catch (Exception e) {
-            return new ApiResponse(false, "Get user failed", e.toString());
-        }
-    }
+//    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_TUTOR')")
+//    @GetMapping("/{idUser}")
+//    public ApiResponse getUserById(@PathVariable("idUser") Long idUser) {
+//        try {
+//            UserInfoVO userInfoVO = userParsing.toUserInfoVO(userService.getById(idUser));
+//            return new ApiResponse(true, "Get user by id " + idUser + "successfully", userInfoVO);
+//        } catch (Exception e) {
+//            return new ApiResponse(false, "Get user failed", e.toString());
+//        }
+//    }
 
     @PostMapping("/forgot-password")
     public ApiResponse sendMail(@RequestParam("email") String email) {
@@ -210,7 +217,52 @@ public class AuthController {
                 "Change image tutor successfully",
                 userService.changeImage(idUser, file, auth));
     }
+    @PostMapping("/addUser")
+    public ApiResponse addUser(@RequestBody UserVO userVO) {
+        try {
+            return new ApiResponse(true,"Add user successfully", userService.addUser(userVO));
+        } catch (Exception e) {
+            return new ApiResponse(false,"Add user fail" + e.getMessage());
+        }
+    }
+
+    @GetMapping("/all")
+    public ApiResponse getAllUser(@PageableDefault(size = 6) Pageable pageable) {
+        try {
+            return new ApiResponse(true,"Get all user successfully", userService.findAll(pageable));
+        } catch (Exception e) {
+            return new ApiResponse(false,"Get all user fail " + e.getMessage());
+        }
+    }
 
 
+    @GetMapping("/{idUser}")
+    public ApiResponse getUserById(@PathVariable("idUser") Long idUser) {
+        try {
+            return new ApiResponse(true,"Get user by ID successfully", userService.getById(idUser));
+        } catch (Exception e) {
+            return new ApiResponse(false,"Get user by ID user fail " + e.getMessage());
+        }
+    }
+
+    @PutMapping("")
+    public ApiResponse updateUser(@RequestBody UserVO userVO) {
+        try {
+            userService.updateUser(userVO);
+            return new ApiResponse(true,"Update user successfully");
+        } catch (Exception e) {
+            return new ApiResponse(false,"Update user fail" + e.getMessage());
+        }
+    }
+
+    @PostMapping("/search")
+    public ApiResponse getAllBySearch(@RequestBody SearchUserVO searchUserVO, @PageableDefault(size = 6)Pageable pageable) {
+        try {
+            Page<UserVO> userVOPage = userService.searchUsers(searchUserVO, pageable);
+            return new ApiResponse(true, "Get all users by search successfully", userVOPage);
+        } catch (Exception e) {
+            return new ApiResponse(false, "Get all users by search failed", e.toString());
+        }
+    }
 
 }

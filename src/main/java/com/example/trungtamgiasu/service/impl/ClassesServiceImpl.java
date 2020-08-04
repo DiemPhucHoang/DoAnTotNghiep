@@ -22,10 +22,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+
+import java.util.*;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 @Service
 public class ClassesServiceImpl implements ClassesService {
@@ -78,7 +79,7 @@ public class ClassesServiceImpl implements ClassesService {
                         new ResourceNotFoundException("Tutor", "id", id));
                 ParentRegisterTutorKey key = new ParentRegisterTutorKey(user.getId(), id);
                 ParentRegisterTutor parentRegisterTutorInfo = new ParentRegisterTutor
-                        (key, user, tutorInfo, classes.getId(), status);
+                        (key, user, tutorInfo, classes.getId(), status, new Date());
                 parentRegisterTutorDAO.save(parentRegisterTutorInfo);
             }
             classes.setStatus(statusRegisterTutor);
@@ -161,5 +162,117 @@ public class ClassesServiceImpl implements ClassesService {
             }
         }
         return classesParsing.toClassesInfoVOList(result);
+    }
+
+    public int[] countNumberOfClass() {
+        int[] A = new int[12];
+        List<Classes> classes = classesDAO.findAll();
+        for (Classes classs: classes) {
+            Instant dateCreated = classs.getDateCreated();
+            ZoneId z = ZoneId.of("Asia/Ho_Chi_Minh");
+            ZonedDateTime zdt = dateCreated.atZone(z);
+            switch (zdt.getMonth()) {
+                case JANUARY:
+                    A[0] += 1;
+                    break;
+                case FEBRUARY:
+                    A[1] += 1;
+                    break;
+                case MARCH:
+                    A[2] += 1;
+                    break;
+                case APRIL:
+                    A[3] += 1;
+                    break;
+                case MAY:
+                    A[4] += 1;
+                    break;
+                case JUNE:
+                    A[5] += 1;
+                    break;
+                case JULY:
+                    A[6] += 1;
+                    break;
+                case AUGUST:
+                    A[7] += 1;
+                    break;
+                case SEPTEMBER:
+                    A[8] +=1;
+                    break;
+                case OCTOBER:
+                    A[9] += 1;
+                    break;
+                case NOVEMBER:
+                    A[10] += 1;
+                    break;
+                case DECEMBER:
+                    A[11] += 1;
+                    break;
+            }
+        }
+        return A;
+    }
+
+    @Override
+    public void saveClass(ClassesInfoVO classesInfoVO) throws Exception {
+        Classes classDB = classesDAO.findById(classesInfoVO.getId()).orElse(null);
+        if (classDB == null) {
+            throw new Exception("Class with id " + classesInfoVO.getId() + "not found");
+        }
+        try {
+            Classes classes = classesParsing.parseClassesInfoVOToEntity(classesInfoVO);
+            classes.setUser(classDB.getUser());
+            classes.setTime(classDB.getTime());
+            classesDAO.save(classes);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    @Override
+    public Page<ClassesInfoVO> getAllClass(Pageable pageable) {
+        List<Classes> classesList = classesDAO.findAll();
+        List<ClassesInfoVO> classesInfoVOS = classesParsing.toClassesInfoVOList(classesList);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), classesInfoVOS.size());
+        Page<ClassesInfoVO> classesInfoVOPage = new PageImpl<>
+                (classesInfoVOS.subList(start, end), pageable, classesInfoVOS.size());
+        return classesInfoVOPage;
+    }
+
+    @Override
+    public void deleteClass(Long id) {
+        classesDAO.deleteById(id);
+    }
+
+    @Override
+    public Page<ClassesInfoVO> searchAllClasses(SearchVO searchVO, Pageable pageable) {
+        if(searchVO == null) {
+            throw new BadRequestException("SearchVO is not found");
+        }
+        List<Classes> classesList = classesDAO.findAll(Objects.requireNonNull(Objects.requireNonNull(Objects.requireNonNull(Specification.
+                where(ClassesSpecification.withSubject(searchVO.getSubject()))
+                .and(ClassesSpecification.withClassTeach(searchVO.getClassTeach())))
+                .and(ClassesSpecification.withDistrict(searchVO.getDistrict())))
+                .and(ClassesSpecification.withLevel(searchVO.getLevel())))
+                .and(ClassesSpecification.withGender(searchVO.getGender())));
+        List<ClassesInfoVO> classesInfoVOS = classesParsing.toClassesInfoVOList(classesList);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), classesInfoVOS.size());
+        Page<ClassesInfoVO> classesInfoVOPage = new PageImpl<>
+                (classesInfoVOS.subList(start, end), pageable, classesInfoVOS.size());
+        return classesInfoVOPage;
+    }
+
+    // admin
+    @Override
+    public void creatClass(ClassesInfoVO classesInfoVO, String phone) throws Exception {
+        User parent = userDAO.findByPhone(phone).orElse(null);
+        if (parent == null) {
+            throw new Exception("Parent not found with phoneNumber: " + phone);
+        }
+        Classes classes = classesParsing.parseClassesInfoVOToEntity(classesInfoVO);
+        classes.setUser(parent);
+        classesDAO.save(classes);
     }
 }

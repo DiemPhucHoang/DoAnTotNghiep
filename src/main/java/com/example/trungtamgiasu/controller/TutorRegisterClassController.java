@@ -1,11 +1,12 @@
 package com.example.trungtamgiasu.controller;
 
 import com.example.trungtamgiasu.service.TutorRegisterClassService;
-import com.example.trungtamgiasu.vo.TutorRegisterClass.ClassRegisterVO;
-import com.example.trungtamgiasu.vo.TutorRegisterClass.TutorRegisterClassInfoVO;
-import com.example.trungtamgiasu.vo.TutorRegisterClass.TutorRegisterClassVO;
+import com.example.trungtamgiasu.vo.TutorRegisterClass.*;
 import com.example.trungtamgiasu.vo.payload.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -50,9 +51,9 @@ public class TutorRegisterClassController {
 
     @GetMapping("/class/{idClass}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_TUTOR')")
-    public ApiResponse getAllTutorRegisterClass(@PathVariable("idClass") Long idClass) {
-        List<TutorRegisterClassInfoVO> tutorRegisterClassInfoVOList =
-                tutorRegisterClassService.getAllTutorRegisterClass(idClass);
+    public ApiResponse getAllTutorRegisterClass(@PathVariable("idClass") Long idClass, Pageable pageable) {
+        Page<TutorRegisterClassInfoVO> tutorRegisterClassInfoVOList =
+                tutorRegisterClassService.getAllTutorRegisterClass(idClass, pageable);
         return new ApiResponse(true,
                 "Get all tutor register class " + idClass + " successfully"
                 , tutorRegisterClassInfoVOList);
@@ -69,4 +70,33 @@ public class TutorRegisterClassController {
         }
     }
 
+    @GetMapping()
+    public ApiResponse getAllTutorRegisterClassDetail(@PageableDefault(size = 10) Pageable pageable) {
+        try {
+            Page<ClassTutorVO> detailVOS = tutorRegisterClassService.getAllTutorClassRegister(pageable);
+            return new ApiResponse(true, "Get all tutor register class detail successfully", detailVOS);
+        } catch (Exception e) {
+            return new ApiResponse(false, "Get all tutor register class detail failed", e.toString());
+        }
+    }
+
+    @GetMapping("/tutorRegister/{idClass}")
+    public ApiResponse getAllTutorRegisterDetailByIdClass(@PathVariable("idClass") Long idClass, Pageable pageable) {
+        try {
+            Page<TutorRegisterDetailVO> tutorRegisterDetailVOS = tutorRegisterClassService.getListTutorRegisterClassByIdClass(idClass, pageable);
+            return new ApiResponse(true, "Get all tutor register class detail successfully", tutorRegisterDetailVOS);
+        } catch (Exception e) {
+            return new ApiResponse(false, "Get all tutor register class detail failed", e.toString());
+        }
+    }
+
+    @PatchMapping("/tutorRegister/updateStatus/{id}")
+    public ApiResponse updateTutorRegisterClassStatus(@PathVariable("id") Long id) {
+        try {
+            tutorRegisterClassService.updateStatusTutorRegisterClass(id);
+            return new ApiResponse(true, "Update status tutor register class successfully");
+        } catch (Exception e) {
+            return new ApiResponse(false, "Update status tutor register class failed", e.toString());
+        }
+    }
 }

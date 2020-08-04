@@ -1,7 +1,6 @@
 package com.example.trungtamgiasu.parsing.impl;
 
 import com.example.trungtamgiasu.model.Classes;
-import com.example.trungtamgiasu.model.Rate;
 import com.example.trungtamgiasu.model.enums.ClassesStatus;
 import com.example.trungtamgiasu.parsing.ClassesParsing;
 import com.example.trungtamgiasu.vo.classes.ClassesInfoVO;
@@ -9,12 +8,10 @@ import com.example.trungtamgiasu.vo.classes.ClassesVO;
 import org.springframework.stereotype.Component;
 
 import java.text.Format;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Component
@@ -77,7 +74,7 @@ public class ClassesParsingImpl implements ClassesParsing {
             classesInfoVO.setDistrict(classes.getDistrict());
             classesInfoVO.setTimeTeach(classes.getTimeTeach());
             classesInfoVO.setAddress(classes.getAddress());
-            classesInfoVO.setTuitionFee(NumberFormat.getNumberInstance(Locale.US).format(classes.getTuitionFee()));
+            classesInfoVO.setTuitionFee(classes.getTuitionFee());
             classesInfoVO.setStatus(classes.getStatus().getKey());
             if(classes.getTime() != null) {
                 Format formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
@@ -114,4 +111,25 @@ public class ClassesParsingImpl implements ClassesParsing {
         }
         return classesInfoVOList;
     }
+
+    @Override
+    public Classes parseClassesInfoVOToEntity(ClassesInfoVO classesInfoVO) throws Exception {
+        if (classesInfoVO == null) {
+            throw new Exception("Invalid classesInfoVO");
+        }
+
+        ClassesStatus classesStatus = null;
+        if (classesInfoVO.getStatus() != null) {
+            classesStatus = ClassesStatus.from(classesInfoVO.getStatus());
+            if (classesStatus == null) {
+                throw new Exception ("Value " + classesInfoVO.getStatus() + " is invalid value");
+            }
+        }
+
+        return new Classes(classesInfoVO.getId(), classesInfoVO.getClassTeach(), classesInfoVO.getSubject(), classesInfoVO.getLevelRequirement(),
+                classesInfoVO.getGenderRequirement(), classesInfoVO.getDistrict(), classesInfoVO.getTimeTeach(), classesInfoVO.getAddress(),
+                classesInfoVO.getTuitionFee(), classesStatus);
+    }
 }
+
+
