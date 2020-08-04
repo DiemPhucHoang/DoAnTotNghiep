@@ -6,6 +6,8 @@ import { connect } from 'react-redux';
 import LopGoiY from '../components/lopDaDangKy/LopGoiY';
 import callApi from '../utils/apiCaller';
 import DanhSachLop from '../components/lopDaDangKy/DanhSachLop';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 class LopDaDangKy extends Component {
 
@@ -37,20 +39,24 @@ class LopDaDangKy extends Component {
 
     render() {
         return (
-            <div className="bg-color">
-                <div className="px-5 pt-5 pb-3 mx-5">
-                    <AppBar position="static">
-                        <Toolbar variant="dense">
-                            <Typography variant="h6" color="inherit">
-                                LỚP ĐÃ ĐĂNG KÝ
-                            </Typography>
-                        </Toolbar>
-                    </AppBar>
-                    <DanhSachLop classRegister={this.props.classRegister} onChangeStatus={this.onChangeStatus}/>
-                    <br />
-                    <LopGoiY classesSuggest={this.state.classesSuggest} history={this.props.history}/>
+            <div>
+                <Header/>
+                <div className="bg-color">
+                    <div className="px-5 pt-5 pb-3 mx-5">
+                        <AppBar position="static">
+                            <Toolbar variant="dense">
+                                <Typography variant="h6" color="inherit">
+                                    LỚP ĐÃ ĐĂNG KÝ
+                                </Typography>
+                            </Toolbar>
+                        </AppBar>
+                        <DanhSachLop classRegister={this.props.classRegister} onChangeStatus={this.onChangeStatus}/>
+                        <br />
+                        <LopGoiY classesSuggest={this.state.classesSuggest} history={this.props.history}/>
+                    </div>
                 </div>
-            </div>
+                <Footer/>
+            </div>           
         );
     }
 }

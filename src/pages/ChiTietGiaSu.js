@@ -3,8 +3,11 @@ import { Grid} from '@material-ui/core';
 import ThongTinChung from './../components/chiTietGiaSu/ThongTinChung';
 import ThongTinChiTiet from './../components/chiTietGiaSu/ThongTinChiTiet';
 import { connect } from 'react-redux';
+
 import {actFetchTutorDetailRequest} from '../actions/tutor';
 import {actFetchRatesRequest} from '../actions/rate';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 class ChiTietGiaSu extends Component {
     componentDidMount() {
@@ -36,10 +39,13 @@ class ChiTietGiaSu extends Component {
                         </Grid>
                         <Grid item xs={8}>
                             <ThongTinChiTiet tutorDetail={tutor} rate={rate}/>
+
                         </Grid>
                     </Grid>
                 </div>
+                <Footer/>
             </div>
+            
         );
     }
 }

@@ -19,7 +19,7 @@ class GiaSuNoiBat extends Component {
                                 <Card elevation={3} style={{ padding: '5px'}}>
                                     <CardActionArea>
                                         <div style={{ textAlign: 'center', padding: '15px' }}>
-                                            <img alt="avatar" src={`data:image/jpg;base64,${tutorItem.image}`} className="rounded-circle" style={{ width: '55%' }} />
+                                            <img alt="avatar" src={`data:image/jpg;base64,${tutorItem.image}`} className="rounded-circle" style={{ width: '125px', height: '125px' }} />
                                         </div>
                                         <CardContent>
                                             <Typography gutterBottom variant="subtitle1" component="h2">

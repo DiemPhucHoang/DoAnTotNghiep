@@ -13,6 +13,8 @@ import { notification } from "antd";
 import "antd/dist/antd.css";
 import { subjectConst, districtConst, classTeachConst } from '../constants/tutor';
 import { actDeleteSearchInputClass } from '../actions/classes';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 class LopMoi extends Component {
     constructor(props) {
@@ -51,7 +53,9 @@ class LopMoi extends Component {
     }
 
     redirectRegisterClass = (idClass) => {
+        console.log("aa" + localStorage.getItem("id"))
         if(localStorage.getItem("id") === null) {
+            console.log("login");
             this.props.history.push('/login');
             return;
         }
@@ -65,6 +69,7 @@ class LopMoi extends Component {
         } else {
             this.props.history.push(`/dang-ky-day/${idClass}`);
         };
+        
     }
 
     onChange = (event, page) => {
@@ -143,7 +148,9 @@ class LopMoi extends Component {
         const {content} = classes;
         let {subjects, districts, classTeaches} = this.state;
         return (
-            <div className="bg-color">
+            <div>
+                <Header/>
+                <div className="bg-color">
                 <div className="p-5 mx-5">
                     <TimLopMoi 
                         onSearchClasses={this.onSearchClasses}
@@ -171,6 +178,9 @@ class LopMoi extends Component {
                         <br />
                     </Paper>
                 </div>
+            </div>
+
+                <Footer/>
             </div>
         );
     }

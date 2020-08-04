@@ -4,6 +4,8 @@ import FormDanhGiaGiaSu from '../components/danhGiaGiaSu/FormDanhGiaGiaSu';
 import callApi from '../utils/apiCaller';
 import { notification } from "antd";
 import "antd/dist/antd.css";
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 class DanhGiaGiaSu extends Component {
     constructor(props) {
@@ -46,12 +48,15 @@ class DanhGiaGiaSu extends Component {
     }
     render() {
         return (
-            <div className="bg-color">
-                <div className="px-5 pt-5 pb-3 mx-5">
-                    <FormDanhGiaGiaSu showTutorRating={this.showTutorRating} />
-                    {this.state.tutors?.length > 0 ? <DanhSachGiaSu phone={this.state.phone} tutors={this.state.tutors} /> : " "}
-
+            <div>
+                <Header/>
+                <div className="bg-color">
+                    <div className="px-5 pt-5 pb-3 mx-5">
+                        <FormDanhGiaGiaSu showTutorRating={this.showTutorRating} />
+                        {this.state.tutors?.length > 0 ? <DanhSachGiaSu phone={this.state.phone} tutors={this.state.tutors} /> : " "}
+                    </div>
                 </div>
+                <Footer/>
             </div>
         );
     }

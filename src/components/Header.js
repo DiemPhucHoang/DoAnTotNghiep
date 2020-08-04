@@ -18,7 +18,6 @@ class Header extends Component {
         const MenuLink = (props) => {
             const location = useLocation()
             const path = location.pathname.replace("/", "");
-            console.log(path)
             return (
                 <li className="nav-item" style={{ marginRight: '20px' }}>
                     <Link to={`/${props.name}`} className="nav-link" onClick={props.handleClick}

@@ -160,6 +160,7 @@ a:hover {
   width: '100%';
   margin-top: 20px;
 }
+
 .display-flexbox {
   display: flex;
 }
@@ -171,4 +172,34 @@ a:hover {
 .test {
   max-width: 10% !important;
   width: 10% !important;
+}
+
+
+.mr-2{
+  margin-right: 2px;
+}
+#wrapper{
+  background-color: white;
+}
+.err-message{
+  color: red;
+}
+.profile{
+  
+  height: auto;
+
+  padding: 15px;
+  
+}
+.p-15{
+  padding: -15px;
+}
+.mt-60{
+  margin-top: -60px;
+}
+.form-warning {
+  color: red;
+}
+.number{
+  color: #ecedee;
 }

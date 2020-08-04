@@ -141,6 +141,7 @@ export const actDeleteChooseTutor = id => {
     }
 }
 
+
 //get tutor by id user
 export const actFetchTutorByIdUserRequest = () => {
     return dispatch => {
@@ -168,3 +169,26 @@ export const actDeleteSearchInputTutor = () => {
         type: Types.DELETE_SEARCH_INPUT_TUTOR
     };
 }
+
+export const actAddTutorRequest = (idUser, dataTutor, history) => {
+    return dispatch => {
+        return callApi(`tutor/${idUser}`, 'POST', dataTutor).then(res => {
+            console.log("actAddTutorRequest")
+            console.log(res.data)
+            if (res.status === 200 && res.data.success) {               
+                notification.success({
+                    message: "Success",
+                    description: "Thêm user thành công!"
+                });
+            }
+            else{
+                notification.error({
+                    message: "Error",
+                    description: "Thất bại!"
+                });
+            }
+            history.push("/admin/quan-ly-user"); 
+        })
+    }
+}
+

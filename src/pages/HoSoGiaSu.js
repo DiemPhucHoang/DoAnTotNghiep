@@ -10,6 +10,8 @@ import _ from 'lodash';
 import callApi from '../utils/apiCaller';
 import { notification } from "antd";
 import "antd/dist/antd.css";
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 class HoSoGiaSu extends Component {
     constructor(props) {
@@ -236,30 +238,34 @@ class HoSoGiaSu extends Component {
         let tutorInfo = this.state.tutorInfo;
 
         return (
-            <div className="bg-color">
-                <div className="p-5 mx-5">
-                    <Grid container spacing={3}>
-                        <ThongTinCaNhan
-                            onHandleChangeImage={this.onHandleChangeImage}
-                            history={this.props.history}
-                            tutor={tutorInfo}
-                            changeInfoUser={this.changeInfoUser} 
-                            user={user}/>
-                        <ThongTinHoSo
-                            cancelUpdate={this.cancelUpdate}
-                            tutor={tutorInfo}
-                            onChangeInfoTutor={this.onChangeInfoTutor} 
-                            handleSubmitTutor={this.handleSubmitTutor}
-                            onHandleClickSubject={this.onHandleClickSubject}
-                            onHandleClickClassTeach={this.onHandleClickClassTeach}
-                            onHandleClickDistrict={this.onHandleClickDistrict}
-                            lstFreeTime={lstFreeTime} 
-                            onChangeFreeTime={this.onChangeFreeTime} 
-                            subjects={subjects}
-                            districts={districts}
-                            classTeaches={classTeaches}/>
-                    </Grid>
+            <div>
+                <Header/>
+                <div className="bg-color">
+                    <div className="p-5 mx-5">
+                        <Grid container spacing={3}>
+                            <ThongTinCaNhan
+                                onHandleChangeImage={this.onHandleChangeImage}
+                                history={this.props.history}
+                                tutor={tutorInfo}
+                                changeInfoUser={this.changeInfoUser} 
+                                user={user}/>
+                            <ThongTinHoSo
+                                cancelUpdate={this.cancelUpdate}
+                                tutor={tutorInfo}
+                                onChangeInfoTutor={this.onChangeInfoTutor} 
+                                handleSubmitTutor={this.handleSubmitTutor}
+                                onHandleClickSubject={this.onHandleClickSubject}
+                                onHandleClickClassTeach={this.onHandleClickClassTeach}
+                                onHandleClickDistrict={this.onHandleClickDistrict}
+                                lstFreeTime={lstFreeTime} 
+                                onChangeFreeTime={this.onChangeFreeTime} 
+                                subjects={subjects}
+                                districts={districts}
+                                classTeaches={classTeaches}/>
+                        </Grid>
+                    </div>
                 </div>
+                <Footer/>
             </div>
         );
     }

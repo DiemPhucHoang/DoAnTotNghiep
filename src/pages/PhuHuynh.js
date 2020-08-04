@@ -12,6 +12,9 @@ import "./PhuHuynh.css";
 import { subjectConst, districtConst, classTeachConst } from '../constants/tutor';
 
 
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+
 class PhuHuynh extends Component {
     constructor(props) {
         super(props);
@@ -106,50 +109,54 @@ class PhuHuynh extends Component {
         let {subjects, districts, classTeaches} = this.state;
         let {history} = this.props;
         return (
-            <div className="bg-color">
-                <div className="p-5 mx-5">
-                    <TimGiaSuNhanh 
-                        onSearchTutors={this.onSearchTutors} 
-                        subjects={subjects} 
-                        districts={districts} 
-                        classTeaches={classTeaches}
-                    />
-                    <br />
-                    <Paper style={{ padding: "20px" }}>
-                        <p>
-                            <b>DANH SÁCH GIA SƯ</b>
-                            <Button
-                                onClick={this.showSubmitRequest}
-                                variant="contained"
-                                color="primary"
-                                style={{ float: "right" }}
-                            >
-                                + Đăng yêu cầu
-                            </Button>
-                            <DangYeuCauTimGiaSu
-                                submitRequest={this.state.submitRequest}
-                                onCloseSubmitRequest={this.onCloseSubmitRequest}
-                                subjects={subjects} 
-                                districts={districts} 
-                                classTeaches={classTeaches}
-                                history={history}
-                            />
-                        </p>{" "}
+            <div>
+                <Header/>
+                <div className="bg-color">
+                    <div className="p-5 mx-5">
+                        <TimGiaSuNhanh 
+                            onSearchTutors={this.onSearchTutors} 
+                            subjects={subjects} 
+                            districts={districts} 
+                            classTeaches={classTeaches}
+                        />
                         <br />
-                        <DanhSachGiaSu>{this.showTutors(content)}</DanhSachGiaSu>
-                        <br />
-                        {/* Phan trang */}
-                        <div style={{ float: "right" }}>
-                            <Pagination 
-                            count={tutor.totalPages}
-                            page={tutor.number + 1}
-                            onChange={this.onChange}
-                            color="primary" />
-                        </div>
-                        <br />
-                        <br />
-                    </Paper>
+                        <Paper style={{ padding: "20px" }}>
+                            <p>
+                                <b>DANH SÁCH GIA SƯ</b>
+                                <Button
+                                    onClick={this.showSubmitRequest}
+                                    variant="contained"
+                                    color="primary"
+                                    style={{ float: "right" }}
+                                >
+                                    + Đăng yêu cầu
+                                </Button>
+                                <DangYeuCauTimGiaSu
+                                    submitRequest={this.state.submitRequest}
+                                    onCloseSubmitRequest={this.onCloseSubmitRequest}
+                                    subjects={subjects} 
+                                    districts={districts} 
+                                    classTeaches={classTeaches}
+                                    history={history}
+                                />
+                            </p>{" "}
+                            <br />
+                            <DanhSachGiaSu>{this.showTutors(content)}</DanhSachGiaSu>
+                            <br />
+                            {/* Phan trang */}
+                            <div style={{ float: "right" }}>
+                                <Pagination 
+                                count={tutor.totalPages}
+                                page={tutor.number + 1}
+                                onChange={this.onChange}
+                                color="primary" />
+                            </div>
+                            <br />
+                            <br />
+                        </Paper>
+                    </div>
                 </div>
+                <Footer/>
             </div>
         );
     }

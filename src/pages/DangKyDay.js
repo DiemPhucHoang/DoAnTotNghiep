@@ -48,7 +48,7 @@ class DangKyDay extends Component {
     }
 
     render() {
-        const { classes } = this.props;
+        const { classes, tutorRegisterClass} = this.props;
 
         return (
             <div className="bg-color">
@@ -62,7 +62,7 @@ class DangKyDay extends Component {
                     </AppBar>
                     <Paper style={{ width: "100%", paddingBottom: "20px" }}>
                         <Grid container style={{ paddingRight: "20px" }}>
-                            <LopMoiDetail length={this.props.tutorRegisterClass.length} classItem={classes} />
+                            <LopMoiDetail length={tutorRegisterClass?.content?.length} classItem={classes} />
                             <FormDangKyNhanLop onRegisterClass={this.onRegisterClass} />
                         </Grid>
                         <hr />
@@ -71,7 +71,7 @@ class DangKyDay extends Component {
                                 <strong>Hiện tại chưa có gia sư nào đăng ký nhận lớp này</strong>
                             </Grid>
                         ) : (
-                                <DanhSachGiaSuDaDangKy tutorRegisterClass={this.props.tutorRegisterClass} />
+                                <DanhSachGiaSuDaDangKy tutorRegisterClass={tutorRegisterClass.content} />
                             )}
 
                         <hr />

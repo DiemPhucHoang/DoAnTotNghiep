@@ -4,7 +4,12 @@ import LopNoiBat from './../components/home/LopNoiBat';
 import FirstPart from './../components/home/FirstPart';
 import SecondPart from'./../components/home/SecondPart';
 import callApi from './../utils/apiCaller';
+
 import {connect} from 'react-redux';
+
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+
 
 
 class Home extends Component {
@@ -49,10 +54,12 @@ class Home extends Component {
         const {isAuthenticated} = this.props.auth;
         return (
             <div>
+                <Header/>
                 <FirstPart />
                 {isAuthenticated ? "" : <GiaSuNoiBat tutorList={this.state.listTutorsTop} chooseTutor={this.chooseTutor}/>}
                 {isAuthenticated ? "" : <SecondPart />}
                 <LopNoiBat classList={this.state.listClassesTop} />
+                <Footer/>
             </div>
         );
     }
