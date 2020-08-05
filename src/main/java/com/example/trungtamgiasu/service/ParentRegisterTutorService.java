@@ -10,5 +10,5 @@ public interface ParentRegisterTutorService {
 
     Page<TutorDetailVO> getListTutorByIdClass(Long idClass, Pageable pageable);
 
-    public void updateStatusParentRegisterTutor(Long idClass, Long idTutor) throws Exception;
+    void updateStatusParentRegisterTutor(Long idClass, Long idTutor) throws Exception;
 }
