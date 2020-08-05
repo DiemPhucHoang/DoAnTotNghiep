@@ -18,7 +18,7 @@ export const actCreateClassesRequest = (classInfo, hasChooseTutors, history) => 
                 notification.success({
                     message: "Success",
                     description:
-                        "Đăng yêu cầu thành công!"
+                        "Chọn gia sư thành công!"
                 });
 
             } else {
@@ -107,6 +107,7 @@ export const actFetchClassDetail = classes => {
     }
 }
 
+
 //delete search
 export const actDeleteSearchInputClass = () => {
     return {
@@ -115,4 +116,133 @@ export const actDeleteSearchInputClass = () => {
 }
 
 
+// update class
+export const actUpdateClassRequest = (classes, history) => {
+    return dispatch => {
+        callApi('class', 'PATCH', classes)
+        .then(res => {
+            dispatch(actUpdateClass(res.data));
+            history.push("/admin/quan-ly-lop");
+            if (res.status === 200 && res.data.success) {               
+                notification.success({
+                    message: "Success",
+                    description: "Chỉnh sửa lớp thành công!"
+                });
+            }
+            else{
+                notification.error({
+                    message: "Error",
+                    description: "Sửa lớp thất bại!"
+                });
+            }
+        })
+    }
+}
+export const actUpdateClass = (classes) => {
+    return {
+        type: Types.UPDATE_CLASS,
+        classes
+    }
+}
 
+// get all class
+export const actFetchAllClassesRequest = (page) => {
+    return dispatch => {
+        return callApi(`class/all?page=${page}`, 'GET', null).then(res => {
+            if (res.status === 200 && res.data.success) {
+                dispatch(actFetchAllClasses(res.data));
+            }
+        }).catch(err => {
+            console.log(err);
+      });
+    }
+}
+
+export const actFetchAllClasses = (classes) => {
+    return {
+        type: Types.FETCH_ALL_CLASSES,
+        classes
+    }
+}
+
+// delete class
+export const actDeleteClassRequest = (id, history) => {
+    return dispatch => {
+        return callApi(`class/${id}`, 'DELETE', null).then(res => {
+           
+            if (res.status === 200 && res.data.success) {               
+                notification.success({
+                    message: "Success",
+                    description: "Xóa lớp thành công!"
+                });
+                
+            }
+            else{
+                notification.error({
+                    message: "Error",
+                    description: "Lớp này không thể xóa!"
+                });
+            }
+           
+        }).then(
+            setTimeout(() => {  window.location.reload(); }, 2000)     
+        ); 
+    }
+}
+export const actDeleteClass = (id) => {
+    return {
+        type: Types.DELETE_CLASS,
+        id
+    }
+}
+
+
+//search classes all
+export const actSearchAllClassesRequest = (searchInput, page) => {
+    return dispatch => {
+        return callApi(
+            `class/searchAll?page=${page}`, "POST", searchInput).then(res => {
+                if (res.status === 200 && res.data.success) {
+                    dispatch(actSearchClasses(res.data));
+                }
+            }).catch(err => {
+                console.log(err);
+          });
+    }
+}
+export const actSearchAllClasses = classes => {
+    return {
+        type: Types.SEARCH_ALL_CLASS,
+        classes
+    };
+}
+
+
+// add class
+export const actAddClassRequest = (classes, phoneParent, history) => {
+    return dispatch => {
+        return callApi(`class/addClass?phone=${phoneParent}`,
+        'POST', classes).then(res => {
+            dispatch(actAddClass(res.data));
+            history.push("/admin/quan-ly-lop");
+            if (res.status === 200 && res.data.success) {               
+                notification.success({
+                    message: "Success",
+                    description: "Thêm lớp thành công!"
+                });
+            }
+            else{
+                notification.error({
+                    message: "Error",
+                    description: "Thêm lớp thất bại! " + res.data.result
+                });
+            }
+        })
+    }
+}
+export const actAddClass = (classes) =>{
+    return {
+        type: Types.ADD_CLASS,
+        classes
+    }
+}

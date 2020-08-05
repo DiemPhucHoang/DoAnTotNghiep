@@ -206,6 +206,7 @@ class HoSoGiaSu extends Component {
             });
         } else {
             callApi(`auth/upload-image/${localStorage.getItem("id")}`, "POST", formData).then(res => {
+                console.log("dddd");
                 if (res.status === 200) {
                     notification.success({
                         message: "Success",

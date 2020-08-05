@@ -152,8 +152,8 @@ class DangKyChonGiaSu extends Component {
                                     <MenuItem key="Thạc sỹ" value="Thạc sỹ">
                                         Thạc sỹ
                                         </MenuItem>
-                                    <MenuItem key="Cử nhân sư phạm" value="Cử nhân sư phạm">
-                                        Cử nhân sư phạm
+                                    <MenuItem key="Cử nhân" value="Cử nhân">
+                                        Cử nhân
                                         </MenuItem>
                                 </TextField>
                             </Grid>

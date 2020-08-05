@@ -41,7 +41,7 @@ class GiaSuNoiBat extends Component {
                                                 variant="contained" 
                                                 color="secondary" 
                                                 size="small" 
-                                                style={{ marginLeft: '15px' }}
+                                                style={{ marginLeft: '8px' }}
                                                 onClick={() => this.chooseTutor(tutorItem.id)}>
                                                 Chọn gia sư
                                             </Button>
