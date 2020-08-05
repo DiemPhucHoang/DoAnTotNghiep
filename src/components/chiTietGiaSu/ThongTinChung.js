@@ -43,7 +43,7 @@ class ThongTinChung extends Component {
                         size="small"
                         style={{ marginRight: '5px' }}
                         onClick={this.chooseTutor}>
-                        Mời dạy
+                        Chọn gia sư
                         </Button>
 
                     <Link to='/danh-gia-gia-su'>

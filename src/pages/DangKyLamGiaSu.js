@@ -7,8 +7,9 @@ import { actLoginRequest } from './../actions/user';
 import { connect } from 'react-redux';
 import { notification } from "antd";
 import "antd/dist/antd.css";
-import Header from '../components/Header';
 import Footer from '../components/Footer';
+import Header from '../components/Header';
+import { validateEmail, validatePhone, validatePassword } from '../constants/validate';
 
 class DangKyLamGiaSu extends Component {
     constructor(props) {
@@ -19,7 +20,10 @@ class DangKyLamGiaSu extends Component {
             phone: '',
             password: '',
             email: '',
-            address: ''
+            address: '',
+            errPhone: '',
+            errEmail: '',
+            errPassword: ''
         }
     }
 
@@ -71,6 +75,28 @@ class DangKyLamGiaSu extends Component {
     handleMouseDownPassword = (event) => {
         event.preventDefault();
     };
+
+    validateField = (value, errName) => {
+        if(errName ==='errPhone') {
+            let err = validatePhone(value);
+            this.setState({
+                errPhone: err
+            })
+        }
+        if(errName ==='errEmail') {
+            let err = validateEmail(value);
+            this.setState({
+                errEmail: err
+            })
+        } 
+        if (errName === 'errPassword') {
+            let err = validatePassword(value);
+            this.setState({
+                errPassword: err
+            })
+        }       
+    }
+
     render() {
         var { password, showPassword } = this.state;
         return (
@@ -101,7 +127,9 @@ class DangKyLamGiaSu extends Component {
                                                     type="number"
                                                     name="phone"
                                                     required
+                                                    onBlur={() => this.validateField(this.state.phone, 'errPhone')}
                                                     onChange={this.handleChange} />
+                                                {(this.state.errPhone !=='') ? <p style={{color: "red"}}>{this.state.errPhone}</p> : ''}
                                             </Grid>
                                             <Grid item xs={6}>
                                                 <FormControl>
@@ -110,7 +138,7 @@ class DangKyLamGiaSu extends Component {
                                                         htmlFor="standard-adornment-password"
                                                     >
                                                         Mật khẩu
-                                                </InputLabel>
+                                                    </InputLabel>
                                                     <Input
                                                         fullWidth={true}
                                                         required
@@ -119,6 +147,7 @@ class DangKyLamGiaSu extends Component {
                                                         name="password"
                                                         value={password}
                                                         onChange={this.handleChange}
+                                                        onBlur={() => this.validateField(this.state.password, 'errPassword')}
                                                         endAdornment={
                                                             <InputAdornment position="end">
                                                                 <IconButton
@@ -131,6 +160,7 @@ class DangKyLamGiaSu extends Component {
                                                             </InputAdornment>
                                                         }
                                                     />
+                                                    {(this.state.errPassword !== '') ? <p style={{ color: "red" }}>{this.state.errPassword}</p> : ''}
                                                 </FormControl>
                                             </Grid>
                                             <Grid item xs={12}>
@@ -148,7 +178,9 @@ class DangKyLamGiaSu extends Component {
                                                     fullWidth
                                                     label="Email"
                                                     name="email"
+                                                    onBlur={() => this.validateField(this.state.email, 'errEmail')}
                                                     onChange={this.handleChange} />
+                                                {(this.state.errEmail !== '') ? <p style={{color: "red"}}>{this.state.errEmail}</p> : ''}
                                             </Grid>
                                         </Grid>
                                         <br />

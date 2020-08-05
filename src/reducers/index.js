@@ -15,6 +15,7 @@ import parent from './parent';
 import users from './users';
 import searchUser from './searchUser';
 import invoices from './invoices';
+import { DESTROY_SESSION } from "../constants/ActionTypes";
 
 const appReducers = combineReducers ({
       auth,
@@ -37,4 +38,12 @@ const appReducers = combineReducers ({
 
 });
 
-export default appReducers;
+const rootReducer = (state, action) => {   
+      // Clear all data in redux store to initial.
+      if(action.type === DESTROY_SESSION)
+         state = undefined;
+      
+      return appReducers(state, action);
+};
+
+export default rootReducer;

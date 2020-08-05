@@ -5,8 +5,18 @@ class FormDangKyNhanLop extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            registerInfo : {}
+            registerInfo : {
+                dateReceive: this.getCurrentDay()
+            }
         }
+    }
+
+    getCurrentDay = () => {
+        let m = new Date();
+        let dayConvert = m.getUTCFullYear() + "-" +
+        ("0" + (m.getUTCMonth()+1)).slice(-2) + "-" +
+        ("0" + m.getUTCDate()).slice(-2);
+        return dayConvert;
     }
 
     handleRegisterClass = (e) => {
@@ -42,7 +52,7 @@ class FormDangKyNhanLop extends Component {
                                     name="dateReceive"
                                     required
                                     fullWidth
-                                    defaultValue="2020-07-02"
+                                    defaultValue={this.state.registerInfo.dateReceive}
                                     onChange={this.handleChange}
                                     className="date-receive"
                                     InputLabelProps={{

@@ -55,7 +55,7 @@ class DuyetPHChonGSDetail extends Component {
         const hasParentRegisters = content && content.length > 0;
         return (
             <div>
-                <Nav />
+                <Nav history={this.props.history}/>
                 <div id="wrapper">
                     <Menu />
                     <div id="content-wrapper">

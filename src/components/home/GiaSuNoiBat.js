@@ -19,7 +19,7 @@ class GiaSuNoiBat extends Component {
                                 <Card elevation={3} style={{ padding: '5px'}}>
                                     <CardActionArea>
                                         <div style={{ textAlign: 'center', padding: '15px' }}>
-                                            <img alt="avatar" src={`data:image/jpg;base64,${tutorItem.image}`} className="rounded-circle" style={{ width: '125px', height: '125px' }} />
+                                            <img alt="avatar" src={`data:image/jpg;base64,${tutorItem.image}`} className="rounded-circle" style={{ width: '55%' }} />
                                         </div>
                                         <CardContent>
                                             <Typography gutterBottom variant="subtitle1" component="h2">
@@ -41,9 +41,9 @@ class GiaSuNoiBat extends Component {
                                                 variant="contained" 
                                                 color="secondary" 
                                                 size="small" 
-                                                style={{ marginLeft: '15px' }}
-                                                onClick={(e, id) => this.chooseTutor(tutorItem.id)}>
-                                                Mời dạy
+                                                style={{ marginLeft: '8px' }}
+                                                onClick={() => this.chooseTutor(tutorItem.id)}>
+                                                Chọn gia sư
                                             </Button>
                                     </CardActions>
                                 </Card>

@@ -8,8 +8,9 @@ import { actLoginRequest } from './../actions/user';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import QuenMatKhau from './QuenMatKhau';
-import Header from '../components/Header';
 import Footer from '../components/Footer';
+import Header from '../components/Header';
+import {validatePhone, validatePassword} from '../constants/validate';
 
 class DangNhap extends Component {
 
@@ -18,6 +19,8 @@ class DangNhap extends Component {
         this.state = {
             userInfo: {},
             open: false,
+            errPhone:'',
+            errPassword: ''
         }
     }
 
@@ -47,6 +50,23 @@ class DangNhap extends Component {
             },
         }));
     }
+
+    validateField = (value, errName) => {
+        if(errName === 'errPhone') {
+            let err = validatePhone(value);
+            this.setState({
+                errPhone: err
+            })
+        }  
+        if(errName === 'errPassword') {
+            let err = validatePassword(value);
+            this.setState({
+                errPassword: err
+            })
+        }  
+    }
+
+
     render() {
         return (
             <div>
@@ -70,7 +90,9 @@ class DangNhap extends Component {
                                 name="phone"
                                 type="number"
                                 onChange={this.onHandleSignIn}
+                                onBlur={() => this.validateField(this.state.userInfo.phone, 'errPhone')}
                             />
+                            {(this.state.errPhone !=='') ? <p style={{color: "red"}}>{this.state.errPhone}</p> : ''}
                             <TextField
                                 variant="outlined"
                                 margin="normal"
@@ -81,7 +103,9 @@ class DangNhap extends Component {
                                 type="password"
                                 id="password"
                                 onChange={this.onHandleSignIn}
+                                onBlur={() => this.validateField(this.state.userInfo.password, 'errPassword')}
                             />
+                            {(this.state.errPassword !=='') ? <p style={{color: "red"}}>{this.state.errPassword}</p> : ''}
                             <FormControlLabel
                                 control={<Checkbox value="remember" color="primary" />}
                                 label="Remember me"
@@ -93,7 +117,7 @@ class DangNhap extends Component {
                                 color="primary"
                             >
                                 Đăng nhập
-                            </Button>
+                        </Button>
                             <Grid container className="pt-3">
                                 <Grid item xs={6}>
                                     <Button size="small" onClick={this.showForgotPassword} variant="outlined" color="primary" >
@@ -110,7 +134,7 @@ class DangNhap extends Component {
                     </div>
                     <QuenMatKhau showForgotPassword={this.state.open} closeForgotPassword={this.onCloseForgotPassword} />
                 </Container>
-                <Footer/>
+                <Footer />
             </div>
         );
     }

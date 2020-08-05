@@ -80,7 +80,7 @@ class ClassActionPage extends Component {
     render() {
         return (
             <div>
-                <Nav />
+                <Nav history={this.props.history}/>
                 <div id="wrapper">
                     <Menu />
                     <div id="content-wrapper">
@@ -207,7 +207,7 @@ class ClassActionPage extends Component {
                                                             <option>Không yêu cầu</option>
                                                             <option>Sinh viên</option>
                                                             <option>Giáo viên</option>
-                                                            <option>Cử nhân sư phạm</option>
+                                                            <option>Cử nhân</option>
                                                             <option>Thạc sỹ/Tiến sỹ</option>
                                                         </select>
                                                     </div>

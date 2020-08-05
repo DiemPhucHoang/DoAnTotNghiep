@@ -64,7 +64,7 @@ class UserListPage extends Component {
         const { content } = users;
         return (
             <div>
-                <Nav />
+                <Nav history={this.props.history}/>
                 <div id="wrapper">
                     <Menu />
                     <div id="content-wrapper">
@@ -113,7 +113,6 @@ class UserListPage extends Component {
     }
     showUser(users) {
         var result = null;
-        console.log(users)
         const hasUsers = users && users.length > 0;
         if (hasUsers) {
             result = users.map((useritem, index) => {

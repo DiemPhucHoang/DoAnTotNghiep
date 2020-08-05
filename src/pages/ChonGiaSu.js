@@ -8,8 +8,8 @@ import DangKyChonGiaSu from "./../components/chonGiaSu/DangKyChonGiaSu";
 import { connect } from 'react-redux';
 import callApi from "./../utils/apiCaller";
 import { actFetchTutorDetailRequest } from './../actions/tutor';
-import Header from '../components/Header';
 import Footer from '../components/Footer';
+import Header from '../components/Header';
 
 class ChonGiaSu extends Component {
     constructor(props) {
@@ -58,12 +58,12 @@ class ChonGiaSu extends Component {
     }
 
     render() {
-        const {tutor} = this.props;
+        const { tutor } = this.props;
         let { subjects, districts, classTeaches } = this.state;
-        const {history} = this.props;
+        const { history } = this.props;
         return (
             <div>
-                <Header/>
+                <Header />
                 <div className="bg-color">
                     <br />
                     <div className="container ">
@@ -75,7 +75,7 @@ class ChonGiaSu extends Component {
                                     </IconButton>
                                     <Typography color="inherit">
                                         GIA SƯ ĐÃ CHỌN
-                                    </Typography>
+                                </Typography>
                                 </Toolbar>
                             </AppBar>
                             <GiaSuDaChon tutorItem={tutor} />
@@ -86,7 +86,7 @@ class ChonGiaSu extends Component {
                                     </IconButton>
                                     <Typography color="inherit">
                                         ĐIỀN THÔNG TIN ĐĂNG KÝ CHỌN GIA SƯ
-                                    </Typography>
+                                </Typography>
                                 </Toolbar>
                             </AppBar>
                             <DangKyChonGiaSu
@@ -100,9 +100,8 @@ class ChonGiaSu extends Component {
                         </Card>
                     </div>
                 </div>
-                <Footer/>
+                <Footer />
             </div>
-            
 
         );
     }

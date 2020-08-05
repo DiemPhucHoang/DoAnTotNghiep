@@ -72,19 +72,19 @@ class App extends Component {
           <Route path="/lop-moi" exact={true} component={LopMoi} />
           <Route path="/danh-gia-gia-su" exact={true} component={DanhGiaGiaSu} />
           <Route path="/chi-tiet-gia-su/:id" exact={true} component={ChiTietGiaSu} />
-          <Route path="/recovery-password/:token" exact={true} component={DoiMatKhau}/>
-          <PrivateRoute 
-            path="/ho-so-gia-su" 
-            exact={true} 
-            component={HoSoGiaSu} 
-            isAuthenticated={isAuthenticated}/>
-          <PrivateRoute 
-            path="/dang-ky-day/:id" 
-            exact={true} 
+          <Route path="/recovery-password/:token" exact={true} component={DoiMatKhau} />
+          <PrivateRoute
+            path="/ho-so-gia-su"
+            exact={true}
+            component={HoSoGiaSu}
+            isAuthenticated={isAuthenticated} />
+          <PrivateRoute
+            path="/dang-ky-day/:id"
+            exact={true}
             component={DangKyDay} isAuthenticated={isAuthenticated} />
-          <PrivateRoute 
-            path="/lop-da-dang-ky" 
-            exact={true} 
+          <PrivateRoute
+            path="/lop-da-dang-ky"
+            exact={true}
             component={LopDaDangKy} isAuthenticated={isAuthenticated} />
 
           <Route path="/login" exact={true} component={DangNhap} />
@@ -140,10 +140,10 @@ class App extends Component {
         </Switch>
 
         {/* <Footer /> */}
-        {/* <div>
-            <BackTop />
-            <strong style={{ color: "rgba(64, 64, 64, 0.6)" }}> gray </strong>
-          </div> */}
+        <div>
+          <BackTop />
+          <strong style={{ color: "rgba(64, 64, 64, 0.6)" }}> gray </strong>
+        </div>
 
         {/* <Footer /> */}
 

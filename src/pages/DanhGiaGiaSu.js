@@ -4,22 +4,22 @@ import FormDanhGiaGiaSu from '../components/danhGiaGiaSu/FormDanhGiaGiaSu';
 import callApi from '../utils/apiCaller';
 import { notification } from "antd";
 import "antd/dist/antd.css";
-import Header from '../components/Header';
 import Footer from '../components/Footer';
+import Header from '../components/Header';
 
 class DanhGiaGiaSu extends Component {
     constructor(props) {
         super(props);
         this.state = {
             tutors: [],
-            phone: ""
+            phone: ''
         }
     }
 
     showTutorRating = phone => {
         callApi(`tutor/parent/${phone}`, "GET", null).then(res => {
             if (res.status === 200 && res.data.success) {
-                if(res.data.result.length > 0) {
+                if (res.data.result.length > 0) {
                     this.setState({
                         tutors: res.data.result,
                         phone: phone
@@ -46,17 +46,18 @@ class DanhGiaGiaSu extends Component {
             console.log("Error: ", error);
         });
     }
+
     render() {
         return (
             <div>
-                <Header/>
+                <Header />
                 <div className="bg-color">
                     <div className="px-5 pt-5 pb-3 mx-5">
                         <FormDanhGiaGiaSu showTutorRating={this.showTutorRating} />
                         {this.state.tutors?.length > 0 ? <DanhSachGiaSu phone={this.state.phone} tutors={this.state.tutors} /> : " "}
                     </div>
                 </div>
-                <Footer/>
+                <Footer />
             </div>
         );
     }

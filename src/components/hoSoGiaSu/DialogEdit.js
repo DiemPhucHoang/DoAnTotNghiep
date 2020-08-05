@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import { Grid, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@material-ui/core';
+import { validatePhone, validateEmail } from '../../constants/validate';
 
 class DialogEdit extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            user: {}
+            user: {},
+            errPhone: '',
+            errEmail: ''
         }
     }
 
@@ -36,6 +39,13 @@ class DialogEdit extends Component {
         })
     }
 
+    cancelDialog = () => {
+        this.setState({
+            user: this.props.user
+        })
+        this.props.onCloseEditTutor();
+    }
+
     onChange = (e) => {
         let {name, value} = e.target;
         this.setState((prevState) => ({
@@ -44,6 +54,21 @@ class DialogEdit extends Component {
                 [name]: value
             }
         }))
+    }
+
+    validateField = (value, errName) => {
+        if(errName ==='errPhone') {
+            let err = validatePhone(value);
+            this.setState({
+                errPhone: err
+            })
+        }
+        if(errName ==='errEmail') {
+            let err = validateEmail(value);
+            this.setState({
+                errEmail: err
+            })
+        }          
     }
 
     render() {
@@ -88,7 +113,9 @@ class DialogEdit extends Component {
                                             variant="outlined"
                                             size="small"
                                             onChange={this.onChange}
+                                            onBlur={() => this.validateField(this.state.user.phone, 'errPhone')}
                                         />
+                                        {(this.state.errPhone !=='') ? <p style={{color: "red"}}>{this.state.errPhone}</p> : ''}
                                     </Grid>
                                     <Grid item xs={12}>
                                         <TextField
@@ -113,12 +140,14 @@ class DialogEdit extends Component {
                                             variant="outlined"
                                             size="small"
                                             onChange={this.onChange}
+                                            onBlur={() => this.validateField(this.state.user.email, 'errEmail')}
                                         />
+                                         {(this.state.errEmail !=='') ? <p style={{color: "red"}}>{this.state.errEmail}</p> : ''}
                                     </Grid>
                                 </Grid>
                             </Grid>
                             <DialogActions>
-                                <Button variant="contained" onClick={this.props.onCloseEditTutor}>
+                                <Button variant="contained" onClick={this.cancelDialog}>
                                     Cancel
                                 </Button>
                                 <Button

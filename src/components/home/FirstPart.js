@@ -16,19 +16,18 @@ class FirstPart extends Component {
                                 Trung tâm gia sư Ánh Dương
                             </h1>
                             <p className=" animated bounceInRight" style={{ fontSize: "20px", animationDelay: "0.8s", marginTop: "30px" }}>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. In maximus tincidunt erat pellentesque venenatis.
-                                Maecenas molestie quis sem nec laoreet.
+                                Trung tâm gia sư Ánh Dương cam kết mang đến cho mọi người dịch vụ gia sư tại nhà hoàn hảo nhất. Chúng tôi đã và đang giúp đỡ
+                                hàng nghìn gia sư có việc làm và hàng nghìn học sinh tiến bộ vượt bậc.
                             </p>
                             <p className=" animated bounceInRight" style={{ fontSize: "0.9rem", animationDelay: "1s", marginTop: "20px" }}>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                Hãy liên hệ với chúng tôi!
                             </p>
-                            <Link href="/lienhe">
+                            <Link to="/">
                                 <Button variant="contained" startIcon={<PlayArrow />} className="animated bounceInRight" style={{ fontSize: "1rem", animationDelay: "1.2s", marginTop: "20px" }} color="secondary" >
                                     Liên hệ với chúng tôi
                                 </Button>
                             </Link>
                         </div>
-
                     </div>
                 </div>
             </div>

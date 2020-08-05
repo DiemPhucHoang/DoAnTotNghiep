@@ -8,11 +8,12 @@ import setAuthorizationToken from './../utils/setAuthorizationToken';
 export const logoutRequest = (history) => {
     
     return dispatch => {
-        // history.push("/login");
+        history.push("/login");
       localStorage.removeItem("token");
       localStorage.removeItem("id");
       setAuthorizationToken(false);
       dispatch(setCurrentUser({}));
+      dispatch({ type: Types.DESTROY_SESSION });
     };
   };
 
@@ -24,10 +25,6 @@ export const actLoginRequest = (userInfo, history, isTutor) => {
                 const token = res.data.accessToken;
                 localStorage.setItem("token", token);
                 setAuthorizationToken(token);
-                notification.success({
-                    message: "Success",
-                    description: "Đăng nhập thành công!"
-                });
 
                 callApi("auth", "GET", null).then(res => {
                     if (res.status === 200 && res.data.success) {
@@ -42,7 +39,11 @@ export const actLoginRequest = (userInfo, history, isTutor) => {
                             } else {
                                 history.push("/");
                             }
-                        } 
+                        }
+                        notification.success({
+                            message: "Success",
+                            description: "Đăng nhập thành công!"
+                        }); 
                     }
                 }).catch(err => {
                     console.log(err);

@@ -5,27 +5,30 @@ import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import { notification } from "antd";
 import "antd/dist/antd.css";
 import callApi from '../utils/apiCaller';
+import { validatePassword, validateConfirmPassword } from '../constants/validate';
 
 class DoiMatKhau extends Component {
     constructor(props) {
         super(props);
         this.state = {
             password: '',
-            confirmPassword: ''
+            confirmPassword: '',
+            errPassword: '',
+            errConfirmPassword: ''
         }
     }
 
     onChangePassword = (e) => {
-        let {name, value} = e.target;
+        let { name, value } = e.target;
         this.setState({
             [name]: value
         })
     }
 
-    handleChangePassword= (e) => {
+    handleChangePassword = (e) => {
         e.preventDefault();
-        let {password, confirmPassword} = this.state;
-        if(password !== confirmPassword) {
+        let { password, confirmPassword } = this.state;
+        if (password !== confirmPassword) {
             notification.error({
                 message: "Failed",
                 description: "Hai mật khẩu không khớp!"
@@ -50,15 +53,29 @@ class DoiMatKhau extends Component {
                     description: "Bạn đã sử dụng link này đổi mật khẩu!"
                 });
             }
-          }).catch(error => {
+        }).catch(error => {
             console.log(error);
         });
+    }
 
+    validateField = (valueFirst, valueSecond, errName) => {
+        if (errName === 'errPassword') {
+            let err = validatePassword(valueFirst);
+            this.setState({
+                errPassword: err
+            })
+        }
+        if (errName === 'errConfirmPassword') {
+            let err = validateConfirmPassword(valueFirst, valueSecond);
+            this.setState({
+                errConfirmPassword: err
+            })
+        }
     }
 
     render() {
-            return (
-                <Container maxWidth="xs">
+        return (
+            <Container maxWidth="xs">
                 <div className="paper-login">
                     <Avatar style={{ backgroundColor: "#dc004e", marginLeft: "170px" }}>
                         <VpnKeyIcon />
@@ -76,7 +93,9 @@ class DoiMatKhau extends Component {
                             label="Password"
                             type="password"
                             onChange={this.onChangePassword}
+                            onBlur={() => this.validateField(this.state.password, null, 'errPassword')}
                         />
+                        {(this.state.errPassword !== '') ? <p style={{ color: "red" }}>{this.state.errPassword}</p> : ''}
                         <TextField
                             variant="outlined"
                             margin="normal"
@@ -86,7 +105,9 @@ class DoiMatKhau extends Component {
                             label="Confirm password"
                             type="password"
                             onChange={this.onChangePassword}
+                            onBlur={() => this.validateField(this.state.password, this.state.confirmPassword, 'errConfirmPassword')}
                         />
+                        {(this.state.errConfirmPassword !== '') ? <p style={{ color: "red" }}>{this.state.errConfirmPassword}</p> : ''}
                         <br /><br />
                         <Button
                             type="submit"
@@ -99,8 +120,8 @@ class DoiMatKhau extends Component {
                     </form>
                 </div>
             </Container>
-            );
-      }
+        );
+    }
 }
 
 export default DoiMatKhau;

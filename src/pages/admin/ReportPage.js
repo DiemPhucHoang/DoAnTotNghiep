@@ -34,7 +34,7 @@ class ReportPage extends Component {
         const { content } = invoices;
         return (
             <div>
-                <Nav />
+                <Nav history={this.props.history}/>
                 <div id="wrapper">
                     <Menu />
                     <div id="content-wrapper">

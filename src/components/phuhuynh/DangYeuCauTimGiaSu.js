@@ -8,16 +8,14 @@ import {
     DialogTitle,
     DialogContent
 } from "@material-ui/core";
-
-import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
-
 import { actCreateClassesRequest } from './../../actions/classes';
 import { connect } from "react-redux";
+import { validateEmail, validatePhone } from '../../constants/validate';
 
 class DangYeuCauTimGiaSu extends Component {
 
@@ -26,7 +24,9 @@ class DangYeuCauTimGiaSu extends Component {
         this.state = {
             classInfo: {
                 subject: []
-            }
+            },
+            errPhone: '',
+            errEmail: '',
         }
     }
 
@@ -47,8 +47,13 @@ class DangYeuCauTimGiaSu extends Component {
             name: this.state.classInfo.name,
             phone: this.state.classInfo.phone,
             email: this.state.classInfo.email,
-          };
+        };
         this.props.onCreateClass(classInfo, hasChooseTutors, history);
+        this.setState({
+            classInfo: {
+                subject: []
+            }
+        })
     }
 
     onChange = (event) => {
@@ -59,6 +64,30 @@ class DangYeuCauTimGiaSu extends Component {
                 [name]: value
             }
         }));
+    }
+
+    cancelDialog = () => {
+        this.props.onCloseSubmitRequest();
+        this.setState({
+            classInfo: {
+                subject: []
+            }
+        })
+    }
+
+    validateField = (value, errName) => {
+        if(errName ==='errPhone') {
+            let err = validatePhone(value);
+            this.setState({
+                errPhone: err
+            })
+        }
+        if(errName ==='errEmail') {
+            let err = validateEmail(value);
+            this.setState({
+                errEmail: err
+            })
+        }        
     }
 
     render() {
@@ -81,14 +110,13 @@ class DangYeuCauTimGiaSu extends Component {
                         <Grid container spacing={3} style={{ padding: "20px" }}>
                             <Grid container spacing={3}>
                                 <Grid item xs={6}>
-                                    <FormControl variant="outlined" fullWidth required>
+                                    <FormControl fullWidth required variant="outlined" size="small">
                                         <InputLabel id="demo-mutiple-checkbox-outlined-label">Môn học</InputLabel>
                                         <Select
                                             labelId="demo-mutiple-checkbox-outlined-label"
                                             multiple
                                             label="Môn học"
                                             onChange={this.onChange}
-                                            input={<Input />}
                                             name="subject"
                                             value={this.state.classInfo.subject}
                                             renderValue={(selected) => selected.join(', ')}
@@ -102,25 +130,6 @@ class DangYeuCauTimGiaSu extends Component {
                                         </Select>
                                     </FormControl>
                                 </Grid>
-                                {/* <Grid item xs={6}>
-                                    <TextField
-                                        fullWidth
-                                        select
-                                        name="subject"
-                                        required
-                                        id="standard-select-currency"
-                                        label="Môn học"
-                                        variant="outlined"
-                                        size="small"
-                                        onChange={this.onChange}
-                                    >
-                                        {hasSubjects && subjects.map((option) => (
-                                            <MenuItem key={option.subjectName} value={option.subjectName}>
-                                                {option.subjectName}
-                                            </MenuItem>
-                                        ))}
-                                    </TextField>
-                                </Grid> */}
                                 <Grid item xs={6}>
                                     <TextField
                                         select
@@ -158,8 +167,8 @@ class DangYeuCauTimGiaSu extends Component {
                                         <MenuItem key="Thạc sỹ" value="Thạc sỹ">
                                             Thạc sỹ
                                         </MenuItem>
-                                        <MenuItem key="Cử nhân sư phạm" value="Cử nhân sư phạm">
-                                            Cử nhân sư phạm
+                                        <MenuItem key="Cử nhân" value="Cử nhân">
+                                            Cử nhân
                                         </MenuItem>
                                     </TextField>
                                 </Grid>
@@ -249,6 +258,7 @@ class DangYeuCauTimGiaSu extends Component {
                                 </Grid>
                                 <Grid item xs={4}>
                                     <TextField
+                                        type="number"
                                         required
                                         fullWidth
                                         name="phone"
@@ -256,7 +266,9 @@ class DangYeuCauTimGiaSu extends Component {
                                         variant="outlined"
                                         size="small"
                                         onChange={this.onChange}
+                                        onBlur={() => this.validateField(this.state.classInfo.phone, 'errPhone')}
                                     />
+                                    {(this.state.errPhone !=='') ? <p style={{color: "red"}}>{this.state.errPhone}</p> : ''}
                                 </Grid>
                                 <Grid item xs={4}>
                                     <TextField
@@ -266,7 +278,9 @@ class DangYeuCauTimGiaSu extends Component {
                                         variant="outlined"
                                         size="small"
                                         onChange={this.onChange}
+                                        onBlur={() => this.validateField(this.state.classInfo.email, 'errEmail')}
                                     />
+                                    {(this.state.errEmail !== '') ? <p style={{color: "red"}}>{this.state.errEmail}</p> : ''}
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -283,7 +297,7 @@ class DangYeuCauTimGiaSu extends Component {
                             <Button
                                 variant="contained"
                                 style={{ float: "right", marginRight: "20px" }}
-                                onClick={this.props.onCloseSubmitRequest}
+                                onClick={this.cancelDialog}
                             >
                                 Hủy
                             </Button>
