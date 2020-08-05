@@ -10,6 +10,7 @@ import com.example.trungtamgiasu.model.Tutor;
 import com.example.trungtamgiasu.model.TutorRegisterClass;
 import com.example.trungtamgiasu.model.enums.ClassesStatus;
 import com.example.trungtamgiasu.model.enums.ParentRegisterTutorStatus;
+import com.example.trungtamgiasu.model.enums.TutorRegisterClassStatus;
 import com.example.trungtamgiasu.service.InvoiceService;
 import com.example.trungtamgiasu.service.ParentRegisterTutorService;
 import com.example.trungtamgiasu.vo.ParentRegisterTutor.ParentRegisterTutorVO;
@@ -130,6 +131,7 @@ public class ParentRegisterTutorServiceImpl implements ParentRegisterTutorServic
         TutorRegisterClass tutorRegisterClass = new TutorRegisterClass();
         tutorRegisterClass.setClasses(classes);
         tutorRegisterClass.setTutor(tutor);
+        tutorRegisterClass.setStatus(TutorRegisterClassStatus.DANHANLOP);
 
         TutorRegisterClass registerClass = tutorRegisterClassDAO.save(tutorRegisterClass);
 
