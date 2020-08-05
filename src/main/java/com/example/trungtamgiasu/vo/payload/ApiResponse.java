@@ -20,4 +20,6 @@ public class ApiResponse {
         this.success = success;
         this.message = message;
     }
+
+
 }

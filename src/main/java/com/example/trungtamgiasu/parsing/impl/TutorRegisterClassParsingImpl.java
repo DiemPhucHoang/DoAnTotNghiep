@@ -69,6 +69,7 @@ public class TutorRegisterClassParsingImpl implements TutorRegisterClassParsing 
             return null;
         }
         List<TutorRegisterClassInfoVO> registerClassInfoVOS = new ArrayList<>();
+
         for (TutorRegisterClass registerClass : tutorRegisterClasses) {
             registerClassInfoVOS.add(toTutorRegisterClassInfoVO(registerClass));
         }

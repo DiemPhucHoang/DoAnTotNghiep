@@ -34,7 +34,7 @@ public class ClassesInfoVO {
     private String address;
 
     @NotBlank
-    private String tuitionFee;
+    private double tuitionFee;
 
     private String status;
 

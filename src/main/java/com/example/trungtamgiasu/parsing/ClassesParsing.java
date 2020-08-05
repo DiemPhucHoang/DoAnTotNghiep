@@ -16,6 +16,6 @@ public interface ClassesParsing {
 
     List<ClassesInfoVO> toClassesInfoVOList(List<Classes> classesList);
 
-
+    Classes parseClassesInfoVOToEntity(ClassesInfoVO classesInfoVO) throws Exception;
 
 }

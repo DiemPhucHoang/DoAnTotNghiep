@@ -10,6 +10,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.time.Instant;
 import java.util.Date;
 
 @Entity(name = "Classes")
@@ -57,4 +58,23 @@ public class Classes {
     @JsonIgnore
     @JoinColumn(name = "id_parent", nullable = false)
     private User user;
+
+    @CreatedDate
+    @Column(updatable = false, nullable = false)
+    private Instant dateCreated;
+
+    public Classes(Long id, String classTeach, String subject, String levelRequirement,
+                   String genderRequirement, String district, String timeTeach,
+                   String address, double tuitionFee, ClassesStatus status) {
+        this.id = id;
+        this.classTeach = classTeach;
+        this.subject = subject;
+        this.levelRequirement = levelRequirement;
+        this.genderRequirement = genderRequirement;
+        this.district = district;
+        this.timeTeach = timeTeach;
+        this.address = address;
+        this.tuitionFee = tuitionFee;
+        this.status = status;
+    }
 }

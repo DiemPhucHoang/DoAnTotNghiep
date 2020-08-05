@@ -32,4 +32,11 @@ public class Invoice {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_register")
     private TutorRegisterClass classRegister;
+
+
+    public Invoice(double serviceFee, Date time, TutorRegisterClass classRegister) {
+        this.serviceFee = serviceFee;
+        this.time = time;
+        this.classRegister = classRegister;
+    }
 }

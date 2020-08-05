@@ -23,4 +23,17 @@ public interface ClassesService {
     List<ClassesInfoVO> getTop3ByClassTeach(Long idClass);
 
     List<ClassesInfoVO> getClassesSuggest(Long idUser);
+
+    int[] countNumberOfClass();
+
+    void saveClass(ClassesInfoVO classesInfoVO) throws Exception;
+
+    Page<ClassesInfoVO> getAllClass(Pageable pageable);
+
+    void deleteClass(Long id);
+
+    Page<ClassesInfoVO> searchAllClasses(SearchVO searchVO, Pageable pageable);
+
+    void creatClass(ClassesInfoVO classesInfoVO, String phone) throws Exception;
+
 }

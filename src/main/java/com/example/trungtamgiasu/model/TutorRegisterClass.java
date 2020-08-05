@@ -50,5 +50,4 @@ public class TutorRegisterClass {
     @ManyToOne
     @JoinColumn(name = "id_tutor")
     private Tutor tutor;
-
 }

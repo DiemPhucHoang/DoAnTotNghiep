@@ -10,13 +10,14 @@ import com.example.trungtamgiasu.model.Classes;
 import com.example.trungtamgiasu.model.Tutor;
 import com.example.trungtamgiasu.model.TutorRegisterClass;
 import com.example.trungtamgiasu.model.User;
+import com.example.trungtamgiasu.model.enums.ClassesStatus;
 import com.example.trungtamgiasu.model.enums.TutorRegisterClassStatus;
 import com.example.trungtamgiasu.parsing.TutorRegisterClassParsing;
 import com.example.trungtamgiasu.security.UserPrincipal;
+import com.example.trungtamgiasu.service.InvoiceService;
 import com.example.trungtamgiasu.service.TutorRegisterClassService;
-import com.example.trungtamgiasu.vo.TutorRegisterClass.ClassRegisterVO;
-import com.example.trungtamgiasu.vo.TutorRegisterClass.TutorRegisterClassInfoVO;
-import com.example.trungtamgiasu.vo.TutorRegisterClass.TutorRegisterClassVO;
+import com.example.trungtamgiasu.vo.TutorRegisterClass.*;
+import com.example.trungtamgiasu.vo.invoice.InvoiceVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TutorRegisterClassServiceImpl implements TutorRegisterClassService {
@@ -47,6 +52,9 @@ public class TutorRegisterClassServiceImpl implements TutorRegisterClassService 
 
     @Autowired
     private TutorRegisterClassParsing tutorRegisterClassParsing;
+
+    @Autowired
+    private InvoiceService invoiceService;
 
     @Override
     public TutorRegisterClass saveTutorRegisterClass(TutorRegisterClass registerClass) {
@@ -123,6 +131,95 @@ public class TutorRegisterClassServiceImpl implements TutorRegisterClassService 
                     (String.valueOf(TutorRegisterClassStatus.DAHUY.ordinal()), tutorRegisterClass.getId());
         } else {
             throw new BadRequestException("Can not change status");
+        }
+    }
+
+    @Override
+    public Page<ClassTutorVO> getAllTutorClassRegister(Pageable pageable) {
+        List<ClassTutorVO> classTutorVOS = new ArrayList<>();
+
+        List<TutorRegisterClass> tutorRegisterClasses = tutorRegisterClassDAO.findAll();
+
+        for (int i=0; i<tutorRegisterClasses.size(); i++) {
+            if(tutorRegisterClasses.get(i).getStatus() == null){
+                tutorRegisterClasses.remove(i);
+            }
+        }
+
+        for(int i=0; i<tutorRegisterClasses.size(); i++) {
+            for(int j=i; j<tutorRegisterClasses.size(); j++) {
+                if(tutorRegisterClasses.get(i).getClasses().getId() == tutorRegisterClasses.get(j).getClasses().getId()) {
+                    tutorRegisterClasses.remove(i);
+                }
+            }
+        }
+
+        List<TutorRegisterClass> sortedTutorRegisterClass = tutorRegisterClasses.stream()
+                .sorted(Comparator.comparing(TutorRegisterClass::getTime).reversed())
+                .collect(Collectors.toList());
+
+        for(TutorRegisterClass tutorRegisterClass: sortedTutorRegisterClass) {
+            String status = "Chưa duyệt";
+            int noTutor = tutorRegisterClassDAO.getAllTutorRegisterByClasses(tutorRegisterClass.getClasses().getId()).size();
+
+            if (tutorRegisterClass.getClasses().getStatus() == ClassesStatus.LOPDAGIAO) {
+                status = "Đã duyệt";
+            }
+            classTutorVOS.add(new ClassTutorVO(tutorRegisterClass, noTutor, status));
+        }
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), classTutorVOS.size());
+        Page<ClassTutorVO> classTutorVOPage = new PageImpl<>
+                (classTutorVOS.subList(start, end), pageable, classTutorVOS.size());
+        return classTutorVOPage;
+    }
+
+    @Override
+    public Page<TutorRegisterDetailVO> getListTutorRegisterClassByIdClass(Long idClass, Pageable pageable) {
+        List<TutorRegisterDetailVO> tutorRegisterDetailVOS = new ArrayList<>();
+
+        List<TutorRegisterClass> tutorRegisterClasses = tutorRegisterClassDAO.getAllTutorRegisterByClasses(idClass);
+        for (TutorRegisterClass tutorRegisterClass: tutorRegisterClasses) {
+            tutorRegisterDetailVOS.add(new TutorRegisterDetailVO(tutorRegisterClass));
+        }
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), tutorRegisterDetailVOS.size());
+        Page<TutorRegisterDetailVO> tutorRegisterDetailVOPage = new PageImpl<>
+                (tutorRegisterDetailVOS.subList(start, end), pageable, tutorRegisterDetailVOS.size());
+        return tutorRegisterDetailVOPage;
+    }
+
+    @Override
+    public void updateStatusTutorRegisterClass(Long idTutorRegisterClass) throws Exception {
+        TutorRegisterClass tutorRegisterClass = tutorRegisterClassDAO.findById(idTutorRegisterClass).orElse(null);
+        if (tutorRegisterClass == null) {
+            throw new Exception("tutorRegisterClass not found with id: " + idTutorRegisterClass);
+        }
+        tutorRegisterClass.setStatus(TutorRegisterClassStatus.DANHANLOP);
+        tutorRegisterClassDAO.save(tutorRegisterClass);
+
+        Long idClass = tutorRegisterClass.getClasses().getId();
+        Classes classes = classesDAO.findById(idClass).orElse(null);
+
+        InvoiceVO invoiceVO = new InvoiceVO();
+        invoiceVO.setServiceFee(classes.getTuitionFee() * 0.25);
+        invoiceVO.setIdTutorRegisterClass(idTutorRegisterClass);
+        invoiceVO.setTime(new Date());
+        invoiceService.save(invoiceVO);
+
+        if (classes != null) {
+            classes.setStatus(ClassesStatus.LOPDAGIAO);
+            classesDAO.save(classes);
+        }
+
+        List<TutorRegisterClass> tutorRegisterClasses = tutorRegisterClassDAO.getAllTutorRegisterByClasses(idClass);
+        for(TutorRegisterClass registerClass: tutorRegisterClasses) {
+            if (registerClass.getId() != idTutorRegisterClass) {
+                registerClass.setStatus(TutorRegisterClassStatus.KHONGDAT);
+                tutorRegisterClassDAO.save(registerClass);
+            }
         }
     }
 }

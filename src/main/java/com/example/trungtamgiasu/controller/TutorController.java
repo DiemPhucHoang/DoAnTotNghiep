@@ -1,5 +1,6 @@
 package com.example.trungtamgiasu.controller;
 
+import com.example.trungtamgiasu.model.Tutor;
 import com.example.trungtamgiasu.parsing.TutorParsing;
 import com.example.trungtamgiasu.service.TutorService;
 import com.example.trungtamgiasu.vo.SearchVO;
@@ -30,7 +31,8 @@ public class TutorController {
     @PostMapping("/{idUser}")
     public ApiResponse createTutor(@RequestBody TutorVO tutorVO, @PathVariable("idUser") Long idUser) {
         try {
-            TutorByUserVO tutorByUserVO = tutorParsing.toTutorByUserVO(tutorService.createTutor(tutorVO, idUser));
+            Tutor tutor = tutorService.createTutor(tutorVO, idUser);
+            TutorByUserVO tutorByUserVO = tutorParsing.toTutorByUserVO(tutor);
             return new ApiResponse(
                     true,
                     "Create tutor successfully",
