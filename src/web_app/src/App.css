@@ -1,0 +1,205 @@
+ul li {
+  display: inline-block;
+  list-style: none; 
+}
+a:hover {
+  text-decoration: none !important;
+}
+.line-show{
+  height:5px;
+  width: 100%;
+  background:#f50057;
+  transition:all 0.3s
+}
+.line{
+  height:5px;
+  width:0%;
+  background:#f50057;
+  transition:all 0.3s
+}
+.nav-item:hover .line{
+  width:100%;
+  transition:all 0.3s;
+  color : #f50057;
+}
+.nav-item:hover {
+  color : #f50057;
+}
+.nav-item{
+  margin-right:10px
+}
+.bg-color {
+  background-image: linear-gradient(to top, #ffffff, #f8f9fd, #eef4fb, #e2f0f8, #d5ecf2, #d5ecf2, #d5ecf2, #d5ecf2, #e2f0f8, #eef4fb, #f8f9fd, #ffffff);
+}
+.pull-right {
+  float: right!important;
+}
+.list-group-unbordered > .list-group-item {
+  border-left: 0px none;
+  border-right: 0px none;
+  border-radius: 0px 0px 0px 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.gblock-v2 .block-calender {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  display: flex;
+}
+
+.row-calendar {
+  max-width: 120px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  margin-left: -15px;
+}
+.calendar-normal, .calendar-active {
+  margin-bottom: 10px;
+}
+.mr-30 {
+  margin-left: 10px !important;
+}
+
+.paper{
+  transition: transform 0.5s;
+}
+.paper:hover{
+  transform: scale(1.05 , 1.05);
+}
+.row-calendar ul li {
+  display: flex;
+  list-style: none;
+}
+.phi-nhan-lop {
+  background-color: rgb(255, 0, 0);
+  color: rgb(255, 255, 255);
+  border-radius: 100%;
+  width: 35px;
+  height: 35px;
+  line-height: 35px;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.title > p{
+  margin: 0;
+    overflow: hidden;
+    padding: 8px 6px 8px 3px;
+    font-size: 12px;
+    color: #fff;
+    position: relative;
+    text-align: center;
+    display: table-cell;
+}
+
+.class-name {
+  background: #26687F;
+}
+.class-info {
+  background: #2691B5;
+}
+
+.class-percent {
+  background: #5BACC7;
+  color: #FFFF00;
+}
+.date-receive {
+  width: 330px;
+}
+.class-detail{
+  margin-bottom: 20px;
+}
+.statusGray {
+  margin-left: 30px;
+  margin-right: 5px;
+  background-color: #e7e5e5;
+  width: 26px;
+  height: 26px;
+  box-shadow: 2px 2px 1px rgba(0, 0, 0, 0.21);
+}
+.statusRed {
+  background-color: #b65c5c;
+  width: 26px;
+  height: 26px;
+  margin-left: 60px;
+  margin-right: 5px;
+  box-shadow: 2px 2px 1px rgba(0, 0, 0, 0.21);
+}
+
+.statusBlue {
+  background-color: #a2aeee;
+  width: 26px;
+  height: 26px;
+  margin-left: 60px;
+  margin-right: 5px;
+  box-shadow: 2px 2px 1px rgba(0, 0, 0, 0.21);
+}
+
+.statusCancel {
+  background-color: #f9b86d;
+  width: 26px;
+  height: 26px;
+  margin-left: 60px;
+  margin-right: 5px;
+  box-shadow: 2px 2px 1px rgba(0, 0, 0, 0.21);
+}
+
+.padding-class {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.paper-login {
+  margin-top: 30px;
+  display: 'flex';
+  flex-direction: 'column';
+  align-items: 'center';
+}
+.form-login {
+  width: '100%';
+  margin-top: 20px;
+}
+
+.display-flexbox {
+  display: flex;
+}
+.padding-rate {
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 20px;
+}
+.test {
+  max-width: 10% !important;
+  width: 10% !important;
+}
+
+
+.mr-2{
+  margin-right: 2px;
+}
+#wrapper{
+  background-color: white;
+}
+.err-message{
+  color: red;
+}
+.profile{
+  
+  height: auto;
+
+  padding: 15px;
+  
+}
+.p-15{
+  padding: -15px;
+}
+.mt-60{
+  margin-top: -60px;
+}
+.form-warning {
+  color: red;
+}
+.number{
+  color: #ecedee;
+}
