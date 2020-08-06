@@ -11,15 +11,19 @@ export const actCreateClassesRequest = (classInfo, hasChooseTutors, history) => 
                 if (hasChooseTutors) {
                     dispatch(actDeleteChooseTutors());
                     history.push("/tim-gia-su");
+                    notification.success({
+                    message: "Success",
+                    description: "Chọn gia sư thành công!"
+                    });
                 }
                 else {
                     history.push("/lop-moi");
+                     notification.success({
+                     message: "Success",
+                     description: "Đăng yêu cầu thành công!"
+                     });
                 }
-                notification.success({
-                    message: "Success",
-                    description:
-                        "Chọn gia sư thành công!"
-                });
+
 
             } else {
                 notification.error({
