@@ -15,14 +15,16 @@ class GiaSuItem extends Component {
 
     render() {
         const { tutorItem } = this.props;
-        const { subjects, districts } = tutorItem;
-        const hasValue = subjects && subjects.length > 0 && districts && districts.length > 0;
+        const { subjects, districts, classTeaches } = tutorItem;
+        const hasValue = subjects && subjects.length > 0 && districts
+        && districts.length > 0 && classTeaches && classTeaches.length;
 
         const subjectNames = hasValue && getStringName(subjects,'subjectName');
         const districtNames = hasValue && getStringName(districts,'districtName');
+        const classTeachNames = hasValue && getStringName(classTeaches,'classTeachName');
         return (
             <Grid item xs={4} className="paper">
-                <Paper elevation={3} style={{ padding: "10px", height: '400px' }}>
+                <Paper elevation={3} style={{ padding: "10px", height: '450px' }}>
                     <Grid container spacing={3}>
                         <Grid item xs={4}>
                             <img
@@ -42,6 +44,7 @@ class GiaSuItem extends Component {
                             <p>Trường: {tutorItem.college}</p>
                             <p>Năm sinh: {tutorItem.yearOfBirth}</p>
                             <p>Môn dạy: {subjectNames}</p>
+                            <p>Lớp dạy: {classTeachNames}</p>
                             <p>Khu vực: {districtNames}</p>
                             <p>Yêu cầu lương: {tutorItem.salaryPerHour} vnđ/h</p>
                             
