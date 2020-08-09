@@ -15,6 +15,8 @@ import java.util.Date;
 public class TutorRegisterDetailVO {
     private Long idTutorRegisterClass;
 
+    private Long idClass;
+
     private String nameTutor;
 
     private String phone;
@@ -32,6 +34,7 @@ public class TutorRegisterDetailVO {
     private String status;
 
     public TutorRegisterDetailVO(TutorRegisterClass tutorRegisterClass) {
+        this.idClass = tutorRegisterClass.getClasses().getId();
         this.idTutorRegisterClass = tutorRegisterClass.getId();
         this.nameTutor = tutorRegisterClass.getTutor().getUser().getName();
         this.phone = tutorRegisterClass.getTutor().getUser().getPhone();

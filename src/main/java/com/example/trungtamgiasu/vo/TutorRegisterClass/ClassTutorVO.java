@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -16,6 +18,7 @@ public class ClassTutorVO {
     private String subject;
     private double tuitionFee;
     private String district;
+    private Date time;
     private int noTutor;
     private String status;
 
@@ -25,6 +28,7 @@ public class ClassTutorVO {
         this.subject = tutorRegisterClass.getClasses().getSubject();
         this.tuitionFee = tutorRegisterClass.getClasses().getTuitionFee();
         this.district = tutorRegisterClass.getClasses().getDistrict();
+        this.time = tutorRegisterClass.getTime();
         this.noTutor = noTutor;
         this.status = status;
     }

@@ -71,7 +71,7 @@ public class TutorRegisterClassController {
     }
 
     @GetMapping()
-    public ApiResponse getAllTutorRegisterClassDetail(@PageableDefault(size = 10) Pageable pageable) {
+    public ApiResponse getAllTutorRegisterClassDetail(@PageableDefault(size = 6) Pageable pageable) {
         try {
             Page<ClassTutorVO> detailVOS = tutorRegisterClassService.getAllTutorClassRegister(pageable);
             return new ApiResponse(true, "Get all tutor register class detail successfully", detailVOS);

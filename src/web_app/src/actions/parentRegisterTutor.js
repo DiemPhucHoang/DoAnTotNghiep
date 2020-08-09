@@ -51,7 +51,18 @@ export const actUpdateParentRegisterTutorRequest = (idClass, idTutor) => {
         return callApi(`parent-register-tutor/updateStatus/${idClass}/${idTutor}`,"PATCH", null
         ).then(res => {
             if (res.status === 200) {
-                dispatch(actFetchTutorDetail(res.data));
+                notification.success({
+                     message: "Success",
+                     description: "Duyệt lớp thành công"
+                });
+                callApi(`parent-register-tutor/tutor/${idClass}`,"GET", null
+                     ).then(res => {
+                         if (res.status === 200) {
+                             dispatch(actFetchTutorDetail(res.data));
+                         }
+                         }).catch(err => {
+                            console.log(err);
+                      });
             }
          }).catch(err => {
             console.log(err);

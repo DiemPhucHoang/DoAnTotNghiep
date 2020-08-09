@@ -105,16 +105,27 @@ export const actFetchTutorRegisterDetail = tutorRegisters => {
     };
 };
 
-export const actUpdateTutorRegisterClassRequest = id => {
+export const actUpdateTutorRegisterClassRequest = (idTutorRegisterClass, idClass) => {
     return dispatch => {
-        return callApi(`register-class/tutorRegister/updateStatus/${id}`,"PATCH", null
-        ).then(res => {
+        return callApi(`register-class/tutorRegister/updateStatus/${idTutorRegisterClass}`,"PATCH", null).then(res => {
             if (res.status === 200) {
-                dispatch(actFetchTutorRegisterDetail(res.data));
+                callApi(`register-class/tutorRegister/${idClass}`,"GET", null).then(res => {
+                    if (res.status === 200) {
+                         console.log("actFetchTutorRegisterDetail", res.data)
+                         dispatch(actFetchTutorRegisterDetail(res.data));
+
+                    }
+                }).catch(err => {
+                        console.log(err);
+                });
+                notification.success({
+                     message: "Success",
+                     description: "Duyệt lớp thành công"
+                });
             }
+
          }).catch(err => {
             console.log(err);
       });
     };
 };
-

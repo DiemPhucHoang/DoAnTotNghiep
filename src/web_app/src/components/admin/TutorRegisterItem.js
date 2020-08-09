@@ -5,16 +5,21 @@ import { connect } from 'react-redux';
 
 
 class TutorRegisterItem extends Component {
-    onUpdateStatus = (id, e) => {
-        e.preventDefault();
-        this.props.onUpdateTutorRegisterClass(id);
+    onUpdateStatus = (idTutorRegisterClass, idClass, e) => {
+         e.preventDefault();
+         this.props.onUpdateTutorRegisterClass(idTutorRegisterClass, idClass);
     }
     
     render() {
         const { tutorRegisterItem, index } = this.props;
-
+        const colorStatus =
+              tutorRegisterItem.status === "Đã hủy"
+              ? '#efdada'
+              : tutorRegisterItem.status === "Đã nhận lớp"
+              ? '#da9494'
+              : '';
         return (
-            <tr style={{backgroundColor: `${tutorRegisterItem.status === "Đã nhận lớp" ? "#da9494" : ""}`}}>
+            <tr style={{ backgroundColor: `${colorStatus}`}}>
                 <td>{index + 1}</td>
                 <td>{tutorRegisterItem.nameTutor}</td>
                 <td>{tutorRegisterItem.phone}</td>
@@ -26,11 +31,14 @@ class TutorRegisterItem extends Component {
                     {
                         tutorRegisterItem.status === "Xem xét" 
                         ?  <button className="btn btn-success btn-sm" 
-                                onClick={ (e) =>this.onUpdateStatus(tutorRegisterItem.idTutorRegisterClass, e)}>
+                                onClick={ (e) =>this.onUpdateStatus(tutorRegisterItem.idTutorRegisterClass, tutorRegisterItem.idClass , e)}>
                                 Duyệt
                             </button>
-                        : 
-                        <button disabled>Đã duyệt</button>
+                        : tutorRegisterItem.status === "Đã nhận lớp"
+                        ? <button disabled>Đã duyệt</button>
+                        : tutorRegisterItem.status === "Đã hủy"
+                        ? <button disabled>Đã hủy</button>
+                        : <button disabled>Không đạt</button>
                     }
                 </td>
             </tr>
@@ -44,8 +52,8 @@ const mapStateToProps = state => {
 }
 const mapDispatchToProps = (dispatch, props) => {
     return {
-        onUpdateTutorRegisterClass: (id) => {
-            dispatch(actUpdateTutorRegisterClassRequest(id));
+        onUpdateTutorRegisterClass: (idTutorRegisterClass, idClass) => {
+             dispatch(actUpdateTutorRegisterClassRequest(idTutorRegisterClass, idClass));
         }
     }
 }

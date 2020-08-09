@@ -28,11 +28,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toCollection;
 
 @Service
 public class TutorRegisterClassServiceImpl implements TutorRegisterClassService {
@@ -140,25 +141,7 @@ public class TutorRegisterClassServiceImpl implements TutorRegisterClassService 
 
         List<TutorRegisterClass> tutorRegisterClasses = tutorRegisterClassDAO.findAll();
 
-        for (int i=0; i<tutorRegisterClasses.size(); i++) {
-            if(tutorRegisterClasses.get(i).getStatus() == null){
-                tutorRegisterClasses.remove(i);
-            }
-        }
-
-        for(int i=0; i<tutorRegisterClasses.size(); i++) {
-            for(int j=i; j<tutorRegisterClasses.size(); j++) {
-                if(tutorRegisterClasses.get(i).getClasses().getId() == tutorRegisterClasses.get(j).getClasses().getId()) {
-                    tutorRegisterClasses.remove(i);
-                }
-            }
-        }
-
-        List<TutorRegisterClass> sortedTutorRegisterClass = tutorRegisterClasses.stream()
-                .sorted(Comparator.comparing(TutorRegisterClass::getTime).reversed())
-                .collect(Collectors.toList());
-
-        for(TutorRegisterClass tutorRegisterClass: sortedTutorRegisterClass) {
+        for(TutorRegisterClass tutorRegisterClass: tutorRegisterClasses) {
             String status = "Chưa duyệt";
             int noTutor = tutorRegisterClassDAO.getAllTutorRegisterByClasses(tutorRegisterClass.getClasses().getId()).size();
 
@@ -168,10 +151,18 @@ public class TutorRegisterClassServiceImpl implements TutorRegisterClassService 
             classTutorVOS.add(new ClassTutorVO(tutorRegisterClass, noTutor, status));
         }
 
+        List<ClassTutorVO> classTutorVOList = classTutorVOS.stream()
+                .collect(collectingAndThen(toCollection(() -> new TreeSet<>(comparing(ClassTutorVO::getIdClass))),
+                        ArrayList::new));
+
+        classTutorVOList = classTutorVOList.stream()
+                .sorted(comparing(ClassTutorVO::getTime).reversed())
+                .collect(Collectors.toList());
+
         int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), classTutorVOS.size());
+        int end = Math.min((start + pageable.getPageSize()), classTutorVOList.size());
         Page<ClassTutorVO> classTutorVOPage = new PageImpl<>
-                (classTutorVOS.subList(start, end), pageable, classTutorVOS.size());
+                (classTutorVOList.subList(start, end), pageable, classTutorVOList.size());
         return classTutorVOPage;
     }
 
@@ -217,7 +208,9 @@ public class TutorRegisterClassServiceImpl implements TutorRegisterClassService 
         List<TutorRegisterClass> tutorRegisterClasses = tutorRegisterClassDAO.getAllTutorRegisterByClasses(idClass);
         for(TutorRegisterClass registerClass: tutorRegisterClasses) {
             if (registerClass.getId() != idTutorRegisterClass) {
-                registerClass.setStatus(TutorRegisterClassStatus.KHONGDAT);
+                if (registerClass.getStatus() != TutorRegisterClassStatus.DAHUY) {
+                    registerClass.setStatus(TutorRegisterClassStatus.KHONGDAT);
+                }
                 tutorRegisterClassDAO.save(registerClass);
             }
         }

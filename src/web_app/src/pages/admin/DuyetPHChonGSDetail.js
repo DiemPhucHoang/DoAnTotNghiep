@@ -102,7 +102,9 @@ class DuyetPHChonGSDetail extends Component {
                                                                         onClick={(e) => this.onUpdateStatus(row.idClass, row.idTutor, e)}>
                                                                         Duyệt
                                                                         </button>
-                                                                    : <button disabled>Đã duyệt</button>
+                                                                    : row.status === "DADONGY"
+                                                                    ? <button disabled>Đã duyệt</button>
+                                                                    : <button disabled>Không đạt</button>
                                                                 }
                                                             </td>
                                                         </tr>
