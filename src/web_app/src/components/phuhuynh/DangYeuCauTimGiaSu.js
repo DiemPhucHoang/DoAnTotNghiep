@@ -16,6 +16,9 @@ import Checkbox from '@material-ui/core/Checkbox';
 import { actCreateClassesRequest } from './../../actions/classes';
 import { connect } from "react-redux";
 import { validateEmail, validatePhone } from '../../constants/validate';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 class DangYeuCauTimGiaSu extends Component {
 
@@ -27,6 +30,7 @@ class DangYeuCauTimGiaSu extends Component {
             },
             errPhone: '',
             errEmail: '',
+            valueRadio: ''
         }
     }
 
@@ -58,6 +62,11 @@ class DangYeuCauTimGiaSu extends Component {
 
     onChange = (event) => {
         let { name, value } = event.target;
+        if (name === "parent") {
+            this.setState({
+                valueRadio: value
+            })
+        }
         this.setState((prevState) => ({
             classInfo: {
                 ...prevState.classInfo,
@@ -71,26 +80,28 @@ class DangYeuCauTimGiaSu extends Component {
         this.setState({
             classInfo: {
                 subject: []
-            }
+            },
+            valueRadio: ''
         })
     }
 
     validateField = (value, errName) => {
-        if(errName ==='errPhone') {
+        if (errName === 'errPhone') {
             let err = validatePhone(value);
             this.setState({
                 errPhone: err
             })
         }
-        if(errName ==='errEmail') {
+        if (errName === 'errEmail') {
             let err = validateEmail(value);
             this.setState({
                 errEmail: err
             })
-        }        
+        }
     }
 
     render() {
+        let { valueRadio } = this.state;
         const { subjects, classTeaches, districts } = this.props;
         const hasSubjects = subjects && subjects.length > 0;
         const hasDistricts = districts && districts.length > 0;
@@ -158,17 +169,20 @@ class DangYeuCauTimGiaSu extends Component {
                                         size="small"
                                         onChange={this.onChange}
                                     >
-                                        <MenuItem key="Giáo viên" value="Giáo viên">
-                                            Giáo viên
+                                        <MenuItem key="Không yêu cầu" value="Không yêu cầu">
+                                            Không yêu cầu
                                         </MenuItem>
                                         <MenuItem key="Sinh viên" value="Sinh viên">
                                             Sinh viên
                                         </MenuItem>
-                                        <MenuItem key="Thạc sỹ" value="Thạc sỹ">
-                                            Thạc sỹ
+                                        <MenuItem key="Giáo viên" value="Giáo viên">
+                                            Giáo viên
                                         </MenuItem>
                                         <MenuItem key="Cử nhân" value="Cử nhân">
                                             Cử nhân
+                                        </MenuItem>
+                                        <MenuItem key="Thạc sỹ" value="Thạc sỹ">
+                                            Thạc sỹ
                                         </MenuItem>
                                     </TextField>
                                 </Grid>
@@ -182,14 +196,14 @@ class DangYeuCauTimGiaSu extends Component {
                                         fullWidth
                                         onChange={this.onChange}
                                     >
+                                        <MenuItem key="Không yêu cầu" value="Không yêu cầu">
+                                            Không yêu cầu
+                                        </MenuItem>
                                         <MenuItem key="Nam" value="Nam">
                                             Nam
                                         </MenuItem>
                                         <MenuItem key="Nữ" value="Nữ">
                                             Nữ
-                                        </MenuItem>
-                                        <MenuItem key="Không yêu cầu" value="Không yêu cầu">
-                                            Không yêu cầu
                                         </MenuItem>
                                     </TextField>
                                 </Grid>
@@ -245,18 +259,16 @@ class DangYeuCauTimGiaSu extends Component {
                                         onChange={this.onChange}
                                     />
                                 </Grid>
-                                <Grid item xs={4}>
-                                    <TextField
-                                        required
-                                        fullWidth
-                                        label="Họ tên của phụ huynh"
-                                        name="name"
-                                        variant="outlined"
-                                        size="small"
-                                        onChange={this.onChange}
-                                    />
+                                <Grid item xs={12}>
+                                    <FormControl component="fieldset">
+                                        {/* <FormLabel component="legend">Nếu bạn đã từng đăng ký tìm gia sư với trung tâm</FormLabel> */}
+                                        <RadioGroup row aria-label="gender" name="parent" value={valueRadio} onChange={this.onChange}>
+                                            <FormControlLabel value="old" control={<Radio />} label="Phụ huynh cũ" />
+                                            <FormControlLabel value="new" control={<Radio />} label="Phụ huynh mới" />
+                                        </RadioGroup>
+                                    </FormControl>
                                 </Grid>
-                                <Grid item xs={4}>
+                                {valueRadio === "old" ? <Grid item xs={12}>
                                     <TextField
                                         type="number"
                                         required
@@ -268,20 +280,50 @@ class DangYeuCauTimGiaSu extends Component {
                                         onChange={this.onChange}
                                         onBlur={() => this.validateField(this.state.classInfo.phone, 'errPhone')}
                                     />
-                                    {(this.state.errPhone !=='') ? <p style={{color: "red"}}>{this.state.errPhone}</p> : ''}
-                                </Grid>
-                                <Grid item xs={4}>
-                                    <TextField
-                                        fullWidth
-                                        name="email"
-                                        label="Email (nếu có)"
-                                        variant="outlined"
-                                        size="small"
-                                        onChange={this.onChange}
-                                        onBlur={() => this.validateField(this.state.classInfo.email, 'errEmail')}
-                                    />
-                                    {(this.state.errEmail !== '') ? <p style={{color: "red"}}>{this.state.errEmail}</p> : ''}
-                                </Grid>
+                                    {(this.state.errPhone !== '') ? <p style={{ color: "red" }}>{this.state.errPhone}</p> : ''}
+                                </Grid> : (valueRadio === "new" ?
+                                    <Grid item xs={12}>
+                                        <Grid container spacing={3}>
+                                            <Grid item xs={4}>
+                                                <TextField
+                                                    required
+                                                    fullWidth
+                                                    label="Họ tên của phụ huynh"
+                                                    name="name"
+                                                    variant="outlined"
+                                                    size="small"
+                                                    onChange={this.onChange}
+                                                />
+                                            </Grid>
+                                            <Grid item xs={4}>
+                                                <TextField
+                                                    type="number"
+                                                    required
+                                                    fullWidth
+                                                    name="phone"
+                                                    label="Số điện thoại"
+                                                    variant="outlined"
+                                                    size="small"
+                                                    onChange={this.onChange}
+                                                    onBlur={() => this.validateField(this.state.classInfo.phone, 'errPhone')}
+                                                />
+                                                {(this.state.errPhone !== '') ? <p style={{ color: "red" }}>{this.state.errPhone}</p> : ''}
+                                            </Grid>
+                                            <Grid item xs={4}>
+                                                <TextField
+                                                    fullWidth
+                                                    name="email"
+                                                    label="Email (nếu có)"
+                                                    variant="outlined"
+                                                    size="small"
+                                                    onChange={this.onChange}
+                                                    onBlur={() => this.validateField(this.state.classInfo.email, 'errEmail')}
+                                                />
+                                                {(this.state.errEmail !== '') ? <p style={{ color: "red" }}>{this.state.errEmail}</p> : ''}
+                                            </Grid>
+                                        </Grid>
+                                    </Grid> : "")
+                                }
                             </Grid>
                         </Grid>
                         <hr />

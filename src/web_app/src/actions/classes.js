@@ -12,23 +12,23 @@ export const actCreateClassesRequest = (classInfo, hasChooseTutors, history) => 
                     dispatch(actDeleteChooseTutors());
                     history.push("/tim-gia-su");
                     notification.success({
-                    message: "Success",
-                    description: "Chọn gia sư thành công!"
+                        message: "Success",
+                        description:
+                            "Chọn gia sư thành công!"
                     });
                 }
                 else {
                     history.push("/lop-moi");
-                     notification.success({
-                     message: "Success",
-                     description: "Đăng yêu cầu thành công!"
-                     });
+                    notification.success({
+                        message: "Success",
+                        description:
+                            "Đăng yêu cầu thành công!"
+                    });
                 }
-
-
             } else {
                 notification.error({
                     message: "Failed",
-                    description: "Số điện thoại đã đăng ký tài khoản gia sư. Vui lòng sử dụng số điện thoại khác!"
+                    description: "Số điện thoại không hợp lệ. Vui lòng kiểm tra lại!"
                 });
             }
         }).catch(err => {

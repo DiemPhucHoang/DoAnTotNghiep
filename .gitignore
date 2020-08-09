@@ -30,3 +30,4 @@ build/
 ### VS Code ###
 .vscode/
 web_app/node_modules
+uploads/
