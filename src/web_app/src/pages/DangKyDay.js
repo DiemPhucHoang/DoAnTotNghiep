@@ -69,7 +69,7 @@ class DangKyDay extends Component {
                                 <FormDangKyNhanLop onRegisterClass={this.onRegisterClass} />
                             </Grid>
                             <hr />
-                            {this.props.tutorRegisterClass.length <= 0 ? (
+                            {this.props.tutorRegisterClass?.content?.length <= 0 ? (
                                 <Grid container className="padding-class">
                                     <strong>Hiện tại chưa có gia sư nào đăng ký nhận lớp này</strong>
                                 </Grid>
