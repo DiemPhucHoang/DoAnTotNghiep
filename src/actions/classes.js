@@ -25,12 +25,10 @@ export const actCreateClassesRequest = (classInfo, hasChooseTutors, history) => 
                             "Đăng yêu cầu thành công!"
                     });
                 }
-                
-
             } else {
                 notification.error({
                     message: "Failed",
-                    description: "Số điện thoại đã đăng ký tài khoản gia sư. Vui lòng sử dụng số điện thoại khác!"
+                    description: "Số điện thoại không hợp lệ. Vui lòng kiểm tra lại!"
                 });
             }
         }).catch(err => {
