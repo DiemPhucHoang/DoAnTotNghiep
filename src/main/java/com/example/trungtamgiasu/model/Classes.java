@@ -59,10 +59,6 @@ public class Classes {
     @JoinColumn(name = "id_parent", nullable = false)
     private User user;
 
-    @CreatedDate
-    @Column(updatable = false, nullable = false)
-    private Instant dateCreated;
-
     public Classes(Long id, String classTeach, String subject, String levelRequirement,
                    String genderRequirement, String district, String timeTeach,
                    String address, double tuitionFee, ClassesStatus status) {

@@ -118,6 +118,7 @@ CREATE TABLE `classes` (
   `tuition_fee` double NOT NULL,
   `status` varchar(255) NOT NULL,
   `id_parent` bigint DEFAULT NULL,
+  `time` datetime DEFAULT NULL,
   PRIMARY KEY (`id_class`),
   KEY `id_parent` (`id_parent`),
   CONSTRAINT `classes_ibfk_1` FOREIGN KEY (`id_parent`) REFERENCES `users` (`id_user`)
@@ -128,6 +129,7 @@ CREATE TABLE `parent_register_tutor` (
   `id_tutor` bigint NOT NULL,
   `id_class` bigint DEFAULT NULL,
   `status` varchar(50) DEFAULT NULL,
+  `time` datetime DEFAULT NULL,
   PRIMARY KEY (`id_parent`,`id_tutor`),
   KEY `id_tutor` (`id_tutor`),
   KEY `id_class` (`id_class`),
@@ -143,6 +145,7 @@ CREATE TABLE `tutor_register_class` (
   `status` varchar(255) DEFAULT NULL,
   `id_class` bigint DEFAULT NULL,
   `id_tutor` bigint DEFAULT NULL,
+  `time` datetime DEFAULT NULL,
   PRIMARY KEY (`id_register`),
   KEY `id_class` (`id_class`),
   KEY `id_tutor` (`id_tutor`),

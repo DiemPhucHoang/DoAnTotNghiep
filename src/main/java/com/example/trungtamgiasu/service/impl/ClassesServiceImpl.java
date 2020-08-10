@@ -167,7 +167,7 @@ public class ClassesServiceImpl implements ClassesService {
         int[] A = new int[12];
         List<Classes> classes = classesDAO.findAll();
         for (Classes classs: classes) {
-            Instant dateCreated = classs.getDateCreated();
+            Instant dateCreated = classs.getTime().toInstant();
             ZoneId z = ZoneId.of("Asia/Ho_Chi_Minh");
             ZonedDateTime zdt = dateCreated.atZone(z);
             switch (zdt.getMonth()) {
