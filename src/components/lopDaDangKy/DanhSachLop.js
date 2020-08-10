@@ -42,7 +42,7 @@ class DanhSachLop extends Component {
                                 </TableHead>
                                 <TableBody>
                                     {hasClassRegister && classRegister.map((row) => (
-                                        <TableRow key={row.idRegister} style={{ backgroundColor: `${row.status === "Xem xét" ? '#e7e5e5' : (row.status === "Không đạt" ? '#b65c5c' : (row.status === "Đã nhận lớp" ? "#a2aeee" : "#f9b86d"))}` }}>
+                                        <TableRow key={row.idRegister} style={{ backgroundColor: `${row.status === "Xem xét" ? '#e7e5e5' : (row.status === "Không đạt" ? '#b65c5c' : ((row.status === "Đã nhận lớp" || row.status === "Đã nhận lớp - phụ huynh chọn") ? "#a2aeee" : "#f9b86d"))}` }}>
                                             <TableCell align="center" component="th" scope="row">
                                                 {row.time}
                                             </TableCell>
