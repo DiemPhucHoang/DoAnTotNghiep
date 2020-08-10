@@ -15,6 +15,8 @@ import java.util.Date;
 public class InvoiceInfoVo {
     private Long idInvoice;
 
+    private Long idClass;
+
     private double serviceFee;
 
     private Date time;
@@ -25,6 +27,7 @@ public class InvoiceInfoVo {
 
     public InvoiceInfoVo(Invoice invoice) {
         this.idInvoice = invoice.getId();
+        this.idClass = invoice.getClassRegister().getClasses().getId();
         this.serviceFee = invoice.getServiceFee();
         this.time = invoice.getTime();
         this.classTeach = invoice.getClassRegister().getClasses().getClassTeach();

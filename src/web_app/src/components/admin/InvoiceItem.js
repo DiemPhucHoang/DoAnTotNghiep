@@ -8,19 +8,13 @@ class InvoiceItem extends Component {
             name: ''
         }
     }
-    
-    // componentDidMount(){
-    //     var { classRegisteritem } = this.props;
-    //     var idTutor = classRegisteritem.tutors.idTutor;
-    //     callApi(`tutors/getTutor/getUser?idTutor=${idTutor}`, "GET", null).then(res => {
-    //         this.setState({name: res.data.result.name })
-    //     })  
-    // }
+
     render() {
         var { invoice } = this.props;
         return (
             <tr>
                 <td>{invoice.idInvoice}</td>
+                <td>{invoice.idClass}</td>
                 <td>{invoice.classTeach}</td>
                 <td>{invoice.tutorName}</td>
                 <td>{invoice.serviceFee}</td>

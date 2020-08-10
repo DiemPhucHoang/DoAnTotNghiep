@@ -9,7 +9,8 @@ class InvoiceList extends Component {
                     <table className="table table-bordered" id="dataTable" width="100%" cellSpacing={0}>
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <th>#</th>
+                                <th>ID Lớp</th>
                                 <th>Lớp dạy</th>
                                 <th>Gia sư</th>
                                 <th>Lệ phí</th>
@@ -18,7 +19,8 @@ class InvoiceList extends Component {
                         </thead>
                         <tfoot>
                             <tr>
-                                <th>ID</th>
+                                <th>#</th>
+                                <th>ID Lớp</th>
                                 <th>Lớp dạy</th>
                                 <th>Gia sư</th>
                                 <th>Lệ phí</th>
