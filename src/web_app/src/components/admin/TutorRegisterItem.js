@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import {actUpdateTutorRegisterClassRequest} from '../../actions/tutorRegisterClass';
 import { connect } from 'react-redux';
+import Rating from '@material-ui/lab/Rating';
+import Box from '@material-ui/core/Box';
 
 
 class TutorRegisterItem extends Component {
@@ -21,7 +23,14 @@ class TutorRegisterItem extends Component {
         return (
             <tr style={{ backgroundColor: `${colorStatus}`}}>
                 <td>{index + 1}</td>
-                <td>{tutorRegisterItem.nameTutor}</td>
+                <td>
+                    {tutorRegisterItem.nameTutor}
+                    <br/>
+                    { tutorRegisterItem?.score !== undefined
+                      ? <Rating size="small" value={tutorRegisterItem?.score} readOnly style={{margin: '-10px'}}/>
+                      :''
+                    }
+                </td>
                 <td>{tutorRegisterItem.phone}</td>
                 <td>{tutorRegisterItem.level}</td>
                 <td>{tutorRegisterItem.major} - {tutorRegisterItem.college}</td>

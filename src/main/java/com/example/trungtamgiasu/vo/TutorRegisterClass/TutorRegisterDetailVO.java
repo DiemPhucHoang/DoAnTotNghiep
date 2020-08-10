@@ -33,7 +33,9 @@ public class TutorRegisterDetailVO {
 
     private String status;
 
-    public TutorRegisterDetailVO(TutorRegisterClass tutorRegisterClass) {
+    private int score;
+
+    public TutorRegisterDetailVO(TutorRegisterClass tutorRegisterClass, int score) {
         this.idClass = tutorRegisterClass.getClasses().getId();
         this.idTutorRegisterClass = tutorRegisterClass.getId();
         this.nameTutor = tutorRegisterClass.getTutor().getUser().getName();
@@ -44,5 +46,6 @@ public class TutorRegisterDetailVO {
         this.payment = tutorRegisterClass.getPayment();
         this.dateReceive =tutorRegisterClass.getDateReceive();
         this.status = tutorRegisterClass.getStatus().getKey();
+        this.score = score;
     }
 }

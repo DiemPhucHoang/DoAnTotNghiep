@@ -2,9 +2,7 @@ package com.example.trungtamgiasu.service.impl;
 
 import com.example.trungtamgiasu.dao.ClassesDAO;
 import com.example.trungtamgiasu.dao.TutorDAO;
-import com.example.trungtamgiasu.model.Classes;
-import com.example.trungtamgiasu.model.Tutor;
-import com.example.trungtamgiasu.model.User;
+import com.example.trungtamgiasu.model.*;
 import com.example.trungtamgiasu.model.enums.RoleName;
 import com.example.trungtamgiasu.service.UserService;
 import com.example.trungtamgiasu.vo.CountTotalVO;
@@ -69,5 +67,51 @@ public class AdminService {
         Classes classes = classesDAO.findById(idClass).get();
         UserInfoVO userInfoVO = new UserInfoVO(classes.getUser());
         return userInfoVO;
+    }
+
+    public int compare(Long idClass, Long idTutor) {
+        int score = 0;
+        Classes classes = classesDAO.getOne(idClass);
+
+        String[] arrSubject = classes.getSubject().split(",");
+        String[] arrClassTeach = classes.getClassTeach().split(",");
+        String[] arrDistrict = classes.getDistrict().split(",");
+
+        Tutor tutor = tutorDAO.getOne(idTutor);
+
+        boolean flagSubject = false;
+        for (Subject subject: tutor.getSubjects()) {
+            for (int i=0; i<arrSubject.length; i++) {
+                if (subject.getSubjectName().equals(arrSubject[i])) {
+                    flagSubject = true;
+                }
+            }
+        }
+        if (flagSubject) score ++;
+
+        boolean flagClassTeach = false;
+        for (ClassTeach classTeach: tutor.getClassTeaches()) {
+            for (int i=0; i<arrClassTeach.length; i++) {
+                if (classTeach.getClassTeachName().equals(arrClassTeach[i])) {
+                    flagClassTeach = true;
+                }
+            }
+        }
+        if (flagClassTeach) score ++;
+
+        boolean flagDistrict = false;
+        for (District district: tutor.getDistricts()) {
+            for (int i=0; i<arrDistrict.length; i++) {
+                if (district.getDistrictName().equals(arrDistrict[i])) {
+                    flagDistrict = true;
+                }
+            }
+        }
+        if (flagDistrict) score ++;
+
+        if( classes.getLevelRequirement().equals("Không yêu cầu") || tutor.getLevel().equals(classes.getLevelRequirement())) score++;
+        if ( classes.getGenderRequirement().equals("Không yêu cầu") || tutor.getGender().equals(classes.getGenderRequirement())) score++;
+
+        return score;
     }
 }

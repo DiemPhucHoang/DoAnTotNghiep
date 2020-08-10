@@ -27,7 +27,9 @@ public class TutorDetailVO {
 
     private String status;
 
-    public TutorDetailVO(ParentRegisterTutor parentRegisterTutor) {
+    private int score;
+
+    public TutorDetailVO(ParentRegisterTutor parentRegisterTutor, int score) {
         this.idTutor = parentRegisterTutor.getId().getIdTutor();
         this.idClass = parentRegisterTutor.getIdClass();
         this.nameTutor = parentRegisterTutor.getTutor().getUser().getName();
@@ -36,5 +38,6 @@ public class TutorDetailVO {
         this.major = parentRegisterTutor.getTutor().getMajor();
         this.college = parentRegisterTutor.getTutor().getCollege();
         this.status = parentRegisterTutor.getStatus().toString();
+        this.score = score;
     }
 }

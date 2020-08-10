@@ -78,4 +78,12 @@ public class Tutor {
 
     @OneToMany(mappedBy = "tutor")
     private Set<Rate> rates = new HashSet<>();
+
+    public Tutor(String gender, String level, Set<Subject> subjects, Set<ClassTeach> classTeaches, Set<District> districts) {
+        this.gender = gender;
+        this.level = level;
+        this.subjects = subjects;
+        this.classTeaches = classTeaches;
+        this.districts = districts;
+    }
 }

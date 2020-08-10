@@ -1,15 +1,9 @@
 package com.example.trungtamgiasu.service.impl;
 
-import com.example.trungtamgiasu.dao.ClassesDAO;
-import com.example.trungtamgiasu.dao.TutorDAO;
-import com.example.trungtamgiasu.dao.TutorRegisterClassDAO;
-import com.example.trungtamgiasu.dao.UserDAO;
+import com.example.trungtamgiasu.dao.*;
 import com.example.trungtamgiasu.exception.BadRequestException;
 import com.example.trungtamgiasu.exception.ResourceNotFoundException;
-import com.example.trungtamgiasu.model.Classes;
-import com.example.trungtamgiasu.model.Tutor;
-import com.example.trungtamgiasu.model.TutorRegisterClass;
-import com.example.trungtamgiasu.model.User;
+import com.example.trungtamgiasu.model.*;
 import com.example.trungtamgiasu.model.enums.ClassesStatus;
 import com.example.trungtamgiasu.model.enums.TutorRegisterClassStatus;
 import com.example.trungtamgiasu.parsing.TutorRegisterClassParsing;
@@ -56,6 +50,9 @@ public class TutorRegisterClassServiceImpl implements TutorRegisterClassService 
 
     @Autowired
     private InvoiceService invoiceService;
+
+    @Autowired
+    private AdminService adminService;
 
     @Override
     public TutorRegisterClass saveTutorRegisterClass(TutorRegisterClass registerClass) {
@@ -140,6 +137,7 @@ public class TutorRegisterClassServiceImpl implements TutorRegisterClassService 
         List<ClassTutorVO> classTutorVOS = new ArrayList<>();
 
         List<TutorRegisterClass> tutorRegisterClasses = tutorRegisterClassDAO.findAll();
+        tutorRegisterClasses.removeIf(n -> (n.getStatus() == TutorRegisterClassStatus.DANHANLOP_PARENT));
 
         for(TutorRegisterClass tutorRegisterClass: tutorRegisterClasses) {
             String status = "Chưa duyệt";
@@ -172,7 +170,8 @@ public class TutorRegisterClassServiceImpl implements TutorRegisterClassService 
 
         List<TutorRegisterClass> tutorRegisterClasses = tutorRegisterClassDAO.getAllTutorRegisterByClasses(idClass);
         for (TutorRegisterClass tutorRegisterClass: tutorRegisterClasses) {
-            tutorRegisterDetailVOS.add(new TutorRegisterDetailVO(tutorRegisterClass));
+            int score = adminService.compare(idClass, tutorRegisterClass.getTutor().getId());
+            tutorRegisterDetailVOS.add(new TutorRegisterDetailVO(tutorRegisterClass, score));
         }
 
         int start = (int) pageable.getOffset();

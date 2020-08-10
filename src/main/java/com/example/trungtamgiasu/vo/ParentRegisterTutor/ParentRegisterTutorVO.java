@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,6 +17,7 @@ public class ParentRegisterTutorVO {
     private String classTeach;
     private String subject;
     private String district;
+    private Date time;
     private int noTutor;
     private String status;
 }

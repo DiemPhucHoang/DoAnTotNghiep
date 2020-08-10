@@ -12,4 +12,6 @@ public interface ClassTeachDAO extends JpaRepository<ClassTeach, Long> {
     Optional<ClassTeach> findById(Long id);
 
     List<ClassTeach> findAll();
+
+    Optional<ClassTeach> findByClassTeachName(String name);
 }

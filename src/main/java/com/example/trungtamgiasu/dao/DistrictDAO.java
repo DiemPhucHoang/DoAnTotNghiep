@@ -12,4 +12,6 @@ public interface DistrictDAO extends JpaRepository<District, Long> {
     Optional<District> findById(Long id);
 
     List<District> findAll();
+
+    Optional<District> findByDistrictName(String name);
 }

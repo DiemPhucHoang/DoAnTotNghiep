@@ -142,6 +142,21 @@ export const actDeleteChooseTutor = id => {
 
 
 //get tutor by id user
+export const actFetchTutorByThisIdUserRequest = (idUser) => {
+    return dispatch => {
+        return callApi(
+            `tutor/user/${idUser}`, "GET", null).then(res => {
+                if (res.status === 200 && res.data.success) {
+                    dispatch(actFetchTutorByIdUser(res.data))
+                }
+            }).catch(err => {
+                console.log(err);
+          });
+    }
+}
+
+
+//get tutor by id user
 export const actFetchTutorByIdUserRequest = () => {
     return dispatch => {
         return callApi(

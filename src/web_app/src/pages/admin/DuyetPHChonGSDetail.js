@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { actFetchClassDetailRequest } from '../../actions/classes';
 import { actFetchTutorDetailRequest, actUpdateParentRegisterTutorRequest } from '../../actions/parentRegisterTutor';
 import { connect } from 'react-redux';
+import Rating from '@material-ui/lab/Rating';
 import RoomSharpIcon from '@material-ui/icons/RoomSharp';
 
 class DuyetPHChonGSDetail extends Component {
@@ -91,7 +92,12 @@ class DuyetPHChonGSDetail extends Component {
                                                     {hasParentRegisters && content.map((row) => (
                                                         <tr style={{backgroundColor: `${row.status === "DADONGY" ? "#da9494" : ""}`}}>
                                                             <td>{row.idTutor}</td>
-                                                            <td>{row.nameTutor}</td>
+                                                            <td>{row.nameTutor} <br/>
+                                                                { row?.score !== undefined
+                                                                   ? <Rating size="small" value={row?.score} readOnly style={{margin: '-10px'}}/>
+                                                                   :''
+                                                                   }
+                                                            </td>
                                                             <td>{row.phone}</td>
                                                             <td>{row.level}</td>
                                                             <td>{row.major} - {row.college}</td>
@@ -104,7 +110,7 @@ class DuyetPHChonGSDetail extends Component {
                                                                         </button>
                                                                     : row.status === "DADONGY"
                                                                     ? <button disabled>Đã duyệt</button>
-                                                                    : <button disabled>Không đạt</button>
+                                                                    : <button disabled>Không đồng ý</button>
                                                                 }
                                                             </td>
                                                         </tr>
