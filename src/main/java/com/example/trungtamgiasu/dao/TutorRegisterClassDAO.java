@@ -23,7 +23,7 @@ public interface TutorRegisterClassDAO extends JpaRepository<TutorRegisterClass,
     @Query(value = "select  * from tutor_register_class where id_tutor = ?1", nativeQuery = true)
     List<TutorRegisterClass> getAllByTutors(Long idTutor);
 
-    @Query(value = "select * from tutor_register_class where status ='0' and id_tutor = ?1", nativeQuery = true)
+    @Query(value = "select * from tutor_register_class where (status = '0' or status = '4') and id_tutor = ?1", nativeQuery = true)
     List<TutorRegisterClass> numberOfClassTeach(Long idTutor);
 
     @Modifying
