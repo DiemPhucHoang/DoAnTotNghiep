@@ -31,7 +31,7 @@ class ThongTinChiTiet extends Component {
                   <Table>
                      <TableHead>
                         <TableRow>
-                           <TableCell>Trường</TableCell>
+                           <TableCell>Trường&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;</TableCell>
                            <TableCell><b>{tutorDetail.college}</b></TableCell>
                         </TableRow>
                      </TableHead>
@@ -44,7 +44,6 @@ class ThongTinChiTiet extends Component {
                            <TableCell>Năm tốt nghiệp</TableCell>
                            <TableCell><b>{tutorDetail.graduationYear}</b></TableCell>
                         </TableRow>
-
                         <TableRow>
                            <TableCell>Dạy môn</TableCell>
                            <TableCell><b>{subjectNames}</b></TableCell>
@@ -60,6 +59,10 @@ class ThongTinChiTiet extends Component {
                         <TableRow>
                               <TableCell>Yêu cầu lương</TableCell>
                               <TableCell><b>{tutorDetail.salaryPerHour} vnđ/h</b></TableCell>
+                        </TableRow>
+                        <TableRow>
+                              <TableCell>Thông tin khác</TableCell>
+                              <TableCell><b>{tutorDetail.moreInfo}</b></TableCell>
                         </TableRow>
                      </TableBody>
                   </Table>

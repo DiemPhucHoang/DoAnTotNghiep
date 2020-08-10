@@ -221,6 +221,7 @@ class ThongTinHoSo extends Component {
                                     multiline
                                     rowsMax={4}
                                     name="moreInfo"
+                                    value={tutor?.moreInfo}
                                     onChange={this.onChangeInfoTutor}
                                 />
                             </Grid>
