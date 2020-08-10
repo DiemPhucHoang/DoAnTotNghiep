@@ -142,7 +142,6 @@ class App extends Component {
 
         <div>
           <BackTop />
-          <strong style={{ color: "rgba(64, 64, 64, 0.6)" }}></strong>
         </div>
 
         {/* <Footer /> */}

@@ -42,7 +42,7 @@ class SearchClass extends Component {
       render() {
         let { subjects, classTeaches, districts } = this.props;
         const genderArr = [{ value: "Nam" }, { value: "Nữ" }, { value: "Không yêu cầu" }];
-        const levelArr = [{value: "Sinh viên"}, {value: "Giáo viên"}, {value: "Thạc sĩ"}, {value: "Cử nhận sư phạm"}]; 
+        const levelArr = [{value: "Sinh viên"}, {value: "Giáo viên"}, {value: "Cử nhân"}, {value: "Thạc sĩ"}]; 
         const hasSubjects = subjects && subjects.length > 0;
         const hasDistricts = districts && districts.length > 0;
         const hasClassTeaches = classTeaches && classTeaches.length > 0;
