@@ -202,6 +202,7 @@ public class TutorServiceImpl implements TutorService {
         tutor.setGender(tutorVO.getGender());
         tutor.setYearOfBirth(tutorVO.getYearOfBirth());
         tutor.setSalaryPerHour(tutorVO.getSalaryPerHour());
+        tutor.setMoreInfo(tutorVO.getMoreInfo());
         //update table tutor_subject
         if(tutorVO.getSubject() != null) {
             tutor.setSubjects(updateSubjects(tutorVO.getSubject()));
