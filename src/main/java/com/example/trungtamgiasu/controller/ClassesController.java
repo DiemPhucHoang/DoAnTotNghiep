@@ -28,7 +28,7 @@ public class ClassesController {
             Classes classes = classesService.createClass(classesVO);
             return new ApiResponse(true, "Create class successfully", classes);
         } catch (Exception e) {
-            return new ApiResponse(false, "Create class failed", e.toString());
+            return new ApiResponse(false, "Create class failed", e.getMessage());
         }
 
     }

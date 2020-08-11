@@ -208,7 +208,7 @@ class ClassActionPage extends Component {
                                                             <option>Sinh viên</option>
                                                             <option>Giáo viên</option>
                                                             <option>Cử nhân</option>
-                                                            <option>Thạc sỹ/Tiến sỹ</option>
+                                                            <option>Thạc sĩ</option>
                                                         </select>
                                                     </div>
                                                 </div>

@@ -1,31 +1,50 @@
 package com.example.trungtamgiasu.specification;
 
-import com.example.trungtamgiasu.model.ClassTeach;
-import com.example.trungtamgiasu.model.District;
-import com.example.trungtamgiasu.model.Subject;
-import com.example.trungtamgiasu.model.Tutor;
+import com.example.trungtamgiasu.model.*;
 import com.example.trungtamgiasu.model.enums.TutorStatus;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 public class TutorSpecification {
 
     public static Specification<Tutor> withSubject(String subject, TutorStatus tutorStatus) {
+//        if (subject == null || subject.isEmpty()) {
+//            return null;
+//        } else {
+//            // Specification using Java 8 lambdas
+//            List<String> list = new ArrayList<>(Arrays.asList(subject.split(",")));
+//            return (root, query, cb) -> {
+//                Join join = root.join("subjects");
+//                query.distinct(true);
+//                Root<Subject> subjectRoot = query.from(Subject.class);
+//                Expression<Collection<Tutor>> tutorSubject = subjectRoot.get("tutors");
+//                return cb.and(cb.equal(subjectRoot.get("subjectName"), subjectRoot), cb.isMember(root, tutorSubject),
+//                        cb.equal(root.get("status"), tutorStatus));
+//            };
+//        }
         if (subject == null || subject.isEmpty()) {
             return null;
-        } else {
-            // Specification using Java 8 lambdas
-            return (root, query, cb) -> {
-                query.distinct(true);
-                Root<Subject> subjectRoot = query.from(Subject.class);
-                Expression<Collection<Tutor>> tutorSubject = subjectRoot.get("tutors");
-                return cb.and(cb.equal(subjectRoot.get("subjectName"), subject), cb.isMember(root, tutorSubject),
-                        cb.equal(root.get("status"), tutorStatus));
-            };
         }
+        List<String> list = new ArrayList<>(Arrays.asList(subject.split(",")));
+        return new Specification<Tutor>() {
+            @Override
+            public Predicate toPredicate(Root<Tutor> root, CriteriaQuery<?> query,
+                                         CriteriaBuilder cb) {
+                final Collection<Predicate> predicates = new ArrayList<>();
+                query.distinct(true);
+                    if (!list.isEmpty()) {
+                        final Predicate appPredicate = root.join(Tutor_.subjects).get(Subject_.subjectName).in(list);
+                        predicates.add(appPredicate);
+                    }
+                return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+
     }
 
     public static Specification<Tutor> withClassTeach(String classTeach, TutorStatus tutorStatus) {

@@ -39,4 +39,8 @@ public class ClassesInfoVO {
     private String status;
 
     private String time;
+
+    private int noDay;
+
+    private int noHour;
 }

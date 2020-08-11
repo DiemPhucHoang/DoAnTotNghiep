@@ -35,6 +35,8 @@ public class ClassesParsingImpl implements ClassesParsing {
             classes.setAddress(classesVO.getAddress());
             classes.setTuitionFee(classesVO.getTuitionFee());
             classes.setStatus(ClassesStatus.from(classesVO.getStatus()));
+            classes.setNoDay(classesVO.getNoDay());
+            classes.setNoHour(classesVO.getNoHour());
             return classes;
         }
 
@@ -56,6 +58,8 @@ public class ClassesParsingImpl implements ClassesParsing {
             classesVO.setAddress(classes.getAddress());
             classesVO.setTuitionFee(classes.getTuitionFee());
             classesVO.setStatus(classes.getStatus().getKey());
+            classesVO.setNoDay(classes.getNoDay());
+            classesVO.setNoHour(classes.getNoHour());
             return classesVO;
         }
     }

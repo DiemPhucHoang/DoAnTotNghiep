@@ -28,8 +28,32 @@ class PhuHuynh extends Component {
     }
 
     componentDidMount() {
-        this.props.deleteSearchInputTutor();
-        this.props.fetchAllTutors(0);
+        // this.props.deleteSearchInputTutor();
+
+        let { subject, district, classTeach, level, gender } = this.props.search;
+        if (!(subject === undefined &&
+            district === undefined &&
+            classTeach === undefined &&
+            level === undefined &&
+            gender === undefined)
+            || (subject === "" &&
+                district === "" &&
+                classTeach === "" &&
+                level === "" &&
+                gender === "")
+        ) {
+            let searchInfo = {
+                subject: subject,
+                classTeach: classTeach,
+                district: district,
+                level: level,
+                gender: gender
+            };
+            this.props.onSearch(searchInfo, 0);
+        } else {
+            this.props.fetchAllTutors(0);
+        }
+
     }
 
     showSubmitRequest = () => {
@@ -132,6 +156,7 @@ class PhuHuynh extends Component {
                                     + Đăng yêu cầu
                             </Button>
                                 <DangYeuCauTimGiaSu
+                                    searchTutor={this.props.search}
                                     submitRequest={this.state.submitRequest}
                                     onCloseSubmitRequest={this.onCloseSubmitRequest}
                                     subjects={subjects}

@@ -28,7 +28,7 @@ export const actCreateClassesRequest = (classInfo, hasChooseTutors, history) => 
             } else {
                 notification.error({
                     message: "Failed",
-                    description: "Số điện thoại không hợp lệ. Vui lòng kiểm tra lại!"
+                    description: res.data.result
                 });
             }
         }).catch(err => {

@@ -138,12 +138,29 @@ public class TutorServiceImpl implements TutorService {
     public Page<TutorInfoVO> searchTutor(SearchVO searchVO, Pageable pageable) {
         logger.info("Search tutor");
         List<Tutor> tutors = tutorDAO.findAll(Objects.requireNonNull(Objects.requireNonNull(Objects.requireNonNull(Specification.
-                where(TutorSpecification.withSubject(searchVO.getSubject(), TutorStatus.CHUANHANLOP))
-                .and(TutorSpecification.withClassTeach(searchVO.getClassTeach(), TutorStatus.CHUANHANLOP)))
+                where(TutorSpecification.withClassTeach(searchVO.getClassTeach(), TutorStatus.CHUANHANLOP)))
                 .and(TutorSpecification.withDistrict(searchVO.getDistrict(), TutorStatus.CHUANHANLOP)))
                 .and(TutorSpecification.withLevel(searchVO.getLevel(), TutorStatus.CHUANHANLOP)))
-                .and(TutorSpecification.withGender(searchVO.getGender(), TutorStatus.CHUANHANLOP)));
+                .and(TutorSpecification.withGender(searchVO.getGender(), TutorStatus.CHUANHANLOP))
+                .and(TutorSpecification.withSubject(searchVO.getSubject(), TutorStatus.CHUANHANLOP)));
         List<TutorInfoVO> tutorInfoVOS = tutorParsing.toTutorsInfoVOList(tutors);
+        List<TutorInfoVO> tutorInfoVOSCopy = new ArrayList<>();
+        if(!searchVO.getSubject().isEmpty()) {
+            List<String> list = new ArrayList<>(Arrays.asList(searchVO.getSubject().split(",")));
+            for (TutorInfoVO t : tutorInfoVOS) {
+                int dem = 0;
+                for (Subject s : t.getSubjects()) {
+                    if(searchVO.getSubject().contains(s.getSubjectName())) {
+                        dem++;
+                    }
+                }
+                if(dem == list.size()) {
+                    tutorInfoVOSCopy.add(t);
+                }
+            }
+            tutorInfoVOS = tutorInfoVOSCopy;
+        }
+
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), tutorInfoVOS.size());
         Page<TutorInfoVO> tutorInfoVOPage = new PageImpl<>

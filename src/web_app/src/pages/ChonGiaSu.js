@@ -10,21 +10,22 @@ import callApi from "./../utils/apiCaller";
 import { actFetchTutorDetailRequest } from './../actions/tutor';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
+import { subjectConst, districtConst, classTeachConst } from '../constants/tutor';
 
 class ChonGiaSu extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            subjects: [],
-            districts: [],
-            classTeaches: [],
+            subjects: subjectConst,
+            districts: districtConst,
+            classTeaches: classTeachConst,
         }
     }
 
     componentDidMount() {
         const chooseTutor = true
         this.props.onFetchTutorDetail(this.props.location.state.tutorId, chooseTutor);
-        this.getAll();
+        // this.getAll();
     }
 
     getAll = () => {

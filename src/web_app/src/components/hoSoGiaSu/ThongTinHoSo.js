@@ -140,8 +140,8 @@ class ThongTinHoSo extends Component {
                                     <MenuItem key="Sinh viên" value="Sinh viên">
                                         Sinh viên
                                         </MenuItem>
-                                    <MenuItem key="Thạc sỹ" value="Thạc sỹ">
-                                        Thạc sỹ
+                                    <MenuItem key="Thạc sĩ" value="Thạc sĩ">
+                                        Thạc sĩ
                                         </MenuItem>
                                     <MenuItem key="Cử nhân" value="Cử nhân">
                                         Cử nhân

@@ -51,4 +51,8 @@ public class ClassesVO {
     private String email;
 
     private Long[] idTutors;
+
+    private int noDay;
+
+    private int noHour;
 }

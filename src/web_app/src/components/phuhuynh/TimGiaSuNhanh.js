@@ -4,12 +4,17 @@ import {
 } from '@material-ui/core';
 import { connect } from "react-redux";
 import { actSearchInputRequest } from "../../actions/tutor";
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import ListItemText from '@material-ui/core/ListItemText';
+import Checkbox from '@material-ui/core/Checkbox';
 
 class TimGiaSuNhanh extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            subject: "",
+            subject: [],
             district: "",
             classTeach: "",
             level: "",
@@ -17,8 +22,33 @@ class TimGiaSuNhanh extends Component {
         }
     }
 
+    componentDidMount() {
+        let { subject, district, classTeach, level, gender } = this.props.searchTutor;
+        if (!(subject === undefined &&
+            district === undefined &&
+            classTeach === undefined &&
+            level === undefined &&
+            gender === undefined)
+            || (subject === "" &&
+                district === "" &&
+                classTeach === "" &&
+                level === "" &&
+                gender === "")
+        ) {
+            this.setState({
+                subject: subject === ""?[]:subject.split(","),
+                district: district,
+                classTeach: classTeach,
+                level: level,
+                gender: gender
+            })
+
+        }
+    }
+
     onChange = event => {
         const { name, value } = event.target;
+        console.log('name, value: ', name, value);
         this.setState({
             [name]: value
         })
@@ -28,11 +58,11 @@ class TimGiaSuNhanh extends Component {
         e.preventDefault();
         let { subject, district, classTeach, level, gender } = this.state;
         let search = {
-            subject: subject,
-            district: district,
-            classTeach: classTeach,
-            level: level,
-            gender: gender,
+            subject: subject.join(","),
+            district: district === "Chọn quận" ? "" : district,
+            classTeach: classTeach === "Chọn lớp" ? "" : classTeach,
+            level: level === "Chọn trình độ gia sư" ? "" : level,
+            gender: gender === "Chọn giới tính gia sư" ? "" : gender,
             isSearch: true
         }
         this.props.onSearchTutors(search);
@@ -40,9 +70,10 @@ class TimGiaSuNhanh extends Component {
     }
 
     render() {
-        let { subjects, classTeaches, districts } = this.props;
+        let { subjects, classTeaches, districts, searchTutor } = this.props;
+        console.log("subject:", this.state.subject);
         const genderArr = [{ value: "Nam" }, { value: "Nữ" }];
-        const levelArr = [{value: "Sinh viên"}, {value: "Giáo viên"}, {value: "Cử nhân"}, {value: "Thạc sĩ"}];
+        const levelArr = [{ value: "Sinh viên" }, { value: "Giáo viên" }, { value: "Cử nhân" }, { value: "Thạc sĩ" }];
         const hasSubjects = subjects && subjects.length > 0;
         const hasDistricts = districts && districts.length > 0;
         const hasClassTeaches = classTeaches && classTeaches.length > 0;
@@ -67,20 +98,24 @@ class TimGiaSuNhanh extends Component {
                                 <Grid item xs={4}>
                                     <TextField
                                         id="standard-select-currency"
+                                        name="district"
                                         select
-                                        label="Chọn môn học"
-                                        name="subject"
-                                        onChange={this.onChange}
+                                        label="Chọn quận"
                                         variant="outlined"
                                         size="small"
                                         fullWidth
-                                        value={this.state.subject}
+                                        onChange={this.onChange}
+                                        value={this.state.district}
                                     >
-                                        {hasSubjects && subjects.map((option) => (
-                                            <MenuItem key={option.subjectName} value={option.subjectName}>
-                                                {option.subjectName}
+                                        <MenuItem key="Chọn quận" value="Chọn quận">
+                                            Chọn quận
+                                        </MenuItem>
+                                        {hasDistricts && districts.map((option) => (
+                                            <MenuItem key={option.districtName} value={option.districtName}>
+                                                {option.districtName}
                                             </MenuItem>
                                         ))}
+
                                     </TextField>
                                 </Grid>
                                 <Grid item xs={4}>
@@ -95,6 +130,9 @@ class TimGiaSuNhanh extends Component {
                                         onChange={this.onChange}
                                         value={this.state.classTeach}
                                     >
+                                        <MenuItem key="Chọn lớp" value="Chọn lớp">
+                                            Chọn lớp
+                                        </MenuItem>
                                         {hasClassTeaches && classTeaches.map((option) => (
                                             <MenuItem key={option.classTeachName} value={option.classTeachName}>
                                                 {option.classTeachName}
@@ -103,24 +141,29 @@ class TimGiaSuNhanh extends Component {
                                     </TextField>
                                 </Grid>
                                 <Grid item xs={4}>
-                                    <TextField
-                                        id="standard-select-currency"
-                                        name="district"
-                                        select
-                                        label="Chọn quận"
-                                        variant="outlined"
-                                        size="small"
-                                        fullWidth
-                                        onChange={this.onChange}
-                                        value={this.state.district}
-                                    >
-                                        {hasDistricts && districts.map((option) => (
-                                            <MenuItem key={option.districtName} value={option.districtName}>
-                                                {option.districtName}
-                                            </MenuItem>
-                                        ))}
-                                    </TextField>
+                                    <FormControl fullWidth required variant="outlined" size="small">
+                                        <InputLabel id="demo-mutiple-checkbox-outlined-label">Môn học</InputLabel>
+                                        <Select
+                                            labelId="demo-mutiple-checkbox-outlined-label"
+                                            id="demo-mutiple-checkbox-outlined"
+                                            multiple
+                                            label="Môn học"
+                                            onChange={this.onChange}
+                                            name="subject"
+                                            variant="outlined"
+                                            value={this.state.subject}
+                                            renderValue={(selected) => selected.join(', ')}
+                                        >
+                                            {hasSubjects && subjects.map((subject) => (
+                                                <MenuItem key={subject.subjectName} value={subject.subjectName}>
+                                                    <Checkbox checked={this.state.subject.indexOf(subject.subjectName) > -1} />
+                                                    <ListItemText primary={subject.subjectName} />
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
                                 </Grid>
+
                             </Grid>
                             <Grid container spacing={3}>
                                 <Grid item xs={4}></Grid>
@@ -138,6 +181,9 @@ class TimGiaSuNhanh extends Component {
                                         onChange={this.onChange}
                                         value={this.state.level}
                                     >
+                                        <MenuItem key="Chọn trình độ gia sư" value="Chọn trình độ gia sư">
+                                            Chọn trình độ gia sư
+                                        </MenuItem>
                                         {levelArr.map((option) => (
                                             <MenuItem key={option.value} value={option.value}>
                                                 {option.value}
@@ -157,6 +203,9 @@ class TimGiaSuNhanh extends Component {
                                         onChange={this.onChange}
                                         value={this.state.gender}
                                     >
+                                        <MenuItem key="Chọn giới tính gia sư" value="Chọn giới tính gia sư">
+                                            Chọn giới tính gia sư
+                                        </MenuItem>
                                         {genderArr.map((option) => (
                                             <MenuItem key={option.value} value={option.value}>
                                                 {option.value}
@@ -177,6 +226,12 @@ class TimGiaSuNhanh extends Component {
         );
     }
 }
+const mapStateToProps = state => {
+    return {
+        searchTutor: state.searchTutor
+    };
+};
+
 
 const mapDispatchToProps = dispatch => {
     return {
@@ -185,4 +240,4 @@ const mapDispatchToProps = dispatch => {
         }
     };
 };
-export default connect(null, mapDispatchToProps)(TimGiaSuNhanh);
+export default connect(mapStateToProps, mapDispatchToProps)(TimGiaSuNhanh);

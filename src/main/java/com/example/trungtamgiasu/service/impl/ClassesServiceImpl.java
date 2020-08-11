@@ -11,6 +11,7 @@ import com.example.trungtamgiasu.parsing.ClassesParsing;
 import com.example.trungtamgiasu.service.ClassesService;
 import com.example.trungtamgiasu.specification.ClassesSpecification;
 import com.example.trungtamgiasu.vo.SearchVO;
+import com.example.trungtamgiasu.vo.Tutor.TutorInfoVO;
 import com.example.trungtamgiasu.vo.classes.ClassesInfoVO;
 import com.example.trungtamgiasu.vo.classes.ClassesVO;
 import org.slf4j.Logger;
@@ -49,12 +50,50 @@ public class ClassesServiceImpl implements ClassesService {
     @Autowired
     private ParentRegisterTutorDAO parentRegisterTutorDAO;
 
+    public double checkSalary(Long[] idTutors, int noDay, int noHour) {
+        int sumSalary = 0;
+        for (Long id : idTutors) {
+            Tutor tutor = tutorDAO.findById(id).orElseThrow(() -> new BadRequestException("Can not found tutor"));
+            sumSalary +=tutor.getSalaryPerHour();
+        }
+        double avgSalary = sumSalary/idTutors.length;
+        return avgSalary * noDay * noHour * 4;
+    }
+
+    public double checkSalary(String level, int noDay, int noHour) {
+        switch (level) {
+            case "Sinh viên":
+                return 50000 * noDay * noHour * 4;
+            case "Giáo viên":
+                return 150000 * noDay * noHour * 4;
+            case "Cử nhân":
+                return 100000 * noDay * noHour * 4;
+            case "Thạc sĩ":
+                return 200000 * noDay * noHour * 4;
+            case "Không yêu cầu":
+                return 50000 * noDay * noHour * 4;
+            default:
+                return 50000 * noDay * noHour * 4;
+        }
+    }
+
     @Override
     public Classes createClass(ClassesVO classesVO) {
         logger.info("Create class");
         if(classesVO == null) {
             throw new BadRequestException("Class is null");
         }
+
+        double salary;
+        if(classesVO.getIdTutors() != null) {
+            salary = checkSalary(classesVO.getIdTutors(), classesVO.getNoDay(), classesVO.getNoHour());
+        } else {
+            salary = checkSalary(classesVO.getLevelRequirement(), classesVO.getNoDay(), classesVO.getNoHour());
+        }
+        if(classesVO.getTuitionFee() < salary) {
+            throw new BadRequestException("Lương tối thiểu phải từ " + salary + " trở lên");
+        }
+
         classesVO.setStatus(ClassesStatus.LOPMOI.getKey());
         User user;
         if (userDAO.existsByPhone(classesVO.getPhone())) {
@@ -107,17 +146,62 @@ public class ClassesServiceImpl implements ClassesService {
         }
         List<Classes> classesList = classesDAO.findAll(Objects.requireNonNull(Objects.requireNonNull(Objects.
                 requireNonNull(Specification.
-                where(ClassesSpecification.withSubject(searchVO.getSubject(), ClassesStatus.LOPMOI))
-                .and(ClassesSpecification.withClassTeach(searchVO.getClassTeach(), ClassesStatus.LOPMOI)))
+                where(ClassesSpecification.withClassTeach(searchVO.getClassTeach(), ClassesStatus.LOPMOI)))
                 .and(ClassesSpecification.withDistrict(searchVO.getDistrict(), ClassesStatus.LOPMOI)))
                 .and(ClassesSpecification.withLevel(searchVO.getLevel(), ClassesStatus.LOPMOI)))
                 .and(ClassesSpecification.withGender(searchVO.getGender(), ClassesStatus.LOPMOI)));
         List<ClassesInfoVO> classesInfoVOS = classesParsing.toClassesInfoVOList(classesList);
+        List<ClassesInfoVO> classesInfoVOSCopy = new ArrayList<>();
+
+        if(!searchVO.getSubject().isEmpty()) {
+            List<String> listSubjectSearch = new ArrayList<>(Arrays.asList(searchVO.getSubject().split(",")));
+            for (ClassesInfoVO t : classesInfoVOS) {
+                List<String> listSubject = new ArrayList<>(Arrays.asList(t.getSubject().split(",")));
+                int dem = 0;
+                for (int i = 0; i < listSubject.size(); i++) {
+                    for (int j = 0; j < listSubjectSearch.size(); j++) {
+                        if(listSubject.get(i).contains(listSubjectSearch.get(j))) {
+                            dem++;
+                        }
+                    }
+                }
+                if(dem == listSubjectSearch.size()) {
+                    classesInfoVOSCopy.add(t);
+                }
+//                if(linearIn(listSubject, listSubjectSearch, listSubject.size(), listSubjectSearch.size())) {
+//                    classesInfoVOSCopy.add(t);
+//                }
+            }
+            classesInfoVOS = classesInfoVOSCopy;
+        }
+
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), classesInfoVOS.size());
         Page<ClassesInfoVO> classesInfoVOPage = new PageImpl<>
                 (classesInfoVOS.subList(start, end), pageable, classesInfoVOS.size());
         return classesInfoVOPage;
+    }
+
+    public static boolean linearIn(List<String> outer, List<String> inner, int m, int n) {
+
+        HashSet<String> hset= new HashSet<>();
+
+        // hset stores all the values of arr1
+
+        for(int i = 0; i < m; i++)
+        {
+            if(!hset.contains(outer.get(i)))
+                hset.add(outer.get(i));
+        }
+
+        // loop to check if all elements of arr2 also
+        // lies in arr1
+        for(int i = 0; i < n; i++)
+        {
+            if(!hset.contains(inner.get(i)))
+                return false;
+        }
+        return true;
     }
 
     @Override

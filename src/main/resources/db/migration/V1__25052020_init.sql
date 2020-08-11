@@ -118,6 +118,8 @@ CREATE TABLE `classes` (
   `tuition_fee` double NOT NULL,
   `status` varchar(255) NOT NULL,
   `id_parent` bigint DEFAULT NULL,
+  `no_day` bigint DEFAULT NULL,
+  `no_hour` bigint DEFAULT NULL,
   `time` datetime DEFAULT NULL,
   PRIMARY KEY (`id_class`),
   KEY `id_parent` (`id_parent`),
