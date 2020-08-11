@@ -99,7 +99,7 @@ class ClassActionPage extends Component {
                                             <div className="row">
                                                 <div className="col-6">
                                                     <div className="form-group">
-                                                        <label>Lớp dạy</label>
+                                                        <label>Môn dạy</label>
                                                         <FormControl variant="outlined" fullWidth required size="small">
                                                             <Select
                                                                 fullWidth

@@ -26,11 +26,13 @@ export const validateEmail = (email) => {
 
  export const validatePassword = (password) => {
       let errPassword = '';
-      if (password.length >= 6) {
-          errPassword = ''
-      }
-      else {
-          errPassword = 'Mật khẩu phải có ít nhất từ 6 ký tự'
+      if(password) {
+        if (password.length >= 6) {
+                  errPassword = ''
+              }
+              else {
+                  errPassword = 'Mật khẩu phải có ít nhất từ 6 ký tự'
+              }
       }
       return errPassword;
   }
