@@ -15,7 +15,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
 import { actCreateClassesRequest } from './../../actions/classes';
 import { connect } from "react-redux";
-import { validateEmail, validatePhone } from '../../constants/validate';
+import { validateEmail, validatePhone, validateSalary } from '../../constants/validate';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -26,11 +26,43 @@ class DangYeuCauTimGiaSu extends Component {
         super(props);
         this.state = {
             classInfo: {
-                subject: []
+                subject: [],
+                district: "",
+                classTeach: "",
+                levelRequirement: "",
+                genderRequirement: ""
             },
             errPhone: '',
             errEmail: '',
-            valueRadio: ''
+            valueRadio: '',
+            errSalary: ''
+        }
+    }
+
+    componentWillReceiveProps() {
+        let { subject, district, classTeach, level, gender } = this.props.searchTutor;
+        console.log('this.props.searchTutor: ', this.props.searchTutor);
+        if (!(subject === undefined &&
+            district === undefined &&
+            classTeach === undefined &&
+            level === undefined &&
+            gender === undefined)
+            || (subject === "" &&
+                district === "" &&
+                classTeach === "" &&
+                level === "" &&
+                gender === "")
+        ) {
+            this.setState({
+                classInfo: {
+                    subject: subject.split(","),
+                    district: district,
+                    classTeach: classTeach,
+                    levelRequirement: level,
+                    genderRequirement: gender,
+                },
+            })
+
         }
     }
 
@@ -42,7 +74,6 @@ class DangYeuCauTimGiaSu extends Component {
         let classInfo = {
             classTeach: this.state.classInfo.classTeach,
             subject: this.state.classInfo.subject.join(", "),
-            timeTeach: this.state.classInfo.timeTeach,
             address: this.state.classInfo.address,
             district: this.state.classInfo.district,
             tuitionFee: this.state.classInfo.tuitionFee,
@@ -51,6 +82,8 @@ class DangYeuCauTimGiaSu extends Component {
             name: this.state.classInfo.name,
             phone: this.state.classInfo.phone,
             email: this.state.classInfo.email,
+            noDay: this.state.classInfo.noDay,
+            noHour: this.state.classInfo.noHour
         };
         this.props.onCreateClass(classInfo, hasChooseTutors, history);
         this.setState({
@@ -98,14 +131,44 @@ class DangYeuCauTimGiaSu extends Component {
                 errEmail: err
             })
         }
+        if(errName === 'errSalary') {
+           
+            let salary = this.checkSalary(this.state.classInfo.levelRequirement, this.state.classInfo.noDay, this.state.classInfo.noHour);
+            // console.log('salary: ', salary);
+            let err = validateSalary(value, salary);
+            this.setState({
+                errSalary: err
+            })
+        }
+
+    }
+
+    checkSalary = (level, noDay, noHour) => {
+        console.log('salaryTutors, noDay, noHour: ', level, noDay, noHour);
+        switch (level) {
+            case "Sinh viên":
+                return 50000 * noDay * noHour * 4;
+            case "Giáo viên":
+                return 150000 * noDay * noHour * 4;
+            case "Cử nhân":
+                return 100000 * noDay * noHour * 4;
+            case "Thạc sĩ":
+                return 200000 * noDay * noHour * 4;
+            case "Không yêu cầu":
+                return 50000 * noDay * noHour * 4;
+            default:
+                return 50000 * noDay * noHour * 4;
+        }
     }
 
     render() {
         let { valueRadio } = this.state;
+        console.log("classInfo: ", this.state.classInfo);
         const { subjects, classTeaches, districts } = this.props;
         const hasSubjects = subjects && subjects.length > 0;
         const hasDistricts = districts && districts.length > 0;
         const hasClassTeaches = classTeaches && classTeaches.length > 0;
+        const noDay = [1, 2, 3, 4, 5, 6, 7];
         return (
             <Dialog
                 open={this.props.submitRequest}
@@ -120,6 +183,56 @@ class DangYeuCauTimGiaSu extends Component {
                     <form onSubmit={this.handleSubmit}>
                         <Grid container spacing={3} style={{ padding: "20px" }}>
                             <Grid container spacing={3}>
+                                <Grid item xs={6}>
+                                    <TextField
+                                        select
+                                        label="Chọn quận"
+                                        name="district"
+                                        required
+                                        variant="outlined"
+                                        size="small"
+                                        fullWidth
+                                        onChange={this.onChange}
+                                        value={this.state.classInfo.district}
+                                    >
+                                        {hasDistricts && districts.map((option) => (
+                                            <MenuItem key={option.districtName} value={option.districtName}>
+                                                {option.districtName}
+                                            </MenuItem>
+                                        ))}
+                                    </TextField>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <TextField
+                                        fullWidth
+                                        label="Địa chỉ cụ thể"
+                                        name="address"
+                                        required
+                                        placeholder="Số nhà, tên đường, tên phường"
+                                        variant="outlined"
+                                        size="small"
+                                        onChange={this.onChange}
+                                    />
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <TextField
+                                        select
+                                        name="classTeach"
+                                        required
+                                        label="Lớp dạy"
+                                        variant="outlined"
+                                        fullWidth
+                                        size="small"
+                                        onChange={this.onChange}
+                                        value={this.state.classInfo.classTeach}
+                                    >
+                                        {hasClassTeaches && classTeaches.map((option) => (
+                                            <MenuItem key={option.classTeachName} value={option.classTeachName}>
+                                                {option.classTeachName}
+                                            </MenuItem>
+                                        ))}
+                                    </TextField>
+                                </Grid>
                                 <Grid item xs={6}>
                                     <FormControl fullWidth required variant="outlined" size="small">
                                         <InputLabel id="demo-mutiple-checkbox-outlined-label">Môn học</InputLabel>
@@ -141,24 +254,7 @@ class DangYeuCauTimGiaSu extends Component {
                                         </Select>
                                     </FormControl>
                                 </Grid>
-                                <Grid item xs={6}>
-                                    <TextField
-                                        select
-                                        name="classTeach"
-                                        required
-                                        label="Lớp dạy"
-                                        variant="outlined"
-                                        fullWidth
-                                        size="small"
-                                        onChange={this.onChange}
-                                    >
-                                        {hasClassTeaches && classTeaches.map((option) => (
-                                            <MenuItem key={option.classTeachName} value={option.classTeachName}>
-                                                {option.classTeachName}
-                                            </MenuItem>
-                                        ))}
-                                    </TextField>
-                                </Grid>
+
                                 <Grid item xs={6}>
                                     <TextField
                                         select
@@ -168,6 +264,7 @@ class DangYeuCauTimGiaSu extends Component {
                                         fullWidth
                                         size="small"
                                         onChange={this.onChange}
+                                        value={this.state.classInfo.levelRequirement === "" ? "Không yêu cầu" : this.state.classInfo.levelRequirement}
                                     >
                                         <MenuItem key="Không yêu cầu" value="Không yêu cầu">
                                             Không yêu cầu
@@ -181,8 +278,8 @@ class DangYeuCauTimGiaSu extends Component {
                                         <MenuItem key="Cử nhân" value="Cử nhân">
                                             Cử nhân
                                         </MenuItem>
-                                        <MenuItem key="Thạc sỹ" value="Thạc sỹ">
-                                            Thạc sỹ
+                                        <MenuItem key="Thạc sĩ" value="Thạc sĩ">
+                                            Thạc sĩ
                                         </MenuItem>
                                     </TextField>
                                 </Grid>
@@ -195,6 +292,7 @@ class DangYeuCauTimGiaSu extends Component {
                                         size="small"
                                         fullWidth
                                         onChange={this.onChange}
+                                        value={this.state.classInfo.genderRequirement === "" ? "Không yêu cầu" : this.state.classInfo.genderRequirement}
                                     >
                                         <MenuItem key="Không yêu cầu" value="Không yêu cầu">
                                             Không yêu cầu
@@ -207,6 +305,44 @@ class DangYeuCauTimGiaSu extends Component {
                                         </MenuItem>
                                     </TextField>
                                 </Grid>
+                                <Grid item xs={3}>
+                                    <TextField
+                                        select
+                                        name="noDay"
+                                        label="Chọn số buổi dạy/tuần"
+                                        variant="outlined"
+                                        size="small"
+                                        fullWidth
+                                        onChange={this.onChange}
+                                        value={this.state.classInfo.noDay}
+                                    >
+                                        {noDay.map((day) => (
+                                            <MenuItem key={day} value={day}>
+                                                {day}
+                                            </MenuItem>
+                                        )
+                                        )}
+                                    </TextField>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <TextField
+                                        select
+                                        name="noHour"
+                                        label="Chọn số giờ dạy/buổi"
+                                        variant="outlined"
+                                        size="small"
+                                        fullWidth
+                                        onChange={this.onChange}
+                                        value={this.state.classInfo.noHour}
+                                    >
+                                        {noDay.map((day) => (
+                                            <MenuItem key={day} value={day}>
+                                                {day}
+                                            </MenuItem>
+                                        )
+                                        )}
+                                    </TextField>
+                                </Grid>
                                 <Grid item xs={6}>
                                     <TextField
                                         fullWidth
@@ -215,49 +351,9 @@ class DangYeuCauTimGiaSu extends Component {
                                         variant="outlined"
                                         size="small"
                                         onChange={this.onChange}
-                                    />
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <TextField
-                                        fullWidth
-                                        required
-                                        name="timeTeach"
-                                        label="Thời gian dạy"
-                                        variant="outlined"
-                                        size="small"
-                                        placeholder="T3-T5-T7 17h30-19h"
-                                        onChange={this.onChange}
-                                    />
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <TextField
-                                        select
-                                        label="Chọn quận"
-                                        name="district"
-                                        required
-                                        variant="outlined"
-                                        size="small"
-                                        fullWidth
-                                        onChange={this.onChange}
-                                    >
-                                        {hasDistricts && districts.map((option) => (
-                                            <MenuItem key={option.districtName} value={option.districtName}>
-                                                {option.districtName}
-                                            </MenuItem>
-                                        ))}
-                                    </TextField>
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <TextField
-                                        fullWidth
-                                        label="Địa chỉ cụ thể"
-                                        name="address"
-                                        required
-                                        placeholder="Số nhà, tên đường, tên phường"
-                                        variant="outlined"
-                                        size="small"
-                                        onChange={this.onChange}
-                                    />
+                                        onBlur={() => this.validateField(this.state.classInfo.tuitionFee, 'errSalary')}
+                                        />
+                                            {(this.state.errSalary !== '') ? <p style={{ color: "red" }}>{this.state.errSalary}</p> : ''}
                                 </Grid>
                                 <Grid item xs={12}>
                                     <FormControl component="fieldset">

@@ -47,3 +47,16 @@ export const validateConfirmPassword = (password, confirmPassword) => {
   }
   return errConfirmPassword;
 }
+
+export const validateSalary = (salaryFirst, salarySecond) => {
+    console.log('salarySecond: ', salarySecond);
+    let errSalary = '';
+    if (salaryFirst >= salarySecond) {
+        errSalary = ''
+    }
+    else {
+        errSalary = 'Lương tối thiểu phải từ ' + salarySecond.toString() + ' trở lên';
+    }
+    return errSalary;
+  }
+
