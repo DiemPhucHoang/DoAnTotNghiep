@@ -25,20 +25,21 @@ class ClassListPage extends Component {
 
     componentDidMount() {
         let number = this.state.activePage - 1;
-        let { subject, district, classTeach, level, gender } = this.props.search;
-        if ((subject === undefined &&
-            district === undefined &&
-            classTeach === undefined &&
-            level === undefined &&
-            gender === undefined)
-            || (subject === "" &&
-                district === "" &&
-                classTeach === "" &&
-                level === "" &&
-                gender === "")
-        ) {
-            this.props.fetchAllClasses(number);
-        }
+        this.props.fetchAllClasses(number);
+//        let { subject, district, classTeach, level, gender } = this.props.search;
+//        if ((subject === undefined &&
+//            district === undefined &&
+//            classTeach === undefined &&
+//            level === undefined &&
+//            gender === undefined)
+//            || (subject === "" &&
+//                district === "" &&
+//                classTeach === "" &&
+//                level === "" &&
+//                gender === "")
+//        ) {
+//            this.props.fetchAllClasses(number);
+//        }
         this.getAll();
     }
     getAll = () => {
@@ -130,7 +131,7 @@ class ClassListPage extends Component {
                         <div className="container-fluid">
                             <ol className="breadcrumb">
                                 <li className="breadcrumb-item">
-                                    <Link to="/">Trang chủ</Link>
+                                    <Link to="/admin">Trang chủ</Link>
                                 </li>
                                 <li className="breadcrumb-item active">Quản lý lớp</li>
                             </ol>

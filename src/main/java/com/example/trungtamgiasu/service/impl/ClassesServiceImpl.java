@@ -168,9 +168,6 @@ public class ClassesServiceImpl implements ClassesService {
                 if(dem == listSubjectSearch.size()) {
                     classesInfoVOSCopy.add(t);
                 }
-//                if(linearIn(listSubject, listSubjectSearch, listSubject.size(), listSubjectSearch.size())) {
-//                    classesInfoVOSCopy.add(t);
-//                }
             }
             classesInfoVOS = classesInfoVOSCopy;
         }
@@ -180,28 +177,6 @@ public class ClassesServiceImpl implements ClassesService {
         Page<ClassesInfoVO> classesInfoVOPage = new PageImpl<>
                 (classesInfoVOS.subList(start, end), pageable, classesInfoVOS.size());
         return classesInfoVOPage;
-    }
-
-    public static boolean linearIn(List<String> outer, List<String> inner, int m, int n) {
-
-        HashSet<String> hset= new HashSet<>();
-
-        // hset stores all the values of arr1
-
-        for(int i = 0; i < m; i++)
-        {
-            if(!hset.contains(outer.get(i)))
-                hset.add(outer.get(i));
-        }
-
-        // loop to check if all elements of arr2 also
-        // lies in arr1
-        for(int i = 0; i < n; i++)
-        {
-            if(!hset.contains(inner.get(i)))
-                return false;
-        }
-        return true;
     }
 
     @Override
@@ -330,16 +305,38 @@ public class ClassesServiceImpl implements ClassesService {
 
     @Override
     public Page<ClassesInfoVO> searchAllClasses(SearchVO searchVO, Pageable pageable) {
+        logger.info("Search classes");
         if(searchVO == null) {
             throw new BadRequestException("SearchVO is not found");
         }
-        List<Classes> classesList = classesDAO.findAll(Objects.requireNonNull(Objects.requireNonNull(Objects.requireNonNull(Specification.
-                where(ClassesSpecification.withSubject(searchVO.getSubject()))
-                .and(ClassesSpecification.withClassTeach(searchVO.getClassTeach())))
-                .and(ClassesSpecification.withDistrict(searchVO.getDistrict())))
-                .and(ClassesSpecification.withLevel(searchVO.getLevel())))
-                .and(ClassesSpecification.withGender(searchVO.getGender())));
+        List<Classes> classesList = classesDAO.findAll(Objects.requireNonNull(Objects.requireNonNull(Objects.
+                requireNonNull(Specification.
+                        where(ClassesSpecification.withClassTeach(searchVO.getClassTeach(), ClassesStatus.LOPMOI)))
+                .and(ClassesSpecification.withDistrict(searchVO.getDistrict(), ClassesStatus.LOPMOI)))
+                .and(ClassesSpecification.withLevel(searchVO.getLevel(), ClassesStatus.LOPMOI)))
+                .and(ClassesSpecification.withGender(searchVO.getGender(), ClassesStatus.LOPMOI)));
         List<ClassesInfoVO> classesInfoVOS = classesParsing.toClassesInfoVOList(classesList);
+        List<ClassesInfoVO> classesInfoVOSCopy = new ArrayList<>();
+
+        if(!searchVO.getSubject().isEmpty()) {
+            List<String> listSubjectSearch = new ArrayList<>(Arrays.asList(searchVO.getSubject().split(",")));
+            for (ClassesInfoVO t : classesInfoVOS) {
+                List<String> listSubject = new ArrayList<>(Arrays.asList(t.getSubject().split(",")));
+                int dem = 0;
+                for (int i = 0; i < listSubject.size(); i++) {
+                    for (int j = 0; j < listSubjectSearch.size(); j++) {
+                        if(listSubject.get(i).contains(listSubjectSearch.get(j))) {
+                            dem++;
+                        }
+                    }
+                }
+                if(dem == listSubjectSearch.size()) {
+                    classesInfoVOSCopy.add(t);
+                }
+            }
+            classesInfoVOS = classesInfoVOSCopy;
+        }
+
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), classesInfoVOS.size());
         Page<ClassesInfoVO> classesInfoVOPage = new PageImpl<>
