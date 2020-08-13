@@ -55,8 +55,25 @@ export const validateSalary = (salaryFirst, salarySecond) => {
         errSalary = ''
     }
     else {
-        errSalary = 'Lương tối thiểu phải từ ' + salarySecond.toString() + ' trở lên';
+        errSalary = 'Lương tối thiểu phải từ ' + salarySecond.toString() + ' vnđ trở lên';
     }
     return errSalary;
   }
+
+ export const checkSalary = (level, noDay, noHour) => {
+    switch (level) {
+        case "Sinh viên":
+            return 50000 * noDay * noHour * 4;
+        case "Giáo viên":
+            return 150000 * noDay * noHour * 4;
+        case "Cử nhân":
+            return 100000 * noDay * noHour * 4;
+        case "Thạc sĩ":
+            return 200000 * noDay * noHour * 4;
+        case "Không yêu cầu":
+            return 50000 * noDay * noHour * 4;
+        default:
+            return 50000 * noDay * noHour * 4;
+    }
+}
 

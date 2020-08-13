@@ -85,6 +85,8 @@ public class ClassesParsingImpl implements ClassesParsing {
                 String s = formatter.format(classes.getTime());
                 classesInfoVO.setTime(s);
             }
+            classesInfoVO.setNoDay(classes.getNoDay());
+            classesInfoVO.setNoHour(classes.getNoHour());
             return classesInfoVO;
         }
     }
@@ -131,8 +133,8 @@ public class ClassesParsingImpl implements ClassesParsing {
         }
 
         return new Classes(classesInfoVO.getId(), classesInfoVO.getClassTeach(), classesInfoVO.getSubject(), classesInfoVO.getLevelRequirement(),
-                classesInfoVO.getGenderRequirement(), classesInfoVO.getDistrict(), classesInfoVO.getTimeTeach(), classesInfoVO.getAddress(),
-                classesInfoVO.getTuitionFee(), classesStatus);
+                classesInfoVO.getGenderRequirement(), classesInfoVO.getDistrict(), "", classesInfoVO.getAddress(),
+                classesInfoVO.getTuitionFee(), classesStatus, classesInfoVO.getNoDay(), classesInfoVO.getNoHour());
     }
 }
 

@@ -88,7 +88,7 @@ class DangKyChonGiaSu extends Component {
                 idTutors: this.state.classInfo.idTutors,
                 noDay: this.state.classInfo.noDay,
                 noHour: this.state.classInfo.noHour
-              };
+            };
             this.props.onCreateClass(classInfo, hasChooseTutors, history);
         })
 
@@ -110,42 +110,39 @@ class DangKyChonGiaSu extends Component {
     }
 
     validateField = (value, errName) => {
-        if(errName === 'errPhone') {
+        if (errName === 'errPhone') {
             let err = validatePhone(value);
             this.setState({
                 errPhone: err
             })
         }
-        if(errName === 'errEmail') {
+        if (errName === 'errEmail') {
             let err = validateEmail(value);
             this.setState({
                 errEmail: err
             })
         }
-        if(errName === 'errSalary') {
+        if (errName === 'errSalary') {
             let salaryArr = [];
             this.props.tutorItem.forEach(tutor => {
                 salaryArr.push(tutor?.tutorInfoVO?.salaryPerHour);
             });
-
-            let salary = this.checkSalary(salaryArr, this.state.classInfo.noDay, this.state.classInfo.noHour);
-            // console.log('salary: ', salary);
-            let err = validateSalary(value, salary);
-            this.setState({
-                errSalary: err
-            })
+            if (this.state.classInfo.noDay && this.state.classInfo.noHour) {
+                let salary = this.checkSalary(salaryArr, this.state.classInfo.noDay, this.state.classInfo.noHour);
+                let err = validateSalary(value, salary);
+                this.setState({
+                    errSalary: err
+                })
+            }
         }
 
     }
 
     checkSalary = (salaryTutors, noDay, noHour) => {
-        console.log('salaryTutors, noDay, noHour: ', salaryTutors, noDay, noHour);
         let sumSalary, salary = 0;
         sumSalary = salaryTutors.reduce((a, b) => a + b, 0);
-        console.log('sumSalary: ', sumSalary);
-        let avgSalary = sumSalary/salaryTutors.length;
+        let avgSalary = sumSalary / salaryTutors.length;
         salary = avgSalary * noDay * noHour * 4;
-        console.log('salary: ', salary);
         return salary;
     }
 
@@ -161,7 +158,7 @@ class DangKyChonGiaSu extends Component {
                 <form onSubmit={this.handleSubmit}>
                     <Grid container spacing={3} style={{ padding: '20px' }}>
                         <Grid container spacing={3}>
-                        <Grid item xs={6}>
+                            <Grid item xs={6}>
                                 <TextField
                                     name="district"
                                     select
@@ -249,19 +246,19 @@ class DangKyChonGiaSu extends Component {
                                     <MenuItem key="Không yêu cầu" value="Không yêu cầu">
                                         Không yêu cầu
                                     </MenuItem>
-                                    <MenuItem key="Giáo viên" value="Giáo viên">
-                                        Giáo viên
-                                        </MenuItem>
+
                                     <MenuItem key="Sinh viên" value="Sinh viên">
                                         Sinh viên
                                         </MenuItem>
-                                    <MenuItem key="Thạc sĩ" value="Thạc sĩ">
-                                        Thạc sĩ
+                                    <MenuItem key="Giáo viên" value="Giáo viên">
+                                        Giáo viên
                                         </MenuItem>
                                     <MenuItem key="Cử nhân" value="Cử nhân">
                                         Cử nhân
                                     </MenuItem>
-
+                                    <MenuItem key="Thạc sĩ" value="Thạc sĩ">
+                                        Thạc sĩ
+                                        </MenuItem>
                                 </TextField>
                             </Grid>
                             <Grid item xs={6}>
@@ -301,8 +298,8 @@ class DangKyChonGiaSu extends Component {
                                 >
                                     {noDay.map((day) => (
                                         <MenuItem key={day} value={day}>
-                                        {day}
-                                    </MenuItem>
+                                            {day}
+                                        </MenuItem>
                                     )
                                     )}
                                 </TextField>
@@ -320,8 +317,8 @@ class DangKyChonGiaSu extends Component {
                                 >
                                     {noDay.map((day) => (
                                         <MenuItem key={day} value={day}>
-                                        {day}
-                                    </MenuItem>
+                                            {day}
+                                        </MenuItem>
                                     )
                                     )}
                                 </TextField>
@@ -333,76 +330,76 @@ class DangKyChonGiaSu extends Component {
                                     label="Học phí dự kiến (VNĐ/tháng)"
                                     variant="outlined"
                                     size="small"
-                                    onChange={this.onHandleChooseTutor}onBlur={() => this.validateField(this.state.classInfo.tuitionFee, 'errSalary')}
+                                    onChange={this.onHandleChooseTutor} onBlur={() => this.validateField(this.state.classInfo.tuitionFee, 'errSalary')}
                                 />
-                                    {(this.state.errSalary !== '') ? <p style={{ color: "red" }}>{this.state.errSalary}</p> : ''}
+                                {(this.state.errSalary !== '') ? <p style={{ color: "red" }}>{this.state.errSalary}</p> : ''}
                             </Grid>
 
                             <Grid item xs={12}>
-                                    <FormControl component="fieldset">
-                                        {/* <FormLabel component="legend">Nếu bạn đã từng đăng ký tìm gia sư với trung tâm</FormLabel> */}
-                                        <RadioGroup row aria-label="gender" name="parent" value={valueRadio} onChange={this.onHandleChooseTutor}>
-                                            <FormControlLabel value="old" control={<Radio />} label="Phụ huynh cũ" />
-                                            <FormControlLabel value="new" control={<Radio />} label="Phụ huynh mới" />
-                                        </RadioGroup>
-                                    </FormControl>
-                                </Grid>
-                                {valueRadio === "old" ? <Grid item xs={12}>
-                                    <TextField
-                                        type="number"
-                                        required
-                                        fullWidth
-                                        name="phone"
-                                        label="Số điện thoại"
-                                        variant="outlined"
-                                        size="small"
-                                        onChange={this.onHandleChooseTutor}
-                                        onBlur={() => this.validateField(this.state.classInfo.phone, 'errPhone')}
-                                    />
-                                    {(this.state.errPhone !== '') ? <p style={{ color: "red" }}>{this.state.errPhone}</p> : ''}
-                                </Grid> : (valueRadio === "new" ?
-                                    <Grid item xs={12}>
-                                        <Grid container spacing={3}>
-                                            <Grid item xs={4}>
-                                                <TextField
-                                                    required
-                                                    fullWidth
-                                                    label="Họ tên của phụ huynh"
-                                                    name="name"
-                                                    variant="outlined"
-                                                    size="small"
-                                                    onChange={this.onHandleChooseTutor}
-                                                />
-                                            </Grid>
-                                            <Grid item xs={4}>
-                                                <TextField
-                                                    type="number"
-                                                    required
-                                                    fullWidth
-                                                    name="phone"
-                                                    label="Số điện thoại"
-                                                    variant="outlined"
-                                                    size="small"
-                                                    onChange={this.onHandleChooseTutor}
-                                                    onBlur={() => this.validateField(this.state.classInfo.phone, 'errPhone')}
-                                                />
-                                                {(this.state.errPhone !== '') ? <p style={{ color: "red" }}>{this.state.errPhone}</p> : ''}
-                                            </Grid>
-                                            <Grid item xs={4}>
-                                                <TextField
-                                                    fullWidth
-                                                    name="email"
-                                                    label="Email (nếu có)"
-                                                    variant="outlined"
-                                                    size="small"
-                                                    onChange={this.onHandleChooseTutor}
-                                                    onBlur={() => this.validateField(this.state.classInfo.email, 'errEmail')}
-                                                />
-                                                {(this.state.errEmail !== '') ? <p style={{ color: "red" }}>{this.state.errEmail}</p> : ''}
-                                            </Grid>
+                                <FormControl component="fieldset">
+                                    {/* <FormLabel component="legend">Nếu bạn đã từng đăng ký tìm gia sư với trung tâm</FormLabel> */}
+                                    <RadioGroup row aria-label="gender" name="parent" value={valueRadio} onChange={this.onHandleChooseTutor}>
+                                        <FormControlLabel value="old" control={<Radio />} label="Phụ huynh cũ" />
+                                        <FormControlLabel value="new" control={<Radio />} label="Phụ huynh mới" />
+                                    </RadioGroup>
+                                </FormControl>
+                            </Grid>
+                            {valueRadio === "old" ? <Grid item xs={12}>
+                                <TextField
+                                    type="number"
+                                    required
+                                    fullWidth
+                                    name="phone"
+                                    label="Số điện thoại"
+                                    variant="outlined"
+                                    size="small"
+                                    onChange={this.onHandleChooseTutor}
+                                    onBlur={() => this.validateField(this.state.classInfo.phone, 'errPhone')}
+                                />
+                                {(this.state.errPhone !== '') ? <p style={{ color: "red" }}>{this.state.errPhone}</p> : ''}
+                            </Grid> : (valueRadio === "new" ?
+                                <Grid item xs={12}>
+                                    <Grid container spacing={3}>
+                                        <Grid item xs={4}>
+                                            <TextField
+                                                required
+                                                fullWidth
+                                                label="Họ tên của phụ huynh"
+                                                name="name"
+                                                variant="outlined"
+                                                size="small"
+                                                onChange={this.onHandleChooseTutor}
+                                            />
                                         </Grid>
-                                    </Grid> : "")
-                                }
+                                        <Grid item xs={4}>
+                                            <TextField
+                                                type="number"
+                                                required
+                                                fullWidth
+                                                name="phone"
+                                                label="Số điện thoại"
+                                                variant="outlined"
+                                                size="small"
+                                                onChange={this.onHandleChooseTutor}
+                                                onBlur={() => this.validateField(this.state.classInfo.phone, 'errPhone')}
+                                            />
+                                            {(this.state.errPhone !== '') ? <p style={{ color: "red" }}>{this.state.errPhone}</p> : ''}
+                                        </Grid>
+                                        <Grid item xs={4}>
+                                            <TextField
+                                                fullWidth
+                                                name="email"
+                                                label="Email (nếu có)"
+                                                variant="outlined"
+                                                size="small"
+                                                onChange={this.onHandleChooseTutor}
+                                                onBlur={() => this.validateField(this.state.classInfo.email, 'errEmail')}
+                                            />
+                                            {(this.state.errEmail !== '') ? <p style={{ color: "red" }}>{this.state.errEmail}</p> : ''}
+                                        </Grid>
+                                    </Grid>
+                                </Grid> : "")
+                            }
                         </Grid>
                     </Grid>
                     <Button variant="contained" style={{ float: 'right' }} color="secondary" type="submit">Đăng ký</Button>

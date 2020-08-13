@@ -67,7 +67,7 @@ public class Classes {
 
     public Classes(Long id, String classTeach, String subject, String levelRequirement,
                    String genderRequirement, String district, String timeTeach,
-                   String address, double tuitionFee, ClassesStatus status) {
+                   String address, double tuitionFee, ClassesStatus status, int noDay, int noHour) {
         this.id = id;
         this.classTeach = classTeach;
         this.subject = subject;
@@ -78,5 +78,7 @@ public class Classes {
         this.address = address;
         this.tuitionFee = tuitionFee;
         this.status = status;
+        this.noDay = noDay;
+        this.noHour = noHour;
     }
 }

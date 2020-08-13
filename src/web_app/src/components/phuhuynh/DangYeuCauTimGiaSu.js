@@ -15,7 +15,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
 import { actCreateClassesRequest } from './../../actions/classes';
 import { connect } from "react-redux";
-import { validateEmail, validatePhone, validateSalary } from '../../constants/validate';
+import { validateEmail, validatePhone, validateSalary, checkSalary } from '../../constants/validate';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -114,7 +114,10 @@ class DangYeuCauTimGiaSu extends Component {
             classInfo: {
                 subject: []
             },
-            valueRadio: ''
+            valueRadio: '',
+            errPhone: '',
+            errEmail: '',
+            errSalary: ''
         })
     }
 
@@ -133,32 +136,15 @@ class DangYeuCauTimGiaSu extends Component {
         }
         if(errName === 'errSalary') {
 
-            let salary = this.checkSalary(this.state.classInfo.levelRequirement, this.state.classInfo.noDay, this.state.classInfo.noHour);
-            // console.log('salary: ', salary);
-            let err = validateSalary(value, salary);
-            this.setState({
-                errSalary: err
-            })
+            if (this.state.classInfo.noDay && this.state.classInfo.noHour) {
+               let salary = checkSalary(this.state.classInfo.levelRequirement, this.state.classInfo.noDay, this.state.classInfo.noHour);
+               let err = validateSalary(value, salary);
+               this.setState({
+                   errSalary: err
+                   })
+             }
         }
 
-    }
-
-    checkSalary = (level, noDay, noHour) => {
-        console.log('salaryTutors, noDay, noHour: ', level, noDay, noHour);
-        switch (level) {
-            case "Sinh viên":
-                return 50000 * noDay * noHour * 4;
-            case "Giáo viên":
-                return 150000 * noDay * noHour * 4;
-            case "Cử nhân":
-                return 100000 * noDay * noHour * 4;
-            case "Thạc sĩ":
-                return 200000 * noDay * noHour * 4;
-            case "Không yêu cầu":
-                return 50000 * noDay * noHour * 4;
-            default:
-                return 50000 * noDay * noHour * 4;
-        }
     }
 
     render() {
@@ -350,6 +336,7 @@ class DangYeuCauTimGiaSu extends Component {
                                         label="Học phí dự kiến (VNĐ/tháng)"
                                         variant="outlined"
                                         size="small"
+                                        type="number"
                                         onChange={this.onChange}
                                         onBlur={() => this.validateField(this.state.classInfo.tuitionFee, 'errSalary')}
                                         />

@@ -24,8 +24,8 @@ class LopNoiBat extends Component {
                                     <CardContent style={{ padding: '10px' }}>
                                         <p><b>Lớp dạy: </b> {classItem.classTeach}</p>
                                         <p><b>Môn dạy: </b> {classItem.subject}</p>
-                                        <p><b>Lương: </b> {classItem.tuitionFee} vnđ/tháng</p>
-                                        <p><b>Thời gian: </b> {classItem.timeTeach}</p>
+                                        <p><b>Lương: </b> {classItem.tuitionFee.toLocaleString('en-US')} vnđ/tháng</p>
+                                        <p><strong>Thời lượng:</strong> Tuần {classItem.noDay} buổi ({classItem.noHour}h/buổi)</p>
                                         <p><b>Địa chỉ: </b> {classItem.district}, TP. HCM</p>
                                         <div style={{ float: "right", paddingBottom: '15px' }}>
                                             <Link to={`/dang-ky-day/${classItem.id}`}>

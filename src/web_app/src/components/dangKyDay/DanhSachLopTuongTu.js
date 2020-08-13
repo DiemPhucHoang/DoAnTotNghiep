@@ -32,8 +32,8 @@ class DanhSachLopTuongTu extends Component {
                                         <p><strong>Lớp dạy:</strong> {classItem.classTeach}</p>
                                         <p><span style={{ color: "#fc0505" }}><RoomSharpIcon /></span>
                                             <span style={{ color: "#356ff4" }}> {classItem.district}, TP.HCM </span></p>
-                                        <p><strong>Lương:<span style={{ color: "#fc0505" }}> {classItem.tuitionFee} vnđ/tháng</span></strong></p>
-                                        <p><strong>Thời gian:</strong> {classItem.timeTeach}</p>
+                                        <p><strong>Lương:<span style={{ color: "#fc0505" }}> {classItem.tuitionFee.toLocaleString('en-US')} vnđ/tháng</span></strong></p>
+                                        <p><strong>Thời lượng:</strong> Tuần {classItem.noDay} buổi ({classItem.noHour}h/buổi)</p>
                                         <p><strong>Yêu cầu trình độ:</strong> {classItem.levelRequirement}</p>
                                         <p><strong>Yêu cầu giới tính:</strong> {classItem.genderRequirement}</p>
                                         <p><strong>Liên hệ: <span style={{ color: "#fc0505" }}> 0963780747 - 0922345128</span>

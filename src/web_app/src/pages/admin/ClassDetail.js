@@ -6,12 +6,15 @@ import { Link } from 'react-router-dom';
 import Nav from '../../components/admin/Nav';
 import Menu from '../../components/admin/Menu';
 import { Card } from '@material-ui/core';
+import { checkSalary, validateSalary } from '../../constants/validate';
 
 class ClassDetail extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            
+            noDay: '',
+            noHour: '',
+            errSalary: ''
         }
     }
     componentWillReceiveProps(nextProps) {
@@ -21,7 +24,6 @@ class ClassDetail extends Component {
                 idClass: classes.id,
                 classTeach: classes.classTeach,
                 subject: classes.subject,
-                timeTeach: classes.timeTeach,
                 address: classes.address,
                 district: classes.district,
                 tuitionFee: classes.tuitionFee,
@@ -29,6 +31,8 @@ class ClassDetail extends Component {
                 levelRequirement: classes.levelRequirement,
                 status: classes.status,
                 time: classes.time,
+                noDay: classes.noDay,
+                noHour: classes.noHour,
                 // parent
                 name: parent.name,
                 phone: parent.phone,
@@ -60,7 +64,8 @@ class ClassDetail extends Component {
             id: this.state.idClass,
             classTeach: this.state.classTeach,
             subject: this.state.subject,
-            timeTeach: this.state.timeTeach,
+            noDay: this.state.noDay,
+            noHour: this.state.noHour,
             address: this.state.address,
             district: this.state.district,
             tuitionFee: this.state.tuitionFee,
@@ -72,19 +77,35 @@ class ClassDetail extends Component {
             this.props.onUpdateClass(dataClass, history);
         }
     }
+
+    validateField = (value, errName) => {
+        if (errName === 'errSalary') {
+            if (this.state.noDay && this.state.noHour) {
+                let salary = checkSalary(this.state.levelRequirement, this.state.noDay, this.state.noHour);
+                // console.log('salary: ', salary);
+                let err = validateSalary(value, salary);
+                this.setState({
+                    errSalary: err
+                })
+            }
+        }
+
+    }
+
     render() {
-        var { classTeach, subject, timeTeach, address, district, tuitionFee, genderRequirement, levelRequirement, status } = this.state;
+        var { classTeach, subject, address, district, tuitionFee, genderRequirement, levelRequirement, status } = this.state;
         const { parent } = this.props;
+        const noDay = [1, 2, 3, 4, 5, 6, 7];
         return (
             <div>
-                <Nav history={this.props.history}/>
+                <Nav history={this.props.history} />
                 <div id="wrapper">
                     <Menu />
                     <div id="content-wrapper">
                         <div className="container-fluid">
                             <ol className="breadcrumb">
                                 <li className="breadcrumb-item">
-                                    <Link to="/">Dashboard</Link>
+                                    <Link to="/admin">Dashboard</Link>
                                 </li>
                                 <li className="breadcrumb-item active">Thông tin lớp chi tiết</li>
                             </ol>
@@ -96,7 +117,7 @@ class ClassDetail extends Component {
                                         <form onSubmit={this.onSave}>
                                             <div className="form-group">
                                                 <div className="row">
-                                                    <div className="col-6">
+                                                    <div className="col-12">
                                                         <div className="form-group">
                                                             <label>Lớp dạy</label>
                                                             <input
@@ -104,17 +125,6 @@ class ClassDetail extends Component {
                                                                 className="form-control"
                                                                 name="classTeach"
                                                                 value={classTeach}
-                                                                onChange={this.handleChange} />
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-6">
-                                                        <div className="form-group">
-                                                            <label>Lương (VNĐ)</label>
-                                                            <input
-                                                                type="text"
-                                                                className="form-control"
-                                                                name="tuitionFee"
-                                                                value={tuitionFee}
                                                                 onChange={this.handleChange} />
                                                         </div>
                                                     </div>
@@ -128,7 +138,85 @@ class ClassDetail extends Component {
                                                         value={subject}
                                                         onChange={this.handleChange} />
                                                 </div>
-                                                <div className="form-group">
+                                                <div className="row">
+                                                    <div className="col-6">
+                                                        <div className="form-group">
+                                                            <label>Yêu cầu trình độ</label>
+                                                            <select
+                                                                className="form-control"
+                                                                name="levelRequirement"
+                                                                value={levelRequirement}
+                                                                onChange={this.handleChange}>
+                                                                <option>Không yêu cầu</option>
+                                                                <option>Sinh viên</option>
+                                                                <option>Giáo viên</option>
+                                                                <option>Cử nhân</option>
+                                                                <option>Thạc sĩ</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div className="col-6">
+                                                        <div className="form-group">
+                                                            <label>Yêu cầu giới tính</label>
+                                                            <select
+                                                                className="form-control"
+                                                                name="genderRequirement"
+                                                                value={genderRequirement}
+                                                                onChange={this.handleChange}>
+                                                                <option>Không yêu cầu</option>
+                                                                <option>Nam</option>
+                                                                <option>Nữ</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="row">
+                                                    <div className="col-4">
+                                                        <div className="form-group">
+                                                            <label>Chọn số buổi dạy/tuần</label>
+                                                            <select required
+                                                                className="form-control"
+                                                                name="noDay"
+                                                                value={this.state.noDay}
+                                                                onChange={this.handleChange}>
+                                                                {noDay.map((item) => (
+                                                                    <option>{item}</option>
+                                                                ))}
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="col-4">
+                                                        <div className="form-group">
+                                                            <label>Chọn số giờ dạy/tuần</label>
+                                                            <select required
+                                                                className="form-control"
+                                                                name="noHour"
+                                                                value={this.state.noHour}
+                                                                onChange={this.handleChange}>
+                                                                {noDay.map((item) => (
+                                                                    <option>{item}</option>
+                                                                ))}
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div className="col-4">
+                                                    <div className="form-group">
+                                                        <label>Lương (VNĐ)</label>
+                                                        <input
+                                                            type="number"
+                                                            className="form-control"
+                                                            name="tuitionFee"
+                                                            value={tuitionFee}
+                                                            onChange={this.handleChange} required
+                                                            onBlur={() => this.validateField(tuitionFee, 'errSalary')}
+                                                            />
+                                                        {(this.state.errSalary !== '') ? <p style={{ color: "red" }}>{this.state.errSalary}</p> : ''}
+                                                    </div>
+                                                </div>
+                                                </div>
+
+                                                {/* <div className="form-group">
                                                     <label>Thời gian dạy</label>
                                                     <input
                                                         type="text"
@@ -136,7 +224,7 @@ class ClassDetail extends Component {
                                                         name="timeTeach"
                                                         value={timeTeach}
                                                         onChange={this.handleChange} />
-                                                </div>
+                                                </div> */}
                                                 <div className="row">
                                                     <div className="col-8">
                                                         <div className="form-group">
@@ -181,39 +269,6 @@ class ClassDetail extends Component {
                                                                 <option>Huyện Củ Chi</option>
                                                                 <option>Huyện Bình Chánh</option>
                                                                 <option>Huyện Hóc Môn</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div className="row">
-                                                    <div className="col-6">
-                                                        <div className="form-group">
-                                                            <label>Yêu cầu trình độ</label>
-                                                            <select
-                                                                className="form-control"
-                                                                name="levelRequirement"
-                                                                value={levelRequirement}
-                                                                onChange={this.handleChange}>
-                                                                <option>Không yêu cầu</option>
-                                                                <option>Sinh viên</option>
-                                                                <option>Giáo viên</option>
-                                                                <option>Cử nhân</option>
-                                                                <option>Thạc sĩ</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-6">
-                                                        <div className="form-group">
-                                                            <label>Yêu cầu giới tính</label>
-                                                            <select
-                                                                className="form-control"
-                                                                name="genderRequirement"
-                                                                value={genderRequirement}
-                                                                onChange={this.handleChange}>
-                                                                <option>Không yêu cầu</option>
-                                                                <option>Nam</option>
-                                                                <option>Nữ</option>
                                                             </select>
                                                         </div>
                                                     </div>

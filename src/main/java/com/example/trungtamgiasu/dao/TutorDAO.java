@@ -34,7 +34,7 @@ public interface TutorDAO extends JpaRepository<Tutor, Long>, JpaSpecificationEx
     List<Tutor> findTop4ByStatus(TutorStatus tutorStatus);
 
     @Query(value = "select * from tutors where id_tutor in (\n" +
-            "select * from (select id_tutor from tutor_register_class where status = '0'\n" +
+            "select * from (select id_tutor from tutor_register_class where (status = '0' or status = '4')\n" +
             "group by id_tutor \n" +
             "order by count(id_tutor) desc \n" +
             "limit 4) as t)", nativeQuery = true)

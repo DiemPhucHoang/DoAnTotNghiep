@@ -7,6 +7,7 @@ import Menu from '../../components/admin/Menu';
 import Nav from '../../components/admin/Nav';
 import { Select, Input, MenuItem, Checkbox, ListItemText, FormControl, InputLabel } from '@material-ui/core';
 import { notification } from "antd";
+import { checkSalary, validateSalary} from '../../constants/validate';
 
 class ClassActionPage extends Component {
     constructor(props) {
@@ -17,19 +18,21 @@ class ClassActionPage extends Component {
                 idClass: null,
                 classTeach: '',
                 subject: [],
-                timeTeach: '',
                 address: '',
                 district: '',
                 tuitionFee: null,
                 genderRequirement: 'Không yêu cầu',
                 levelRequirement: 'Không yêu cầu',
                 status: 'Lớp mới',
+                noDay: '',
+                noHour: ''
             },
 
             statusParent: 'old',
             subjects: [],
             districts: [],
             classTeaches: [],
+            errSalary: ''
         }
     }
 
@@ -68,6 +71,7 @@ class ClassActionPage extends Component {
 
     onChange = (event) => {
         let { name, value } = event.target;
+        console.log("name, value", name, value);
         this.setState((prevState) => ({
             classInfo: {
                 ...prevState.classInfo,
@@ -76,8 +80,23 @@ class ClassActionPage extends Component {
         }));
     }
 
+    validateField = (value, errName) => {
+        if (errName === 'errSalary') {
+            if (this.state.classInfo.noDay && this.state.classInfo.noHour) {
+                let salary = checkSalary(this.state.classInfo.levelRequirement, this.state.classInfo.noDay, this.state.classInfo.noHour);
+                // console.log('salary: ', salary);
+                let err = validateSalary(value, salary);
+                this.setState({
+                    errSalary: err
+                })
+            }
+        }
+
+    }
+
 
     render() {
+        const noDay = [1, 2, 3, 4, 5, 6, 7];
         return (
             <div>
                 <Nav history={this.props.history}/>
@@ -141,61 +160,6 @@ class ClassActionPage extends Component {
                                                 </div>
                                             </div>
                                             <div className="row">
-
-                                                <div className="col-6">
-                                                    <div className="form-group">
-                                                        <label>Lương (VNĐ)</label>
-                                                        <input
-                                                            type="number"
-                                                            className="form-control"
-                                                            name="tuitionFee"
-                                                            value={this.state.tuitionFee}
-                                                            onChange={this.onChange} required />
-                                                    </div>
-                                                </div>
-                                                <div className="col-6">
-                                                    <div className="form-group">
-                                                        <label>Thời gian dạy</label>
-                                                        <input
-                                                            type="text"
-                                                            className="form-control"
-                                                            name="timeTeach"
-                                                            value={this.state.timeTeach}
-                                                            onChange={this.onChange} required />
-                                                    </div>
-                                                </div>
-                                            </div>
-
-
-                                            <div className="row">
-                                                <div className="col-8">
-                                                    <div className="form-group">
-                                                        <label>Địa chỉ dạy</label>
-                                                        <input
-                                                            type="text"
-                                                            className="form-control"
-                                                            name="address"
-                                                            value={this.state.address}
-                                                            onChange={this.onChange} required />
-                                                    </div>
-                                                </div>
-                                                <div className="col-4">
-                                                    <div className="form-group">
-                                                        <label>Quận / Huyện</label>
-                                                        <select required
-                                                            className="form-control"
-                                                            name="district"
-                                                            value={this.state.district}
-                                                            onChange={this.onChange}>
-                                                            {this.state.districts.map((districtItem) => (
-                                                                <option>{districtItem.districtName}</option>
-                                                            ))}
-                                                        </select>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="row">
                                                 <div className="col-6">
                                                     <div className="form-group">
                                                         <label>Yêu cầu trình độ</label>
@@ -224,6 +188,79 @@ class ClassActionPage extends Component {
                                                             <option>Nam</option>
                                                             <option>Nữ</option>
                                                         </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="row">
+                                                <div className="col-3">
+                                                    <div className="form-group">
+                                                        <label>Chọn số buổi dạy/tuần</label>
+                                                        <select required
+                                                            className="form-control"
+                                                            name="noDay"
+                                                            value={this.state.noDay}
+                                                            onChange={this.onChange}>
+                                                            {noDay.map((item) => (
+                                                                <option>{item}</option>
+                                                            ))}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div className="col-3">
+                                                    <div className="form-group">
+                                                        <label>Chọn số giờ dạy/tuần</label>
+                                                        <select required
+                                                            className="form-control"
+                                                            name="noHour"
+                                                            value={this.state.noHour}
+                                                            onChange={this.onChange}>
+                                                            {noDay.map((item) => (
+                                                                <option>{item}</option>
+                                                            ))}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div className="col-6">
+                                                    <div className="form-group">
+                                                        <label>Lương (VNĐ)</label>
+                                                        <input
+                                                            type="number"
+                                                            className="form-control"
+                                                            name="tuitionFee"
+                                                            value={this.state.tuitionFee}
+                                                            onChange={this.onChange} required
+                                                            onBlur={() => this.validateField(this.state.classInfo.tuitionFee, 'errSalary')}
+                                                            />
+                                                        {(this.state.errSalary !== '') ? <p style={{ color: "red" }}>{this.state.errSalary}</p> : ''}
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div className="row">
+                                                <div className="col-8">
+                                                    <div className="form-group">
+                                                        <label>Địa chỉ dạy</label>
+                                                        <input
+                                                            type="text"
+                                                            className="form-control"
+                                                            name="address"
+                                                            value={this.state.address}
+                                                            onChange={this.onChange} required />
+                                                    </div>
+                                                </div>
+                                                <div className="col-4">
+                                                    <div className="form-group">
+                                                        <label>Quận / Huyện</label>
+                                                        <select required
+                                                            className="form-control"
+                                                            name="district"
+                                                            value={this.state.district}
+                                                            onChange={this.onChange}>
+                                                            {this.state.districts.map((districtItem) => (
+                                                                <option>{districtItem.districtName}</option>
+                                                            ))}
+                                                        </select>
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -272,7 +309,8 @@ class ClassActionPage extends Component {
         var dataClass = {
             classTeach: this.state.classInfo.classTeach,
             subject: this.state.classInfo.subject.join(", "),
-            timeTeach: this.state.classInfo.timeTeach,
+            noDay: this.state.classInfo.noDay,
+            noHour: this.state.classInfo.noHour,
             address: this.state.classInfo.address,
             district: this.state.classInfo.district,
             tuitionFee: this.state.classInfo.tuitionFee,
